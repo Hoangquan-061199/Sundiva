@@ -1,0 +1,209 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Simple.Json
+@using ADCOnline.Utils
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle + ((Model.Page > 1) ? (" - " + ResourceData.Resource("Page", ViewBag.Lang) + " " + Model.Page) : string.Empty);
+        if (Model.Page == 1)
+        {
+            ViewBag.Title = Model.ModuleItem.SEOTitle;
+        }
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    ViewBag.IsSchema = false;
+    ViewBag.LangModule = Model.ModuleItem.Lang;
+    SizeImages image = new SizeImages();
+}
+@if (Model.ModuleItem != null)
+{
+
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+            {
+                image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                <div class="banner mb-block-content">
+                    <img src="@Utility.GetUrlPicture(WebConfig.PathServer, item.AlbumUrl)"
+                         alt="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)" width="@image.Width"
+                         height="@image.Height" loading="lazy">
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide-index mb-block-content">
+                <div class="owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                        <div class="item">
+                            <img src="@Utility.GetUrlPicture(WebConfig.PathServer, item.AlbumUrl)"
+                                 alt="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)"
+                                 width="@image.Width" height="@image.Height" loading="lazy">
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+
+    <div class="wrapper process-producer ">
+        <div class="container">
+            <div class="title line uppercase center">
+                <h1 class="sub">@(!string.IsNullOrEmpty(Model.ModuleItem.Title) ? Model.ModuleItem.Title : string.Empty)</h1>
+            </div>
+            <div class="desc mb-block-content detail-content">
+                @Html.Raw(Model.ModuleItem.Description)
+            </div>
+            @if (Model.ListProductItem.Any())
+            {
+                @if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]) && !Utility.IsTablet(Context.Request.Headers["User-Agent"]))
+                {
+                    int i = 1;
+                    var list = Model.ListProductItem.Where(x => x.ID != Model.ListProductItem.OrderBy(x => x.OrderDisplay).FirstOrDefault().ID);
+                    <div class="list-process-producer mb-block-content">
+                        @foreach (ProductItem item in Model.ListProductItem.OrderBy(x => x.OrderDisplay).Take(1))
+                        {
+                            image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                            <div class="item-parent" id="@item.ID">
+                                <div class="item">
+                                    <div class="img">
+                                        <div class="arrow"></div>
+                                        <img src="@Utility.GetUrlPicture(WebConfig.PathServer, item.UrlPicture)"
+                                             alt="@item.Name"
+                                             width="@image.Width" height="@image.Height" loading="lazy">
+                                    </div>
+                                    <div class="info">
+                                        <strong>@item.Name</strong>
+                                        <span><span class="line"> - </span>@item.Title</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @while (list.Skip(2 * i - 2).Count() > 0)
+                        {
+                            <div class="item-parent">
+                                @foreach (ProductItem item in list.OrderBy(x => x.OrderDisplay).Skip(2 * i - 2).Take(2))
+                                {
+                                    image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                    <div class="item @(list.OrderBy(x => x.OrderDisplay).LastOrDefault().ID == item.ID ? "last" : string.Empty)" id="@item.ID">
+                                        <div class="img">
+                                            <div class="arrow"></div>
+                                            <img src="@Utility.GetUrlPicture(WebConfig.PathServer, item.UrlPicture)"
+                                                 alt="@item.Name"
+                                                 width="@image.Width" height="@image.Height" loading="lazy">
+                                        </div>
+                                        <div class="info">
+                                            <strong>@item.Name</strong>
+                                            <span><span class="line"> - </span>@item.Title</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            i++;
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="list-process-producer-mb mb-block-content">
+                        @foreach (ProductItem item in Model.ListProductItem.OrderBy(x => x.OrderDisplay))
+                        {
+                            image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                            <div class="item-parent">
+                                <div class="item">
+                                    <div class="arrow"></div>
+                                    <div class="img">
+                                        <img src="@Utility.GetUrlPicture(WebConfig.PathServer, item.UrlPicture)"
+                                             alt="@item.Name"
+                                             width="@image.Width" height="@image.Height" loading="lazy">
+                                    </div>
+                                    <div class="info">
+                                        <strong>@item.Name</strong>
+                                        <span><span class="line"> - </span>@item.Title</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            @if (Model.WebsiteModulesItems.Any() && Model.WebsiteModulesItems.FirstOrDefault().ListProductItem.Any())
+            {
+                <div class="devices mb-block-content mb-block-content">
+                    <div class="title line uppercase center">
+                        <h2 class="sub">@Model.WebsiteModulesItems.FirstOrDefault().Name</h2>
+                    </div>
+                    <div class="slide-devices">
+                        <div class="owl-carousel owl-theme">
+                            @foreach (ProductItem item in Model.WebsiteModulesItems.FirstOrDefault().ListProductItem)
+                            {
+                                image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                <div class="item">
+                                    <div class="left">
+                                        <img src="@Utility.GetUrlPicture(WebConfig.PathServer, item.UrlPicture)"
+                                             alt="@item.Name"
+                                             width="@image.Width" height="@image.Height" loading="lazy">
+                                    </div>
+                                    <div class="right">
+                                        <h3>@item.Name</h3>
+                                        <div class="detail-content">@Html.Raw(item.Content)</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.ListProductItemJson.Any())
+            {
+                <div class="product-other mb-block-content">
+                    <div class="title line-left-red">
+                        <h2 class="sub">@ResourceData.Resource("SanPhamKhac", ViewBag.Lang)</h2>
+                    </div>
+                    <div class="slide-product-other">
+                        <div class="owl-carousel owl-theme">
+                            @foreach (WebsiteProductItemJson item in Model.ListProductItemJson)
+                            {
+                                image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                <div class="item item-product">
+                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item .LinkUrl)" title="@item.Name" class="img">
+                                        <img src="@Utility.GetUrlPicture(WebConfig.PathServer, item.UrlPicture)" alt="@item.Name" width="@image.Width" height="@image.Height" loading="lazy">
+                                    </a>
+                                    <div class="title product-item">
+                                        <h3 class="sub">
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item .LinkUrl)" title="@item.Name">@item.Name</a>
+                                        </h3>
+                                        <div class="sub">
+                                            @item.Title
+                                        </div>
+                                    </div>
+                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item .LinkUrl)" title="@item.Name" class="btn-more triangle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+}

@@ -1,0 +1,154 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Utils
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+}
+
+@if (Model.ModuleItem != null)
+{
+    @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        <div class="banner-slide">
+            <div class="@(Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) > 1 ? "slide owl-carousel owl-theme" : "banner mt-top")">
+                @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3).OrderBy(x => x.AlbumOrderDisplay))
+                {
+                    <div class="item">
+                        <img src="@item.AlbumUrl" alt="@item.AlbumTitle">
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @if (Model.WebsiteModulesItems.Any())
+    {
+        <div class="intro-page-menu no-mb">
+            <div class="container-3 box">
+                @foreach (var module in Model.WebsiteModulesItems.Where(x => x.ParentID == Model.ModuleParentItem.ID).OrderBy(x => x.OrderDisplay))
+                {
+                    <a class="item@(module.ID == Model.ModuleItem.ID ? " active" : string.Empty)" href="@Utility.Link(module.NameAscii, string.Empty, module.LinkUrl)" title="@module.Name">@module.Name</a>
+                }
+            </div>
+        </div>
+    }
+    @if (Model.ListModuleItems.Any())
+    {
+        foreach (var module in Model.ListModuleItems.OrderBy(x => x.OrderDisplay))
+        {
+            switch (module.ModuleTypeCode)
+            {
+                case StaticEnum.Gallery:
+                    {
+                        if (module.ListContentItem.Any())
+                        {
+                            <div class="gallery_images">
+                                <div class="container">
+                                    <h2 class="title">@module.Name</h2>
+                                    <div class="list-gallery owl-carousel owl-theme">
+                                        @foreach (var content in module.ListContentItem)
+                                        {
+                                            <div class="item">
+                                                <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="item-img img-hover">
+                                                    <img src="@content.UrlPicture" alt="@content.Name" />
+                                                </a>
+                                                <div class="item-bottom">
+                                                    <h3 class="name">
+                                                        <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name">
+                                                            @content.Name
+                                                        </a>
+                                                    </h3>
+                                                    <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="btn-see-detail">
+                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        break;
+                    }
+                case StaticEnum.Video:
+                    {
+                        if (module.ListContentItem.Any())
+                        {
+                            <div class="gallery_video">
+                                <div class="container">
+                                    <h2 class="title">@module.Name</h2>
+                                    <div class="list-gallery owl-carousel owl-theme">
+                                        @foreach (var content in module.ListContentItem)
+                                        {
+                                            <div class="item">
+                                                <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="item-img img-hover">
+                                                    <img src="@content.UrlPicture" alt="@content.Name" />
+                                                </a>
+                                                <div class="item-bottom">
+                                                    <h3 class="name">
+                                                        <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name">
+                                                            @content.Name
+                                                        </a>
+                                                    </h3>
+                                                    <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="btn-see-detail">
+                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        break;
+                    }
+                case StaticEnum.Document:
+                    {
+                        if (module.ListContentItem.Any())
+                        {
+                            <div class="gallery-document">
+                                <div class="container">
+                                    <h2 class="title">@module.Name</h2>
+                                    <div class="list-document owl-carousel owl-theme">
+                                        @foreach (var content in module.ListContentItem)
+                                        {
+                                            <div class="item">
+                                                <div class="item-img">
+                                                    <img src="@content.UrlPicture" alt="@content.Name" />
+                                                </div>
+                                                <p>@content.Name</p>
+                                                @if (!string.IsNullOrEmpty(content.LinkFile))
+                                                {
+                                                    <a href="@content.LinkFile" title="@ResourceData.Resource("TaiVe", ViewBag.Lang)" class="btn-see-more">
+                                                        <span>@ResourceData.Resource("TaiVe", ViewBag.Lang)</span>
+                                                        <img src="/html/style/images/icon-download.webp" alt="@ResourceData.Resource("TaiVe", ViewBag.Lang)" />
+                                                    </a>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        break;
+                    }
+            }
+        }
+    }
+}

@@ -1,0 +1,38 @@
+<html>
+<head>
+    <title>Single PDFjs-viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script src="../js/pdfjs-viewer.js"></script>
+    <link rel="stylesheet" href="../css/pdfjs-viewer.css">
+    <script>
+    // Let's initialize the PDFjs library
+    var pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+    </script>
+    <style>
+        .h-50 {
+            height: 50% !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="row h-100 mx-0">
+        <div class="col-12 text-center">
+            <h1>Example for PDFjs-viewer</h1>
+            <p>This is a simple document embeded in a div, integrated with bootstrap</p>
+        </div>
+        <div class="pdfjs-viewer col-8 offset-md-2 h-50">
+        </div>
+    </div>
+</body>
+<script>
+    let pdfViewer = new PDFjsViewer($('.pdfjs-viewer'));
+    pdfViewer.loadDocument("test.pdf").then(function() {
+        pdfViewer.setZoom("fit");
+    });
+</script>
+</html>

@@ -1,0 +1,73 @@
+﻿@using ADCOnline.Simple.Base
+@model Website.Areas.Admin.ViewModels.DepartmentViewModel
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="ModulePositionContent" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.Department.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Tên phòng ban</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.Department.Name">
+                                </div>
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.Department.OrderDisplay" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            $('.back-grid-view').click(function() {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=@(Model.Department.ID)";
+                loadAjax(listItems, "#loadGridView");
+                $('a[href="#tab_search"]').click();
+            });
+            $("#ModulePositionContent").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    Name: "Tên phòng ban bắt buộc nhập."
+                },
+                submitHandler: function() { //onSubmit
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#ModulePositionContent");
+                    return false;
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,100 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Utils
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptChaConfig
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+}
+
+@if (Model.ModuleItem != null)
+{
+    @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        <div class="banner-slide">
+            <div class="@(Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) > 1 ? "slide owl-carousel owl-theme" : "banner mt-top")">
+                @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3).OrderBy(x => x.AlbumOrderDisplay))
+                {
+                    <div class="item">
+                        <img src="@item.AlbumUrl" alt="@item.AlbumTitle">
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @if (Model.WebsiteModulesItems.Any())
+    {
+        <div class="intro-page-menu no-mb">
+            <div class="container-3 box">
+                @foreach (var module in Model.WebsiteModulesItems.Where(x => x.ParentID == Model.ModuleParentItem.ID).OrderBy(x => x.OrderDisplay))
+                {
+                    <a class="item@(module.ID == Model.ModuleItem.ID ? " active" : string.Empty)" href="@Utility.Link(module.NameAscii, string.Empty, module.LinkUrl)" title="@module.Name">@module.Name</a>
+                }
+            </div>
+        </div>
+    }
+    <div class="container">
+        <div class="list-total type-3">
+            <div class="item@(!string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? string.Empty : "full-container")">
+                @if (!string.IsNullOrEmpty(Model.ModuleItem.UrlPicture))
+                {
+                    <div class="item-img img-bg-before">
+                        <img src="@Model.ModuleItem.UrlPicture" alt="@Model.ModuleItem.Name" />
+                    </div>
+                }
+                <div class="text-content">
+                    <h1 class="name">@Model.ModuleItem.Name</h1>
+                    <div class="text detail-content">
+                        @Html.Raw(Model.ModuleItem.Content)
+                    </div>
+                </div>
+            </div>
+            @if (Model.ListContentItemAsync.Any())
+            {
+                int s = 1;
+                <div class="item">
+                    @foreach (var content in Model.ListContentItemAsync.OrderBy(x => x.OrderDisplay).Take(1))
+                    {
+                        <div class="item-img img-bg-before">
+                            <img src="@content.UrlPicture" alt="@content.Name" />
+                        </div>
+                    }
+                    <div class="text-content">
+                        @foreach (var content in Model.ListContentItemAsync.OrderBy(x => x.OrderDisplay))
+                        {
+                            <div class="item-detail-content">
+                                <div class="top@(s==1? " active" : string.Empty)">
+                                    <div class="icon-bar">
+                                        <div class="bar-1"></div>
+                                        <div class="bar-2"></div>
+                                    </div>
+                                    <div class="name">@content.Name</div>
+                                </div>
+                                <div class="text detail-content">
+                                    @Html.Raw(content.Content)
+                                </div>
+                            </div>
+                            s++;
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

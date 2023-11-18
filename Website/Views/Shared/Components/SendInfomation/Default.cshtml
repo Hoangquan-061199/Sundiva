@@ -1,0 +1,11 @@
+﻿@model ModuleViewModels
+
+
+<p>@ResourceData.Resource("DangKyNhanThongTInKhuyenMai", ViewBag.Lang)</p>
+<form id="ReceiverEmailFrm">
+    @Html.AntiForgeryToken()
+    <input type="text" name="Email" required placeholder="@ResourceData.Resource("NhapEmailCuaBan", ViewBag.Lang)">
+    <button type="submit">
+        @Html.Raw(Utility.GetImage(WebConfig.PathServer, "/html/style/images/icon-send.webp", "icon-send"))
+    </button>
+</form>

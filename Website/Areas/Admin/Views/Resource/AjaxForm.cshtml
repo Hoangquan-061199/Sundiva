@@ -1,0 +1,71 @@
+﻿@model Website.Areas.Admin.ViewModels.ResourceViewModel
+@{
+    ViewBag.Title = ViewBag.ActionText + " Quản lý resource";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            $('.back-grid-view').click(function() {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&ItemID=@(Model.Keys)";
+                loadAjax(listItems, "#loadGridView");
+                $('a[href="#tab_search"]').click();
+            });
+            removeObject();
+            $("#AddEditForm").validate({
+                rules: {
+                    Keys: { required: true, maxlength: 255 },
+                    Values: { required: true }
+                },
+                messages: {
+                    Keys: "Mã bắt buộc nhập.",
+                    Values: "Giá trị bắt buộc nhập.",
+                },
+                submitHandler: function() { //onSubmit
+                    Post(urlPostAction, "#AddEditForm");
+                    return false;
+                }
+            });
+            $('.autoPermalinkP').on('keyup', function(e) {
+                e.preventDefault();
+                $(this).val(RemoveToUnicode($(this).val()));
+            });
+        });
+    </script>
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="TypeJson" id="TypeJson" value="@Model.TypeJson" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Mã</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control code autoPermalinkP" name="Keys" id="Keys" value="@Model.Keys" @(ViewBag.Action == "Edit" ? "Readonly" :string.Empty)>
+                                </div>
+                                <label class="col-sm-1">Giá trị</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control not-valid" name="Values" id="Values" value="@Model.Values">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}

@@ -1,0 +1,45 @@
+﻿@model Website.Areas.Admin.ViewModels.BlockIPViewModel
+@using ADCOnline.Utils
+@if (Model.SystemActionAdmin.Edit == true || Model.SystemActionAdmin.Add == true)
+{
+    <form id="ModulePositionContent" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Address IP</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea class="form-control" name="AddressIps">@(Model!=null ? string.Join(",", Model.AddressIp) : string.Empty)</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            $("#ModulePositionContent").validate({
+                submitHandler: function() { //onSubmit
+                    Post(urlPostAction, "#ModulePositionContent");
+                    return false;
+                }
+            });
+        });
+    </script>
+}

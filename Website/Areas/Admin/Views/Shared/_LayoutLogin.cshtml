@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="bg-black">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Application</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- css -->
+    <environment include="Development">
+
+        <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/Content/Admin/css/font-awesome.min.css" rel="stylesheet" />
+        <link href="~/lib/sweetalert/sweetalert.css" rel="stylesheet" />
+        <link href="~/Admin/css/AdminLTE.css" rel="stylesheet" />
+        <link href="~/Common/css/Common.css" rel="stylesheet" />
+        <link href="~/Admin/css/style.css" rel="stylesheet" />
+
+    </environment>
+    <!--Script-->
+    <environment include="Development">
+        <script src="~/lib/jquery/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+        <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+        <script src="~/lib/jquery/js/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery/js/jquery.form.min.js"></script>
+        <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
+        <script src="~/Common/js/Common.js"></script>
+    </environment>
+
+</head>
+<body class="hold-transition bg-black">
+    <div class="display-flex">
+        <div class="form-box flex-content">
+            <div class="logo-lg">
+                <div><img src="~/Admin/images/adcvietnam.png" width="70%" /></div>
+                <div class="header">Đăng nhập</div>
+                <p>Hệ quản trị CMS ADC Sofware</p>
+            </div>
+            @RenderBody()
+            <div class="footer text-center">
+                <i>© 2019. By adcvietnam.net</i>
+            </div>
+        </div>
+
+    </div>
+    <!-- jQuery 2.0.2 -->
+    <script>
+        $('.display-flex').height($(window).height());
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+﻿@model ADCOnline.Simple.Json.SystemConfigJson
+@if (Model != null)
+{
+    <link rel="shortcut icon" type="image/x-icon" href="@(Model!=null && !string.IsNullOrEmpty(Model.favicon) ? Model.favicon : "/favicon.ico")" />
+}
+else{
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+}

@@ -1,0 +1,73 @@
+﻿@model ModuleViewModels
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = "noodp,noindex,nofollow";
+    ViewBag.LangModule = Model.ModuleItem.Lang;
+}
+@if (Model.ModuleItem != null)
+{
+    <div class="banner">
+        <div class="img-banner">
+            @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+            {
+                @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                {
+                    <img src="@item.AlbumUrl" alt="@Model.ModuleItem.Name">
+                }
+            }
+            else
+            {
+                <img src="/Upload/banner-service.webp" alt="@Model.ModuleItem.Name">
+            }
+        </div>
+        <div class="container">
+            <div class="title">
+                <h1>@Model.ModuleItem.Name</h1>
+                <div class="breadcrumb">
+                    <ul>
+                        <li>
+                            <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                                @ResourceData.Resource("TrangChu",
+                            ViewBag.Lang)
+                            </a> /
+                        </li>
+                        <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+                        <li>
+                            @Model.ModuleItem.Name
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="detail-news">
+        <div class="container">
+            <div class="title center">
+                <h1>@Html.Raw(Model.ModuleItem.Name)</h1>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.ModuleItem.Content))
+            {
+                <div class="detail-content">
+                    @Html.Raw(Model.ModuleItem.Content)
+                </div>
+            }
+            else
+            {
+                <p class="center update">@Html.Raw(ResourceData.Resource("DangCapNhat", ViewBag.Lang))</p>
+            }
+        </div>
+    </div>
+}

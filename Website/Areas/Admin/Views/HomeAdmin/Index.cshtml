@@ -1,0 +1,252 @@
+﻿@using ADCOnline.Utils
+@using Website.Utils
+@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewBag.Home = true;
+    var session = new SessionBase(Context);
+}
+<section class="content">
+    <div class="box-about-home">
+        <div class="col-sm-12">
+            <div class="title-content clearfix tlt_bd_bottom">
+                <ul class="nav nav-tabs nav-tabs-ed pull-left">
+                    <li class="list_tabsct active">
+                        <a href="#tab_dashboard" class="btn-action" data-toggle="tab" aria-expanded="true" title="Thống kê"><span class="lnr lnr-list"></span> Thống kê</a>
+                    </li>
+                    <li class="list_tabsct">
+                        <a href="#tab_admin" class="btn-action" data-toggle="tab" aria-expanded="true" title="Hỗ trợ"><span class="lnr lnr-list"></span> Hỗ trợ</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active fade in" id="tab_dashboard">
+                    @if (Model.StatisticalAdmins != null)
+                    {
+                        <div class="list-main">
+                            @foreach (var item in Model.StatisticalAdmins)
+                            {
+                                switch (item.Name)
+                                {
+                                    case "Order":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "Order"))
+                                            {
+                                                <div class="it-main sell">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Đơn hàng</div>
+                                                    <a href="/@WebConfig.AdminAlias/Order/Index" title="Đơn hàng" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }
+                                    @*case "Product":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "Product"))
+                                            {
+                                                <div class="it-main pro">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Sản phẩm</div>
+                                                    <a href="/@WebConfig.AdminAlias/Product/Index" title="Sản phẩm" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }*@
+                                    @*case "WebsiteModuleProduct":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "WebsiteModuleProduct"))
+                                            {
+                                                <div class="it-main pro">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Danh mục sản phẩm</div>
+                                                    <a href="/@WebConfig.AdminAlias/WebsiteModuleProduct/Index" title="Sản phẩm" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }*@
+                                    @*case "TradeMark":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "TradeMark"))
+                                            {
+                                                <div class="it-main pro">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Hãng sản xuất</div>
+                                                    <a href="/@WebConfig.AdminAlias/TradeMark/Index" title="Hãng sản xuất" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }*@
+                                    @*case "Comment":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "Comment"))
+                                            {
+                                                <div class="it-main cmt">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Đánh giá & Bình luận</div>
+                                                    <a href="/@WebConfig.AdminAlias/Comment/Index" title="Đánh giá & Bình luận" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }*@
+                                   @* case "Rate":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "Rate"))
+                                            {
+                                                <div class="it-main cmt">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Đánh giá</div>
+                                                    <a href="/@WebConfig.AdminAlias/Rate/Index" title="Đánh giá" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }*@
+                                    case "WebsiteContent":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "WebsiteContent"))
+                                            {
+                                                <div class="it-main cate">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Bài viết</div>
+                                                    <a href="/@WebConfig.AdminAlias/WebsiteContent/Index" title="Bài viết" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+
+                                            break;
+                                        }
+                                    case "WebsiteModuleContent":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "WebsiteModuleContent"))
+                                            {
+                                                <div class="it-main cate">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Danh mục bài viết</div>
+                                                    <a href="/@WebConfig.AdminAlias/WebsiteModuleContent/Index" title="Bài viết" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }
+                                    case "ContactUs":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "ContactUs"))
+                                            {
+                                                <div class="it-main cate">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Liên hệ</div>
+                                                    <a href="/@WebConfig.AdminAlias/ContactUs/Index" title="Yêu cầu" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }
+                                    case "Advisor":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "Advisor"))
+                                            {
+                                                <div class="it-main cate">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Yêu cầu tư vấn</div>
+                                                    <a href="/@WebConfig.AdminAlias/Advisor/Index" title="Yêu cầu" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }
+                                    case "Question":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "Question"))
+                                            {
+                                                <div class="it-main cate">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Hỏi đáp</div>
+                                                    <a href="/@WebConfig.AdminAlias/Question/Index" title="Hỏi đáp" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }
+                                    case "DistributionSystem":
+                                        {
+                                            if (Model.ListModule.Any(x => x.Tag == "DistributionSystem"))
+                                            {
+                                                <div class="it-main cate">
+                                                    <div class="text-main"><div class="des-main">@item.Total</div>Đại lý</div>
+                                                    <a href="/@WebConfig.AdminAlias/DistributionSystem/Index" title="Đại lý" class="cl-xt">
+                                                        <span>Xem thêm</span>
+                                                        <span class="lnr lnr-arrow-right-circle"></span>
+                                                    </a>
+                                                </div>
+                                            }
+                                            break;
+                                        }
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane fade" id="tab_admin">
+                    <div class="detail-about-home">
+                        <h2 class="title-abous">Thông tin về công ty</h2>
+                        <h4 class="title-abous">Công ty Cổ phần TM và phát triển công nghệ ứng dụng Việt Nam</h4>
+                        <p>
+                            Tên giao dịch quốc tế là Vietnam Applied Technology Development And Commerce Joint Stock Company - ADC là đơn vị hoạt động chuyên nghiệp trong lĩnh vực phát triển phần mềm, thương mại điện tử và tích hợp hệ thống công nghệ thông tin.
+                        </p>
+                        <p>
+                            Mục tiêu của <strong>ADC Viêt Nam</strong> là hỗ trợ các đơn vị kinh tế, xã hội tham gia hoạt động tuyên truyền, quảng bá, kinh doanh trên mạng internet toàn cầu đạt hiệu quả cao nhất với mức chi phí thấp nhất.
+                        </p>
+                        <p>
+                            <strong>ADC Viêt Nam</strong> luôn đi đầu trong việc nghiên cứu, phát triển và cung cấp các giải pháp, chương trình phần mềm quản trị nội bộ và các phần mềm hoạt động trong môi trường mạng.
+                        </p>
+                        <p>
+                            Các sản phẩm của <strong>ADC Viêt Nam</strong> đều được phát triển dựa trên đòi hỏi từ thực tiễn và phải đáp ứng, giải quyết ngay lập tức các yêu cầu về quản trị, điều hành, kinh doanh của Khách hàng cũng như các yêu cầu về phát triển, mở rộng của Khách hàng trong tương lai.
+                        </p>
+                        <p>
+                            Điểm nổi bật, mạnh mẽ nhất của các giải pháp, sản phẩm do <strong>ADC Viêt Nam</strong> cung cấp chính là phát huy khả năng sáng tạo của Khách hàng. Khách hàng dễ dàng làm chủ các công nghệ, kỹ thuật cũng như dễ dàng thể hiện và điều hành các hoạt động diễn theo ý đồ và mục đích của mình khi sử dụng các sản phẩm của ADC trong quản trị các hoạt động của mình.
+                        </p>
+                        <p>
+                            Song song với việc cung cấp các giải pháp, sản phẩm cho các tổ chức, <strong>ADC Viêt Nam</strong> còn là một nhà tư vấn và phát triển chuyên nghiệp, uy tín trong chương trình xây dựng và phát triển các mạng thông tin, mạng thương mại, mạng chuyên ngành ở phạm vi quốc gia, khu vực và toàn cầu.
+                        </p>
+                        Thành công và sức mạnh của <strong>ADC Viêt Nam</strong> được thể hiện trong việc hợp tác chặt chẽ và hiệu quả với các chuyên gia hàng đầu thuộc các ngành, lĩnh vực kinh tế, xã hội khác cũng như phát huy tối đa sức sáng tạo, tinh thần đoàn kết, tự chủ của tập thể các cán bộ trẻ trung, năng động đang làm việc tại ADC Việt Nam.
+                        Với Kim chỉ nam hành động là "Hợp tác để vượt qua mọi rào cản và thách thức"
+                        <strong>ADC Viêt Nam</strong> mong muốn được hợp tác, cùng phát triển với các Bạn !
+                        </p>
+                        <div class="title">
+                            Liên hệ:
+                            <strong>Mr.Quang Kỹ thuật</strong>: <i> 0936 399 255</i> -
+                            <strong>Mr.Vương Kỹ thuật</strong>: <i> 0983 773 986</i> -
+                            <strong>Mr.Nam Kinh doanh</strong>: <i>0902 211 365</i> -
+                            <strong>Mr.Minh Kế toán</strong>: <i>0904 134 445</i>
+                        </div>
+                        <div class="coy-right-home">
+                            ©2002-2020 ADC Joint Stock Company <a href="https://www.adcvietnam.net" title="">adcvietnam.net</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<style>
+    .grid-home > div { font-weight: 600; text-transform: uppercase; font-size: 18px; display: block; margin-bottom: 10px; }
+        .grid-home > div a { font-size: 14px; float: right; text-transform: initial; color: #43b6d7; }
+</style>

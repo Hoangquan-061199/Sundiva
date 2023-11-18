@@ -1,0 +1,206 @@
+﻿@using ADCOnline.Simple.Base
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.SubItemViewModel
+@if (Model.SystemActionAdmin.Add || Model.SystemActionAdmin.Edit)
+{
+    <form id="SubItemContent" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.SubItem.ID" />
+            @if (!string.IsNullOrEmpty(Model.WebsiteContent.Name))
+            {
+                <input type="hidden" name="ContentID" id="ContentID" value="@Model.WebsiteContent.ID" />
+                <input type="hidden" name="ModuleTypeCode" id="ModuleTypeCode" value="@StaticEnum.Content" />
+            }
+            @if (!string.IsNullOrEmpty(Model.Product.Name))
+            {
+                <input type="hidden" name="ProductID" id="ProductID" value="@Model.Product.ID" />
+                <input type="hidden" name="ModuleTypeCode" id="ModuleTypeCode" value="@StaticEnum.Product" />
+            }
+            @if (!string.IsNullOrEmpty(Model.WebsiteModule.Name))
+            {
+                <input type="hidden" name="ModuleID" id="ModuleID" value="@Model.WebsiteModule.ID" />
+                <input type="hidden" name="ModuleTypeCode" id="ModuleTypeCode" value="@StaticEnum.Module" />
+            }
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                        <li role="presentation"><a href="#TabCollection" aria-controls="TabCollection" role="tab" data-toggle="tab">Bộ suu tập</a></li>
+                        @*<li role="presentation"><a href="#TabWedding" aria-controls="TabWedding" role="tab" data-toggle="tab">Trang sức cưới</a></li>*@
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Tiêu đề</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.SubItem.Name" placeholder="@Model.SubItem.Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Link</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control link" name="Link" id="Link" value="@Model.SubItem.Link" placeholder="@Model.SubItem.Link">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ảnh</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="background:transparent;padding-right:10px;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm"><span class="lnr lnr-upload" style="margin-right:5px;"></span>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="@Model.SubItem.UrlPicture" />
+                                    </div>
+                                    <div id="AddAvatar">
+                                        @if (Model.SubItem.UrlPicture != null)
+                                        {
+                                            <table class="removeParent text-center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <img style="max-width:100px;max-height:100px;" src="@Model.SubItem.UrlPicture">
+                                                            <input type="hidden" name="UrlPicture" value="@Model.SubItem.UrlPicture">
+                                                            <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                                @if (Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.SubItem.OrderDisplay" placeholder="@Model.SubItem.OrderDisplay" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">Mô tả</div>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="Content" name="Content" class="form-control">@Model.SubItem.Content</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="TabCollection">
+                            <div class="grid-collection">
+                                @if (Model.AlbumImageAdmins != null)
+                                {
+                                    foreach (var item in Model.AlbumImageAdmins.OrderBy(x => x.ImageOrder))
+                                    {
+                                        <div class="item-collection">
+                                            <div class="form-group">
+                                                <div class="col-sm-1">Link</div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" value="@item.ImageLink" name="ImageLink" class="form-control" placeholder="Link" />
+                                                </div>
+                                                <div class="col-sm-1">Tọa độ</div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" value="@item.ImageSize.Replace(",","|")" name="ImageSize" class="form-control size" placeholder="Tọa độ" />
+                                                </div>
+                                                <div class="col-sm-1">Thứ tự</div>
+                                                <div class="col-sm-1">
+                                                    <input type="number" value="@item.ImageOrder" name="ImageOrder" class="form-control" placeholder="Thứ tự" />
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <a href="javascript:" rel="nofollow" title="xóa" class="btn btn-info remove-collection">Xóa</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <a href="javascript:" class="btn btn-info add-collection">Thêm</a>
+                        </div>
+                    </div>
+                    <script>
+                        $(function() {
+                            $('.add-collection').click(function() {
+                                var html = `<div class="item-collection">
+                                                                                                        <div class="form-group">
+                                                                                                            <div class="col-sm-1">Link</div>
+                                                                                                            <div class="col-sm-3">
+                                                                                                                <input type="text" value="" name="ImageLink" class="form-control" placeholder="Link" />
+                                                                                                            </div>
+                                                                                                            <div class="col-sm-1">Tọa độ</div>
+                                                                                                            <div class="col-sm-3">
+                                                                                                                <input type="text" value="" name="ImageSize" class="form-control size" placeholder="Tọa độ" />
+                                                                                                            </div>
+                                                                                                            <div class="col-sm-1">Thứ tự</div>
+                                                                                                            <div class="col-sm-1">
+                                                                                                                <input type="number" value="" name="ImageOrder" class="form-control" placeholder="Thứ tự" />
+                                                                                                            </div>
+                                                                                                            <div class="col-sm-1">
+                                                                                                                <a href="javascript:" rel="nofollow" title="xóa" class="btn btn-info remove-collection">Xóa</a>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>`;
+                                $('.grid-collection').append(html);
+                                size();
+                            });
+                            $('.remove-collection').click(function() {
+                                $(this).parents('.item-collection').remove();
+                            });
+                            size();
+                            function size() {
+                                $('.size').keyup(function() {
+                                    var val = $(this).val();
+                                    $(this).val(val.replace(/,/g, '|'));
+                                });
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            LoadCKEDITOR('Content', true);
+            $("#SubItemContent").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    Name: "Bạn cần nhập tiêu đề"
+                },
+                submitHandler: function() { //onSubmit
+                    updateEditor();
+                    Post(urlPostAction, "#SubItemContent");
+                    return false;
+                }
+            });
+            $('#SelectModule').on('click', function() {
+                ModalADC.Open({
+                    title: "Chọn module",
+                    urlLoad: '@Url.Action("AjaxTreeSelect", "WebsiteModule")?MutilFile=True&Container=ModuleValues&ValuesSelected=' + $("#Value_ModuleValues").val(),
+                    bottom: false
+                });
+            });
+            $('#SelectModuleType').on('click', function() {
+                ModalADC.Open({
+                    title: "Chọn nội dung hiển thị",
+                    urlLoad: '@Url.Action("AjaxCheckbox", "ModuleType")?ValuesSelected=' + $("#ValueModuleType").val(),
+                    bottom: false
+                });
+            });
+        });
+    </script>
+}

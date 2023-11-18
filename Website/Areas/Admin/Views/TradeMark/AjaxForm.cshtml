@@ -1,0 +1,555 @@
+﻿@using Website.Utils
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.WebsiteModuleViewModel
+@{
+    bool Attr = false;
+}
+@if (Model.SystemActionAdmin.Add || Model.SystemActionAdmin.Edit)
+{
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.WebsiteModule.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab=="TabGenaral" ? "active" : string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab=="TabContent" ? "active" : string.Empty)"><a href="#TabContent" aria-controls="TabContent" role="tab" data-toggle="tab">Nội dung</a></li>
+                        @if (Attr == true)
+                        {
+                            <li role="presentation" class="@(ViewBag.Tab=="TabAttr" ? "active" : string.Empty)"><a href="#TabAttr" aria-controls="TabAttr" role="tab" data-toggle="tab">Thuộc tính</a></li>
+                        }
+                        <li role="presentation" class="@(ViewBag.Tab=="TabCEO" ? "active" : string.Empty)"><a href="#TabCEO" aria-controls="TabCEO" role="tab" data-toggle="tab">SEO</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab=="TabAlbum" ? "active" : string.Empty)"><a href="#TabAlbum" aria-controls="TabAlbum" role="tab" data-toggle="tab">Hình ảnh</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab=="TabGenaral" ? "active" : string.Empty)" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Tên thương hiệu</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" maxlength="70" class="form-control title count @(ViewBag.Action.Equals("Add") ? "autoPermalink" : "" )" autocomplete="off" name="Name" id="Name" value="@Model.WebsiteModule.Name" placeholder="" />
+                                </div>
+                                <div class="col-sm-3"><span class="Val-Name"><span><b>0</b> ký tự <b>0</b> từ</span> (Khuyến cáo 10 - 70 ký tự)</span></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Link</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control link" name="NameAscii" id="NameAscci" value="@Model.WebsiteModule.NameAscii" placeholder="Link" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Kiểu hiển thị</label>
+                                </div>
+                                <div class="col-sm-1">
+                                    <select name="ModuleTypeCode" id="ModuleTypeCode" class="form-control" readonly>
+                                        @foreach (var item in Model.ListModuleType.OrderBy(c => c.Name))
+                                        {
+                                            <option value="@item.Code" @(item.Code != StaticEnum.Trademark ? "disabled" : string.Empty) @((item.Code == Model.WebsiteModule.ModuleTypeCode || item.Code == StaticEnum.Trademark) ? " selected" : string.Empty)>@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Thương hiệu cha</label>
+                                </div>
+                                <div class="col-sm-1">
+                                    <select name="ParentID" id="ParentID" class="form-control">
+                                        <option value="0">-- Chọn --</option>
+                                        @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                                        {
+                                            foreach (var item in Model.ListItem.Where(p => ConvertUtil.ToInt32(p.ParentID) == 0).OrderBy(p => p.OrderDisplay))
+                                            {
+                                                <option value="@item.ID" @((item.ID == Model.WebsiteModule.ParentID) ? " selected" : string.Empty)>@item.Name</option>
+                                                foreach (var child in Model.ListItem.Where(p => p.ParentID == item.ID).OrderBy(p => p.OrderDisplay))
+                                                {
+                                                    <option value="@child.ID" @((child.ID == Model.WebsiteModule.ParentID) ? " selected" : string.Empty)>----@child.Name</option>
+
+                                                    foreach (var child2 in Model.ListItem.Where(p => p.ParentID == child.ID).OrderBy(p => p.OrderDisplay))
+                                                    {
+                                                        <option value="@child2.ID" @((child2.ID == Model.WebsiteModule.ParentID) ? " selected" : string.Empty)>-------@child2.Name</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                @*<div class="col-sm-1">
+                            <label>Kiểu sản phẩm</label>
+                            </div>
+                            <div class="col-sm-1">
+                            <select name="TypeView" id="TypeView" class="form-control">
+                            <option value="">-- Chọn</option>
+                            <option value="@StaticEnum.TypeProductI" @(Model.WebsiteModule.TypeView == StaticEnum.TypeProductI ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.TypeProductI)</option>
+                            <option value="@StaticEnum.TypeProductII" @(Model.WebsiteModule.TypeView == StaticEnum.TypeProductII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.TypeProductII)</option>
+                            </select>
+                            </div>*@
+                                @if (Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber text-center" id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.WebsiteModule.OrderDisplay" placeholder="Thứ tự" autocomplete="off" />
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Active == true || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>
+                                            <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.WebsiteModule.IsShow == false) ? "" : "checked") />
+                                            <input type="hidden" name="IsShow" value="false" />
+                                        </label>
+                                        <label for="IsShow">Hiện</label>
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Sitemap == true || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>
+                                            <input type="checkbox" name="IsSitemap" id="IsSitemap" value="True" @((Model.WebsiteModule.IsSitemap == false) ? "" : "checked") />
+                                            <input type="hidden" name="IsSitemap" value="false" />
+                                        </label>
+                                        <label for="IsSitemap">Thêm Sitemap</label>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Vị trí</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="PositionIds" id="ValueModulePosition" value="@Model.WebsiteModule.PositionIds" />
+                                    <button id="SelectModule" type="button" class="primaryAction btn btn-info btn-sm">Chọn vị trí</button>
+                                    <div id="TextModulePosition" class="checkBoxValues">@string.Join(", ", Model.ListModulePosition.Select(c => c.Name))</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Link url (nếu có)</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control link" name="LinkUrl" id="LinkUrl" value="@Model.WebsiteModule.LinkUrl" placeholder="Link url" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Mô tả ngắn</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea rows="5" id="Description" name="Description" placeholder="Mô tả ngắn" class="form-control">@Model.WebsiteModule.Description</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Logo</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" style="margin:0;" value="@Model.WebsiteModule.UrlPicture" />
+                                    </div>
+                                    <div id="AddAvatar">
+                                        @if (Model.WebsiteModule.UrlPicture != null)
+                                        {
+                                            <table class="removeParent">
+                                                <tr>
+                                                    <td>
+                                                        <img style="width: 100px; max-height: 100px;" src="@Model.WebsiteModule.UrlPicture">
+                                                        <input type="hidden" name="UrlPicture" value="@Model.WebsiteModule.UrlPicture">
+                                                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab=="TabAlbum" ? "active" : string.Empty)" id="TabAlbum">
+                            <div class="form-group">
+                                @*<div class="col-sm-1">
+                            <label>Logo</label>
+                            </div>
+                            <div class="col-sm-5 changeUrlTinyMceParent">
+                            <div class="input-group">
+                            <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                            </span>
+                            <input type="text" class="changeUrlTinyMce form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" style="margin:0;" value="@Model.WebsiteModule.UrlPicture" />
+                            </div>
+                            <div id="AddAvatar">
+                            @if (Model.WebsiteModule.UrlPicture != null)
+                            {
+                            <table class="removeParent">
+                            <tr>
+                            <td>
+                            <img style="width: 100px; max-height: 100px;" src="@Model.WebsiteModule.UrlPicture">
+                            <input type="hidden" name="UrlPicture" value="@Model.WebsiteModule.UrlPicture">
+                            <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                            </td>
+                            </tr>
+                            </table>
+                            }
+                            </div>
+                            </div>*@
+                                @*<div class="col-sm-1">
+                            <label>Logo nhỏ</label>
+                            </div>
+                            <div class="col-sm-5 changeUrlTinyMceParent">
+                            <div class="input-group">
+                            <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                            <button type="button" onclick="SelectFileTyniMce('AddIcon','Icon',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                            </span>
+                            <input type="text" class="changeUrlTinyMce form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddIcon', 'Icon',0)" style="margin:0;" value="@Model.WebsiteModule.Icon" />
+                            </div>
+                            <div id="AddIcon">
+                            @if (Model.WebsiteModule.Icon != null)
+                            {
+                            <table class="removeParent">
+                            <tr>
+                            <td>
+                            <img style="width: 100px; max-height: 100px;" src="@Model.WebsiteModule.Icon">
+                            <input type="hidden" name="UrlPicture" value="@Model.WebsiteModule.Icon">
+                            <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                            </td>
+                            </tr>
+                            </table>
+                            }
+                            </div>
+                            </div>*@
+                            </div>
+                            @*<div class="form-group">
+                        <div class="col-sm-1">
+                        <label>Màu nền chính</label>
+                        </div>
+                        <div class="col-sm-5">
+                        <input type="text" class="form-control" name="BackgroundColor" id="BackgroundColor" value="@Model.WebsiteModule.BackgroundColor" placeholder="@Model.WebsiteModule.BackgroundColor" />
+                        <span>Ví dụ: #ffffff;</span>
+                        </div>
+                        <div class="col-sm-1">
+                        <label>Nền đầu trang (1920x896)</label>
+                        </div>
+                        <div class="col-sm-5 changeUrlTinyMceParent">
+                        <div class="input-group">
+                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;vertical-align:top;">
+                        <button type="button" onclick="SelectFileTyniMce('AddHeader','BackgroundHeader',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                        </span>
+                        <input type="text" class="changeUrlTinyMce form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddHeader', 'BackgroundHeader',0)" style="margin:0;" value="@Model.WebsiteModule.BackgroundHeader" />
+                        </div>
+                        <div id="AddHeader">
+                        @if (!string.IsNullOrEmpty(Model.WebsiteModule.BackgroundHeader))
+                        {
+                        <table class="removeParent">
+                        <tr>
+                        <td>
+                        <img style="width: 100px; max-height: 100px;" src="@Model.WebsiteModule.BackgroundHeader">
+                        <input type="hidden" name="BackgroundHeader" value="@Model.WebsiteModule.BackgroundHeader">
+                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                        </td>
+                        </tr>
+                        </table>
+                        }
+                        </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                        <div class="col-sm-1">
+                        <label>Nền Chính (1920x1269)</label>
+                        </div>
+                        <div class="col-sm-5 changeUrlTinyMceParent">
+                        <div class="input-group">
+                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;vertical-align:top;">
+                        <button type="button" onclick="SelectFileTyniMce('AddIndex','BackgroundIndex',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                        </span>
+                        <input type="text" class="changeUrlTinyMce form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddIndex', 'BackgroundIndex',0)" style="margin:0;" value="@Model.WebsiteModule.BackgroundIndex" />
+                        </div>
+                        <div id="AddIndex">
+                        @if (!string.IsNullOrEmpty(Model.WebsiteModule.BackgroundIndex))
+                        {
+                        <table class="removeParent">
+                        <tr>
+                        <td>
+                        <img style="width: 100px; max-height: 100px;" src="@Model.WebsiteModule.BackgroundIndex">
+                        <input type="hidden" name="BackgroundIndex" value="@Model.WebsiteModule.BackgroundIndex">
+                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                        </td>
+                        </tr>
+                        </table>
+                        }
+                        </div>
+                        </div>
+                        <div class="col-sm-1">
+                        <label>Nền chân trang (1920x568)</label>
+                        </div>
+                        <div class="col-sm-5 changeUrlTinyMceParent">
+                        <div class="input-group">
+                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;vertical-align:top;">
+                        <button type="button" onclick="SelectFileTyniMce('AddFooter','BackgroundFooter',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                        </span>
+                        <input type="text" class="changeUrlTinyMce form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddFooter', 'BackgroundFooter',0)" style="margin:0;" value="@Model.WebsiteModule.BackgroundFooter" />
+                        </div>
+                        <div id="AddFooter">
+                        @if (Model.WebsiteModule.BackgroundFooter != null)
+                        {
+                        <table class="removeParent">
+                        <tr>
+                        <td>
+                        <img style="width: 100px; max-height: 100px;" src="@Model.WebsiteModule.BackgroundFooter">
+                        <input type="hidden" name="BackgroundFooter" value="@Model.WebsiteModule.BackgroundFooter">
+                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                        </td>
+                        </tr>
+                        </table>
+                        }
+                        </div>
+                        </div>
+                        </div>*@
+                            <div class="input-group">
+                                <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                    <button type="button" onclick="SelectFileTyniMce('AddAlbum','AlbumUrl',1);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                </span>
+                                <input type="text" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this), 'AddAlbum', 'AlbumUrl',1)" style="margin:0;" value="" class="form-control" />
+                            </div>
+                            <div class="lst-gallery" id="AddAlbum">
+                                @if (Model.ListAlbumGalleryAdmin != null && Model.ListAlbumGalleryAdmin.Count > 0)
+                                {
+                                    foreach (var item in Model.ListAlbumGalleryAdmin)
+                                    {
+                                        <table class="table removeParent">
+                                            <tr>
+                                                <td rowspan="2" style="width:50px;">
+                                                    <img style="width: 50px; height: 50px;" src="@item.AlbumUrl">
+                                                    <input type="hidden" name="AlbumUrl" value="@item.AlbumUrl">
+                                                    <a href="javascript:void(0);" class="removeObject">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                                <td style="width:100px;text-align:left;"><b>Tiêu đề</b></td>
+                                                <td><input class="form-control" type="text" name="AlbumTitle" value="@item.AlbumTitle"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:left;"><b>Alt/Link</b></td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="AlbumAlt" value="@item.AlbumAlt">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" style="text-align:center;width:70px;display: inline-block;" class="form-control" name="AlbumOrderDisplay" value="@item.AlbumOrderDisplay" placeholder="Thứ tự"></td>
+                                                <td style="text-align:left;"><b>Loại</b></td>
+                                                <td>
+                                                    <select name='AlbumType' class="form-control" style="width:200px;display:inline-block;">
+                                                        <option value='0' @(item.AlbumType == 0 ? "selected" : "")>Ảnh/Background</option>
+                                                        <option value='1' @(item.AlbumType == 1 ? "selected" : "")>Icon (Ảnh nhỏ bộ sưu tập)</option>
+                                                        @*<option value='2' @(item.AlbumType == 2 ? "selected" : "")>Icon trang chủ</option>*@
+                                                        <option value='3' @(item.AlbumType == 3 ? "selected" : "")>Banner (@Temp.SizeImage("Banner"))</option>
+                                                        @*<option value='4' @(item.AlbumType == 4 ? "selected" : "")>Slide thư viện</option>*@
+                                                        @*<option value='5' @(item.AlbumType == 5 ? "selected" : "")>Banner ngoài danh mục cha</option>*@
+                                                        @*<option value='6' @(item.AlbumType == 6 ? "selected" : "")>Popup</option>*@
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    }
+                                }
+                            </div>
+                            <a href="javascript:" class="btn btn-info" onclick="removeAllAlbum('AddAlbum')">Xóa tất cả</a>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab=="TabContent" ? "active" : string.Empty)" id="TabContent">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Nội dung</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="Content" name="Content" class="form-control">@Model.WebsiteModule.Content</textarea>
+                                </div>
+                            </div>
+                            <div class="grid-note">
+                                <span>Ghi chú/Giải thích:</span>
+                                <div class="note-content" style="display:block;">
+                                    <p><b>Nội dung</b>: Nội dung của danh mục</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab=="TabCEO" ? "active" : string.Empty)" id="TabCEO">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>SEO Description</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" maxlength="300" class="form-control title count" name="SeoDescription" id="SeoDescription" value="@Model.WebsiteModule.SeoDescription" placeholder="@Model.WebsiteModule.SeoDescription" />
+                                </div>
+                                <div class="col-sm-3"><span class="Val-SeoDescription"><span><b>0</b> ký tự <b>0</b> từ</span> (Khuyến cáo 150 - 300 ký tự)</span></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>SEO Title</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" maxlength="70" class="form-control title count" name="SEOTitle" id="SEOTitle" value="@Model.WebsiteModule.SEOTitle" placeholder="@Model.WebsiteModule.SEOTitle" />
+                                </div>
+                                <div class="col-sm-3"><span class="Val-SEOTitle"><span><b>0</b> ký tự <b>0</b> từ</span> (Khuyến cáo 10 - 70 ký tự)</span></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>SEO Keyword</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="SeoKeyword" id="SeoKeyword" value="@Model.WebsiteModule.SeoKeyword" placeholder="@Model.WebsiteModule.SeoKeyword" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label for="IsIndexGG">
+                                        Index google
+                                        <input type="checkbox" name="IsIndexGG" id="IsIndexGG" value="true" @((Model.WebsiteModule.IndexGoogle == "noodp,noindex,nofollow") ? "" : "checked") />
+                                        <input type="hidden" name="IndexGoogle" id="IndexGoogle" value="@(!string.IsNullOrEmpty(Model.WebsiteModule.IndexGoogle) ? Model.WebsiteModule.IndexGoogle : "noodp,index,follow")" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab=="TabAttr" ? "active" : string.Empty)" id="TabAttr">
+                            @foreach (var item in Model.AttributesAdmins.Where(c => c.ParentID == 0).OrderBy(c => c.OrderDisplay))
+                            {
+                                <div class="form-group parent-ittr-select" style="border-bottom: 1px solid #ccc;">
+                                    <div class="col-sm-1">
+                                        <label style="font-weight:bold">
+                                            <input type="checkbox" name="AttributeModuleIdsCal" value="@item.ID" @(("," + Model.WebsiteModule.AttributeModuleIdsCal + ",").Contains("," + item.ID + ",") ? "checked" : string.Empty) />
+                                            Tính toán
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <label style="font-weight:bold">
+                                            <input type="checkbox" class="parr-attr parr-attr-@item.ID" name="AttributeProductIds" value="@item.ID" @(("," + Model.WebsiteModule.AttributeModuleIds + ",").Contains("," + item.ID + ",") ? "checked" : string.Empty) />
+                                            @item.Name:
+                                        </label>
+                                        <i class="fa fa-long-arrow-right" aria-hidden="true" style="margin-left:10px;cursor:pointer;"></i>
+                                    </div>
+                                    <div class="col-sm-9 show-child-attr" style="border-left:1px solid #cdcdcd;display:none;">
+                                        <div class="form-group">
+                                            @foreach (var itemC in Model.AttributesAdmins.Where(c => c.ParentID == item.ID).OrderBy(c => c.OrderDisplay))
+                                            {
+                                                <div class="col-sm-2">
+                                                    <label>
+                                                        <input type="checkbox" class="child-attr" data-parent="@item.ID" name="AttributeProductIds" value="@itemC.ID" @(("," + Model.WebsiteModule.AttributeModuleIds + ",").Contains("," + itemC.ID + ",") ? "checked" : string.Empty) />
+                                                        @itemC.Name
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <link href="/lib/jquery/css/sumoselect.css" rel="stylesheet" />
+    <script src="/lib/jquery/js/jquery.sumoselect.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            $('.back-grid-view').click(function() {
+                var moduleId = '@(Model.WebsiteModule.ID)';
+                if (moduleId != '0') {
+                    var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&ModuleId=" + moduleId;
+                    loadAjax(listItems, "#loadGridView");
+                }
+                $('a[href="#tab_search"]').click();
+            });
+            window.testSelAll = $('.LayoutCode').SumoSelect({ search: true, searchText: 'Chọn', csvDispCount: 3, okCancelInMulti: false, selectAll: true });
+            $('#PositionIds').SumoSelect({ search: true, searchText: '-- Chọn banner chung', csvDispCount: 3, okCancelInMulti: false, selectAll: true });
+            removeObject();
+            Count();
+            LoadCKEDITOR('Content', true);
+            $("#AddEditForm").validate({
+                rules: {
+                    Name: { required: true, maxlength: 255 },
+                    ModuleTypeCode: { required: true }
+                },
+                messages: {
+                    Name: "Tên Module bắt buộc nhập.",
+                    ModuleTypeCode: { required: "Kiểu hiển thị bắt buộc nhập." }
+                },
+                submitHandler: function() { //onSubmit
+                    updateEditor();
+                    updateDateDDMMYYYY();
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+            $('#SelectModule').on('click', function() {
+                var moduleSelected = $("#ValueModulePosition").val();
+                ModalADC.Open({
+                    title: "Chọn module",
+                    urlLoad: '/@WebConfig.AdminAlias/ModulePosition/AjaxTreeSelect?ValuesSelected=' + moduleSelected + "",
+                    bottom: false
+                });
+            });
+            $('#IsIndexGG').click(function() {
+                if ($(this).is(":checked")) {
+                    $('#IndexGoogle').val('noodp,index,follow');
+                }
+                else {
+                    $('#IndexGoogle').val('noodp,noindex,nofollow');
+                }
+            });
+            $('.autoPermalink').on('keyup', function(e) {
+                e.preventDefault();
+                $('#NameAscci').val(RemoveUnicode($(this).val()).toLowerCase());
+            });
+            initAutoComplete("Related", "@Url.Action("AutoComplete", "WebsiteContent")", "RelatedIds", "listRelatedAttachRemove");
+            initAutoComplete("Noted", "@Url.Action("AutoComplete", "WebsiteContent")", "NotedIds", "listNotedAttachRemove");
+            $('.child-attr').change(function() {
+                var f = [];
+                var pid = $(this).data('parent');
+                $('.child-attr[data-parent=' + pid + ']').each(function() {
+                    if ($(this).is(":checked")) {
+                        f.push($(this).val());
+                    }
+                });
+                if (f.length == 0) {
+                    $('.parr-attr-' + pid).removeAttr('checked');
+                }
+                else {
+                    $('.parr-attr-' + pid).attr('checked', 'checked');
+                }
+            });
+            $('.parent-ittr-select .fa-long-arrow-right').click(function() {
+                $(this).parents('.parent-ittr-select').children('.show-child-attr').slideToggle();
+            });
+            $('.parr-attr').change(function() {
+                $(this).parents('.parent-ittr-select').children('.show-child-attr').slideDown();
+                var id = $(this).attr('class');
+                id = id.replace('parr-attr parr-attr-', '');
+                if ($(this).is(":checked")) {
+                    $('input[data-parent=' + id + ']').attr('checked', 'checked');
+                }
+                else {
+                    $('input[data-parent=' + id + ']').removeAttr('checked');
+                }
+            });
+        });
+    </script>
+}

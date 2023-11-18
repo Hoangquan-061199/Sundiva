@@ -1,0 +1,137 @@
+﻿@model Website.Areas.Admin.ViewModels.OrderViewModel
+@using Newtonsoft.Json
+@using ADCOnline.Utils
+@using Website.Utils
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = Model.SystemActionAdmin.View;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.SystemActionAdmin.View)
+{
+    <script src="/Admin/js/city.js"></script>
+    <style>
+        #searchFrm select.form-control { max-width: 245px }
+    </style>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr form-inline">
+                    <input type="text" style="width:calc(100% - 105px);margin-bottom:10px;vertical-align:top;" class="form-control title" name="keyword" id="Keyword" placeholder="Nhập từ khóa cần tìm">
+                    <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                    @*<input type="text" class="form-control" name="voucher" id="voucher" placeholder="Mã giảm giá">*@
+                    <select class="form-control" name="CityID" id="CityIDs">
+                        <option value="">-- Tỉnh thành --</option>
+                        @if (Model.CityItems != null)
+                        {
+                            foreach (var item in Model.CityItems.OrderBy(x => x.Value.type).OrderBy(x => x.Value.name))
+                            {
+                                <option value="@item.Key">@item.Value.name</option>
+                            }
+                        }
+                    </select>
+                    <select class="form-control" name="DistrictID" id="DistrictIDs" disabled>
+                        <option value="">-- Quận huyện --</option>
+                    </select>
+                    <select class="form-control" name="WardID" id="WardIDs" disabled>
+                        <option value="">-- Phường xã --</option>
+                    </select>
+                    <select class="form-control" name="Status" id="Status">
+                        <option value="">-- Trạng thái --</option>
+                        <option value="1">Chờ thực hiện</option>
+                        <option value="2">Chờ lấy hàng</option>
+                        <option value="3">Đang giao</option>
+                        <option value="5">Hoàn thành</option>
+                        <option value="6">Đã hủy</option>
+                    </select>
+                    <select class="form-control" name="paymenttype" id="paymenttype">
+                        <option value="">-- Thanh toán --</option>
+                        <option value="1">Thanh toán tiền mặt khi nhận hàng (COD)</option>
+                        @*<option value="2">Thanh toán trực tuyến bằng thẻ ATM nội địa đã được đăng ký internet banking. </option>
+                        <option value="3">Thanh toán online bằng thẻ VISA, MasterCard</option>
+                        <option value="4">Thanh toán chuyển khoản</option>
+                        <option value="5">Thanh toán online bằng thẻ ATM</option>*@
+                    </select>
+                    <input type="text" class="form-control" name="from" id="from" placeholder="Từ ngày">
+                    <input type="text" class="form-control" name="to" id="to" placeholder="Đến ngày">
+                    @*<span>Xuất hóa đơn: </span>
+                    <input type="checkbox" name="ExportBill" value="1" /> Có
+                    <input type="checkbox" name="ExportBill" value="0" /> Không*@
+                    <input type="text" class="form-control" style="width:100px;" name="page" value="" id="page" placeholder="Trang" />
+                    <button type="button" id="btnReset" class="btn btn-info">
+                        <i class="fa fa-trash fa-fw" aria-hidden="true"></i> Xóa tìm kiếm
+                    </button>
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView"></div>
+            <div style="clear:both"></div>
+            <ul class="stat">
+                <li><strong><i class="fa fa-bar-chart" aria-hidden="true"></i>Thống kê:</strong> </li>
+                @if (Model.StatisticalOrders != null)
+                {
+                    <li><span class="badge badge-danger"><i class="fa fa-info-circle" aria-hidden="true"></i>Tổng đơn hàng: <span>@Model.StatisticalOrders.Sum(x => x.Total)</span></span></li>
+                    <li><span class="badge badge-success"><i class="fa fa-check-square" aria-hidden="true"></i>Đơn hàng thành công: <span>@(Model.StatisticalOrders.Any(x => x.Status == 5) ? Model.StatisticalOrders.FirstOrDefault(x => x.Status == 5).Total : 0)</span></span></li>
+                    <li><span class="badge badge-warning"><i class="fa fa-clock-o" aria-hidden="true"></i>Đơn đơn hàng chờ kinh doanh xử lý: <span>@(Model.StatisticalOrders.Any(x => x.Status == 1) ? Model.StatisticalOrders.FirstOrDefault(x => x.Status == 1).Total : 0)</span></span></li>
+                    <li><span class="badge badge-warning"><i class="fa fa-clock-o" aria-hidden="true"></i>Đơn đơn hàng đã xử lý đóng gói xong chờ vận chuyển qua lấy: <span>@(Model.StatisticalOrders.Any(x => x.Status == 2) ? Model.StatisticalOrders.FirstOrDefault(x => x.Status == 2).Total : 0)</span></span></li>
+                    <li><span class="badge badge-warning"><i class="fa fa-clock-o" aria-hidden="true"></i>Đơn đơn hàng đã giao cho đơn vị vận chuyển: <span>@(Model.StatisticalOrders.Any(x => x.Status == 3) ? Model.StatisticalOrders.FirstOrDefault(x => x.Status == 3).Total : 0)</span></span></li>
+                    <li><span class="badge badge-basic"><i class="fa fa-ban" aria-hidden="true"></i>Đơn hủy: <span>@(Model.StatisticalOrders.Any(x => x.Status == 6) ? Model.StatisticalOrders.FirstOrDefault(x => x.Status == 6).Total : 0)</span></span></li>
+                }
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="tab_add"></div>
+    </div>
+    <style>
+        .stat { padding: 0; width: 100%; }
+        .stat { margin: 20px auto 0; }
+            .stat span { font-weight: bold }
+            .stat li { margin-right: 20px; list-style: none; font-size: 14px; padding: 6px 10px !important; height: 26px !important; float: initial; }
+                .stat li i { margin-right: 5px }
+    </style>
+    <script>
+        $(function() {
+            ValidInput();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            DateVi("#from");
+            DateVi("#to");
+            var form = $("#searchFrm");
+            $("#btnSearch").click(function(e) {
+                LoadSearch(form);
+            });
+            form.validate({
+                submitHandler: function() {
+                    LoadSearch(form);
+                }
+            });
+            $('#searchFrm select').change(function() {
+                LoadSearch(form);
+            });
+            function LoadSearch(t) {
+                window.location.href = '#' + getValueFormMutilSelect(t);
+                return false;
+            }
+            $('#btnReset').click(function() {
+                var form = $("#searchFrm");
+                form[0].reset();
+                window.location.href = '#';
+                return false;
+            });
+            $("#btnAdd").click(function() {
+                loadAjax("@Url.Action("AjaxForm")", "#tab_add");
+            });
+
+        });
+        $(document).ready(function() {
+            ChageCity();
+            ChageDistrict();
+        });
+    </script>
+}

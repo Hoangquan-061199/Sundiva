@@ -1,0 +1,91 @@
+﻿@model Website.Areas.Admin.ViewModels.CustomerCategoryViewModel
+@using ADCOnline.Utils
+
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.CustomerCategory.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Tiêu đề</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" id="Name" name="Name" value="@Model.CustomerCategory.Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Mã</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control code" id="Code" name="Code" value="@Model.CustomerCategory.Code">
+                                </div>
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber text-center" id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.CustomerCategory.OrderDisplay" placeholder="Thứ tự" autocomplete="off" />
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Delete)
+                                {
+                                    <div class="col-sm-1">
+                                        <label for="IsShow">
+                                            Hiển thị
+                                            <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.CustomerCategory.IsShow != false) ? "checked" : "") />
+                                            <input type="hidden" name="IsShow" value="false" @((Model.CustomerCategory.IsShow != false) ? "" : "checked") />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            $('.back-grid-view').click(function() {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=@(Model.CustomerCategory.ID)";
+                loadAjax(listItems, "#loadGridView");
+                $('a[href="#tab_search"]').click();
+            });
+            $("#AddEditForm").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    Name: "Tiêu đề bắt buộc nhập."
+                },
+                submitHandler: function() {
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#AddEditForm");
+                    return false;
+                    return false;
+                }
+            });
+        });
+    </script>
+}

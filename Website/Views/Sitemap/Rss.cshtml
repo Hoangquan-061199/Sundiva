@@ -1,0 +1,50 @@
+﻿@model List<WebsiteModulesJson>
+@using ADCOnline.Simple.Json
+@using ADCOnline.Simple.Item
+@{
+    ViewBag.Title = "Rss - dienmayquanhhanh.com";
+    ViewBag.Name = "Rss - dienmayquanhhanh.com";
+    ViewBag.Description = "Rss - dienmayquanhhanh.com";
+    ViewBag.Keywords = "Rss - dienmayquanhhanh.com";
+    ViewBag.Canonical = "https://dienmayquanghanh.com/rss";
+    ViewBag.Url = "https://dienmayquanghanh.com/rss";
+}
+
+<div class="rss-page">
+    <div class="container">
+        <h2 class="title-page">RSS</h2>
+        <strong class="sub-title-page">Kênh do Điện Máy Quang Hạnh cung cấp</strong>
+        @if (Model != null)
+        {
+            <div class="list-rss">
+                @foreach (var item in Model.OrderBy(x => x.OrderDisplay))
+                {
+                    <a href="/rss/@(item.NameAscii).rss">@item.Name <span>RSS <img src="/html/style/images/rss_icon.png" /></span></a>
+                }
+            </div>
+        }
+        <strong class="sub-title-page">Điều khoản sử dụng</strong>
+        <p>
+            Các nguồn kênh tin được cung cấp miễn phí cho các cá nhân và các tổ chức phi lợi nhuận. Chúng tôi yêu cầu
+            bạn cung cấp rõ các thông tin cần thiết khi bạn sử dụng các nguồn kênh tin này từ Điện Máy Quang Hạnh.
+        </p>
+        <p>
+            DieuTri có quyền yêu cầu bạn ngừng cung cấp và phân tán thông tin dưới dạng này ở bất kỳ thời điểm nào và
+            với bất kỳ lý do nào.
+        </p>
+    </div>
+</div>
+<style>
+    .title-page { font-size: 24px; line-height: 160%; font-family: "Anastasia", sans-serif; font-weight: 700; margin-bottom: 15px; }
+    .sub-title-page { font-size: 20px; line-height: 160%; margin-bottom: 15px; font-family: "Anastasia", sans-serif; display: inline-block; }
+    .rss-page p { font-size: 18px; line-height: 160%; margin-bottom: 20px; }
+    .list-rss { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 15px; margin-bottom: 15px; }
+        .list-rss a { display: flex; justify-content: space-between; color: #4F4F4F; font-size: 18px; line-height: 1.1666666667; padding: 15px 0; border-bottom: 1px solid #E5E5E5; text-decoration: none; }
+            .list-rss a:hover { color: #d5392d }
+            .list-rss a span { font-size: 13px; color: #222; margin-top: 3px; line-height: 20px; display: flex; align-items: center; }
+                .list-rss a span img { width: 18px; height: 18px; margin-top: -3px; margin-left: 10px; }
+    @@media(max-width: 767px) {
+        .rss-page p { text-align: justify; }
+        .list-rss { display: block }
+    }
+</style>

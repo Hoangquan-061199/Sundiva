@@ -1,0 +1,279 @@
+﻿@using ADCOnline.Simple.Base
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.ModulePositionViewModel
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="ModulePositionContent" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.ModulePosition.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab == "TabDescription" ? "active" : string.Empty)"><a href="#TabDescription" aria-controls="TabForSeo" role="tab" data-toggle="tab">Mô tả <sup>(*)</sup></a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Tên vị trí</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.ModulePosition.Name" placeholder="@Model.ModulePosition.Name">
+                                </div>
+                                <label class="col-sm-1">Số Module</label>
+                                <div class="col-sm-2">
+                                    <input type="number" min="0" class="form-control" name="NumberCount" id="NumberCount" value="@Model.ModulePosition.NumberCount" placeholder="@Model.ModulePosition.NumberCount">
+                                </div>
+                                <label class="col-sm-1">Số Content</label>
+                                <div class="col-sm-2">
+                                    <input type="number" min="0" class="form-control" name="NumberContent" id="NumberContent" value="@Model.ModulePosition.NumberContent" placeholder="@Model.ModulePosition.NumberContent">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Mã</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control code" name="Code" id="Code" value="@Model.ModulePosition.Code" placeholder="@Model.ModulePosition.Code">
+                                </div>
+                                <label class="col-sm-1">Module cha</label>
+                                <div class="col-sm-5">
+                                    <select name="ParentID" id="ParentID" class="form-control">
+                                        <option value="0">--Thư mục gốc--</option>
+                                        @if (Model.ListBaseItem != null && Model.ListBaseItem.Count > 0)
+                                        {
+                                            var listParent = Model.ListBaseItem.Where(c => ConvertUtil.ToInt32(c.ParentId) == 0);
+                                            var listChild = new List<ModulePosition>();
+                                            foreach (var item in listParent)
+                                            {
+                                                <option value="@item.ID" @(item.ID == Model.ModulePosition.ParentId ? "selected" : string.Empty)>@item.Name</option>
+                                                listChild = Model.ListBaseItem.Where(c => c.ParentId == item.ID).ToList();
+                                                if (listChild != null && listChild.Count > 0)
+                                                {
+                                                    foreach (var child in listChild)
+                                                    {
+                                                        <option value="@child.ID" @(child.ID == Model.ModulePosition.ParentId ? "selected" : string.Empty)>--@child.Name</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Kiểu hiển thị</label>
+                                <div class="col-sm-2">
+                                    <select name="TypeView" id="TypeView" class="form-control">
+                                        <option value="Module" @(Model.ModulePosition.TypeView == "Module" ? "selected" : "")>Module</option>
+                                        <option value="Advertising" @(Model.ModulePosition.TypeView == "Advertising" ? "selected" : "")>Quảng cáo</option>
+                                        <option value="Content" @(Model.ModulePosition.TypeView == "Content" ? "selected" : "")>Nội dung</option>
+                                        <option value="Product" @(Model.ModulePosition.TypeView == "Product" ? "selected" : "")>Sản phẩm</option>
+                                    </select>
+                                </div>
+                                @if (Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.ModulePosition.OrderDisplay" placeholder="@Model.ModulePosition.OrderDisplay" />
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Hiển thị</label>
+                                        <label>
+                                            <input type="checkbox" name="IsShow" id="IsShow" value="true" @(Model.ModulePosition.IsShow == false ? string.Empty : "checked") />
+                                            <input type="hidden" name="IsShow" value="false" />
+                                        </label>
+                                    </div>
+                                }
+                                <div class="col-sm-1 type-content" style="@((Model.ModulePosition.TypeView=="Content" || Model.ModulePosition.TypeView=="Product") ? "display:block" : "display:none")">
+                                    <label>Điều kiện</label>
+                                </div>
+                                <div class="col-sm-2 type-content" style="@((Model.ModulePosition.TypeView=="Content" || Model.ModulePosition.TypeView=="Product") ? "display:block" : "display:none")">
+                                    <select class="form-control" name="Where">
+                                        <option value="">-- Điều kiện</option>
+                                        <option value="1" @(Model.ModulePosition.SqlContent == " And ',' + ViewHome + ',' like N'%,1,%'" ? "selected" : string.Empty)>Tích trang chủ</option>
+                                        <option value="3" @(Model.ModulePosition.SqlContent == " And ',' + ViewHome + ',' like N'%,3,%'" ? "selected" : string.Empty)>Tích nổi bật</option>
+                                        @*<option value="4" @(Model.ModulePosition.SqlContent == " And ',' + ViewHome + ',' like N'%,4,%'" ? "selected" : string.Empty)>Tích mới nhất</option>*@
+                                    </select>
+                                </div>
+                                <div class="col-sm-1 type-content" style="@((Model.ModulePosition.TypeView=="Content" || Model.ModulePosition.TypeView=="Product") ? "display:block" : "display:none")">
+                                    <label>Sắp xếp</label>
+                                </div>
+                                <div class="col-sm-2 type-content" style="@((Model.ModulePosition.TypeView=="Content" || Model.ModulePosition.TypeView=="Product") ? "display:block" : "display:none")">
+                                    <select class="form-control" name="Sort">
+                                        <option value="">-- Mặc định (Mới nhất)</option>
+                                        <option value="1" @(Model.ModulePosition.SqlContentOrderBy == " Order By OrderDisplay Asc" ? "selected" : string.Empty)>Thứ tự (Tăng dần)</option>
+                                        <option value="2" @(Model.ModulePosition.SqlContentOrderBy == " Order By OrderDisplay Desc" ? "selected" : string.Empty)>Thứ tự (Giảm dần)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Link map</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control link" id="LinkBanner" name="LinkBanner" placeholder="Link" value="@Model.ModulePosition.LinkBanner" />
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Ảnh</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" style="margin:0;" value="@Model.ModulePosition.UrlPicture" />
+                                    </div>
+                                    <div id="AddAvatar">
+                                        @if (!string.IsNullOrEmpty(Model.ModulePosition.UrlPicture))
+                                        {
+                                            <table class="removeParent">
+                                                <tr>
+                                                    <td>
+                                                        <img style="max-width:100px;max-height:100px;" src="@Model.ModulePosition.UrlPicture">
+                                                        <input type="hidden" name="UrlPicture" value="@Model.ModulePosition.UrlPicture">
+                                                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                        <div class="col-sm-1">
+                        <label>Link banner</label>
+                        </div>
+                        <div class="col-sm-5">
+                        <input type="text" class="form-control link" id="LinkBanner" name="LinkBanner" placeholder="Link banner" value="@Model.ModulePosition.LinkBanner" />
+                        </div>
+                        <div class="col-sm-1">
+                        <label>Icon</label>
+                        </div>
+                        <div class="col-sm-5 changeUrlTinyMceParent">
+                        <div class="input-group">
+                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                        <button type="button" onclick="SelectFileTyniMce('AddIcon','Icon',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                        </span>
+                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddIcon', 'Icon',0)" style="margin:0;" value="@Model.ModulePosition.Icon" />
+                        </div>
+                        <div id="AddIcon">
+                        @if (Model.ModulePosition.Icon != null)
+                        {
+                        <table class="removeParent">
+                        <tr>
+                        <td>
+                        <img style="max-width:100px;max-height:100px;" src="@Model.ModulePosition.Icon">
+                        <input type="hidden" name="Icon" value="@Model.ModulePosition.Icon">
+                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                        </td>
+                        </tr>
+                        </table>
+                        }
+                        </div>
+                        </div>
+                        </div>*@
+                            <div class="form-group">
+                                <div class="col-sm-1" style="display: none">
+                                    <label>Danh mục đã chọn</label>
+                                </div>
+                                <div class="col-sm-5" style="display: none">
+                                    <input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="@string.Join(",", Model.ListWebsiteModule.Select(c => c.ID))" />
+                                    <div id="Text_ModuleValues" class="checkBoxValues" style="font-weight:600;">@string.Join(", ", Model.ListWebsiteModule.Select(c => c.Name))</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <div id="LoadGridModule"></div>
+                                </div>
+                                @*<div class="col-sm-6">
+                            <div id="LoadGridTradeMark"></div>
+                            </div>*@
+                            </div>
+                        </div>
+                        @*<div role="tabpanel" class="tab-pane @(ViewBag.Tab == "TabModule" ? "active" : string.Empty)" id="TabModule">
+                    <textarea rows="10" id="SqlModule" name="SqlModule" class="form-control">@Model.ModulePosition.SqlModule</textarea>
+                    </div>
+                    <div role="tabpanel" class="tab-pane @(ViewBag.Tab == "TabContent" ? "active" : string.Empty)" id="TabContent">
+                    <textarea rows="10" id="SqlContent" name="SqlContent" class="form-control">@Model.ModulePosition.SqlContent</textarea>
+                    </div>
+                    <div role="tabpanel" class="tab-pane @(ViewBag.Tab == "TabOrderContent" ? "active" : string.Empty)" id="TabOrderContent">
+                    <textarea rows="10" id="SqlContentOrderBy" name="SqlContentOrderBy" class="form-control">@Model.ModulePosition.SqlContentOrderBy</textarea>
+                    </div>*@
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab == "TabDescription" ? "active" : string.Empty)" id="TabDescription">
+                            <textarea rows="10" id="Description" name="Description" class="form-control">@Model.ModulePosition.Description</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function () {
+            ValidInput();
+            $('#TypeView').change(function () {
+                v = $(this).val();
+                if (v == 'Product' || v == 'Content') {
+                    $('.type-content').show();
+                }
+                else {
+                    $('.type-content').hide();
+                }
+            })
+            $('.back-grid-view').click(function () {
+                var contentId = '@Model.ModulePosition.ID';
+                if (contentId != '0') {
+                    var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=" + contentId;
+                    loadAjax(listItems, "#loadGridView");
+                }
+                $('a[href="#tab_search"]').click();
+            });
+            removeObject();
+            LoadCKEDITOR('Description', true, 200);
+            $("#ModulePositionContent").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    Name: "Bạn cần nhập tên vị trí module"
+                },
+                submitHandler: function () { //onSubmit
+                    updateEditor();
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#ModulePositionContent");
+                    return false;
+                }
+            });
+            if ($('#ItemId').length > 0) {
+                var fixscroll = function () {
+                    if (91 < $(window).scrollTop()) {
+                        $('#myTab,.box-footer').addClass('fixed');
+                    } else {
+                        $('#myTab,.box-footer').removeClass('fixed');
+                    }
+                };
+                fixscroll();
+                $(window).on("scroll", function () { fixscroll(); });
+            }
+            var moduleSelected = $("#Value_ModuleValues").val();
+            loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + moduleSelected + '&module=&type=Trademark,Product,ProductLine', "#LoadGridModule")
+            loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + moduleSelected + '&module=Trademark,Product,ProductLine', "#LoadGridTradeMark")
+        });
+    </script>
+}
+

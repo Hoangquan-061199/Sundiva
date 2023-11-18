@@ -1,0 +1,196 @@
+﻿@using Website.Utils;
+@using ADCOnline.Utils;
+@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+<header class="main-header">
+    <!-- Logo -->
+    <a href="/" class="logo" target="_blank">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"><b>A</b>DC</span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg"><span>ADC</span>Vietnam</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top clearfix">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="~/Admin/images/avatar.png" class="user-image" alt="User Image">
+                        <span class="hidden-xs">@Model.Member.UserName</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="~/Admin/images/avatar.png" class="img-circle" alt="User Image">
+                            <p>@Model.Member.UserName</p>
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="/@WebConfig.AdminAlias/HomeAdmin/ChangePassword" class="btn btn-default btn-flat">Đổi mật khẩu</a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="/@WebConfig.AdminAlias/HomeAdmin/LogOff" class="btn btn-default btn-flat">Thoát</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        <div style="position:relative; float:right;">
+            <div href="javascript:" id="Language" class="lang dropdown-toggle" data-toggle="dropdown">
+                @switch (Model.CurrentLanguage)
+                {
+                    case Resources.VI:
+                        {
+                            <img src="/Admin/images/flag-vn.png" />
+                            break;
+                        }
+                    @* case Resources.JP:
+                {
+                <img src="/Admin/images/flag-jp.jpg" />
+                break;
+                } *@
+                    @*case Resources.RU:
+                {
+                <img src="~/Admin/images/flag-ru.png" />
+                break;
+                }*@
+                    @*case Resources.EN:
+                        {
+                            <img src="~/Admin/images/flag-en.png" />
+                            break;
+                        }
+                    case Resources.DE:
+                        {
+                            <img src="~/Admin/images/de-flag.webp" />
+                            break;
+                        }*@
+                    default:
+                        {
+                            <img src="~/Admin/images/flag-vn.png" />
+                            break;
+                        }
+                }
+            </div>
+           @* <div class="dropdown-menu drop-lang" aria-labelledby="Language">
+                <a class="dropdown-item" href="javascript:" data-lang="@Resources.EN"><img src="/Admin/images/flag-en.png" style="width:30px;" /> Tiếng Anh</a>
+                <a class="dropdown-item" href="javascript:" data-lang="@Resources.DE"><img src="/Admin/images/de-flag.webp" style="width:30px;" /> Tiếng Đức</a>
+                <a class="dropdown-item" href="javascript:" data-lang="@Resources.VI"><img src="/Admin/images/flag-vn.png" style="width:30px;" /> Tiếng Việt</a>
+            </div>*@
+        </div>
+        <div style="position:relative; float:right;">
+            @*<div href="javascript:" class="dropdown-toggle" data-toggle="dropdown" style="width: 51px;display: block;height: 51px;line-height: 51px;text-align: center;font-weight: 600;position: relative;">
+            <span class="fa fa-bullhorn"></span>
+            <b class="badge badge-info" style="position:absolute; left: -8px;top: 7px;">@Model.CommentAdmins.FirstOrDefault().TotalRecord</b>
+            </div>*@
+            <div class="dropdown-menu notification" aria-labelledby="Language" style="max-height:400px;overflow-y:auto;min-width:300px;border-top: 2px solid #43b6d7;">
+                @if (Model.CommentAdmins.Any())
+                {
+                    foreach (var item in Model.CommentAdmins)
+                    {
+                        if (item.Act == "Rate")
+                        {
+                            if (item.ParentID != null)
+                            {
+                                <a class="dropdown-item" href="/Adminadc/Rate/IndexReply?parentId=@item.ParentID" style="display:block;padding:10px;">[Đánh giá] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" href="/Adminadc/Rate/Index?productId=@item.ProductID" style="display: block; padding: 10px;">[Đánh giá] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+                            }
+                        }
+                        if (item.Act == "Comment")
+                        {
+                            if (item.ParentID != null)
+                            {
+                                <a class="dropdown-item" href="/Adminadc/Comment/IndexReply?parentId=@item.ParentID" style="display: block; padding: 10px;">[Bình luận] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" href="/Adminadc/Comment/Index?productId=@item.ProductID" style="display: block; padding: 10px;">[Bình luận] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+                            }
+                        }
+                    }
+                    if (Model.CommentAdmins.FirstOrDefault().TotalRecord > 15)
+                    {
+                        <input type="hidden" id="Page" value="2" />
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+</header>
+<script>
+    $('.notification').on('scroll', function () {
+        if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            var p = $('#Page').val();
+            if (p > 0) {
+                $('.notification').append("<span class=\"loading\">Đang tải</span>");
+                $('#Page').remove();
+                var url = "/Adminadc/Comment/MoreNotification?page=" + p;
+                $.ajax({
+                    url: encodeURI(url),
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        $('.loading').remove();
+                        $('.notification').append(data);
+                        $('.notification').find('.hidden').removeClass('hidden').fadeIn();
+                    }
+                });
+            }
+        }
+    });
+    //$(function () {
+    //    $('.sidebar-toggle').click();
+    //});
+</script>
+<style>
+    .notification a:nth-of-type(2n+1) {
+        background: #f2f2f2;
+    }
+
+    .lang {
+        width: 30px;
+        display: block;
+        height: 51px;
+        line-height: 51px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+        .lang img {
+            width: 100%;
+        }
+
+    .drop-lang {
+        right: 0 !important;
+    }
+
+        .drop-lang a {
+            display: block;
+            padding: 0 10px;
+        }
+
+            .drop-lang a img {
+                margin-right: 10px;
+            }
+</style>
+<script>
+    $('.drop-lang a').click(function (e) {
+        e.preventDefault();
+        var lang = $(this).data('lang');
+        var lan = Cookies.get('lanad');
+        if (lan == lang) return;
+        else {
+            Cookies.set('lanad', lang, { expires: 1 });
+            window.location.reload();
+        }
+    });
+</script>

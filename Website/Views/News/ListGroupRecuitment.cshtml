@@ -1,0 +1,71 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Utils
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptChaConfig
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+    ViewBag.IsSchema = true;
+    ViewBag.ShowDichVu = true;
+}
+
+@if (Model.ModuleItem != null)
+{
+    @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        <div class="banner-slide">
+            <div class="@(Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) > 1 ? "slide owl-carousel owl-theme" : "banner mt-top")">
+                @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3).OrderBy(x => x.AlbumOrderDisplay))
+                {
+                    <div class="item">
+                        <img src="@item.AlbumUrl" alt="@item.AlbumTitle">
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <div class="activity-page">
+        <div class="container">
+            <h1 class="title">@Model.ModuleItem.Name</h1>
+            @if (Model.WebsiteModulesItems.Any())
+            {
+                <div class="list-total">
+                    @foreach (var module in Model.WebsiteModulesItems.OrderBy(x => x.OrderDisplay))
+                    {
+                        <div class="item">
+                            <div class="item-img img-bg-before">
+                                <img src="@module.UrlPicture" alt="@module.Name" />
+                            </div>
+                            <div class="text-content">
+                                <h2 class="name">@(!string.IsNullOrEmpty(module.Title) ? module.Title : module.Name)</h2>
+                                @if (!string.IsNullOrEmpty(module.Description))
+                                {
+                                    <div class="text detail-content">
+                                        @Html.Raw(module.Description)
+                                    </div>
+                                }
+                                <a href="@Utility.Link(module.NameAscii, string.Empty, module.LinkUrl)" class="btn-see-more">@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}

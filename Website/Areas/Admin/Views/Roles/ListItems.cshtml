@@ -1,0 +1,47 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.RolesViewModel
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr role="row">
+                <th>Tên quyền</th>
+                <th>Roles</th>
+                <th class="act_roles text-center wd80"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr>
+                        <td>@item.RoleName</td>
+                        <td>@item.Code</td>
+                        <td class="act_delete">
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.RoleId" class="edit btn" title="Chỉnh sửa: @item.RoleName">
+                                    <span class="lnr lnr-pencil"></span>
+                                </a>    
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.RoleId" class="delete btn" title="Xóa: @item.RoleName">
+                                    <span class="lnr lnr-trash"></span>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+}

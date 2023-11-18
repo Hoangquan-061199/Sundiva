@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "wwwroot/lib/tinymce/css/main.min.css",
+    "inputFiles": [
+      "wwwroot/lib/tinymce/css/main.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/tinymce/js/custom.min.js",
+    "inputFiles": [
+      "wwwroot/lib/tinymce/js/custom.js"
+    ]
+  }
+]

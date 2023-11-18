@@ -1,0 +1,81 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.ContentDataJsonViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="box" id="gridItems" style="padding:0;">
+        <div class="box-body table-responsive">
+            <table id="tblContent" class="table table-bordered">
+                <thead>
+                    <tr role="row">
+                        <th class="wd100">ID</th>
+                        <th>Tiêu đề</th>
+                        <th>Tiêu đề tiếng anh</th>
+                        <th class="wd100">Thứ tự</th>
+                        <th class="act_roles noexport wd100 text-center">
+                            <a href="#deleteAll" title="Xóa chọn" class="deleteAll badge badge-info"><span class="lnr lnr-trash"></span><span>Xóa</span></a>
+                        </th>
+                        <th class="text-center wd50">
+                            <div class="label-check">
+                                <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                                <label for="checkAll"></label>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                @if (Model.GetListItem != null && Model.GetListItem.Count > 0)
+                {
+                    <tbody>
+                        @foreach (var item in Model.GetListItem.OrderBy(x => x.OrderDisplay))
+                        {
+                            <tr id="item_@item.ID" class="@(item.ID==Model.CommonJsonAdmin.ID ? "active" : string.Empty)">
+                                <td>@item.ID</td>
+                                <td>@item.Name</td>
+                                <td>@item.NameEn</td>
+                                <td>@item.OrderDisplay</td>
+                                <td class="act_delete noexport">
+                                    @if (Model.SystemActionAdmin.Edit == true)
+                                    {
+                                        <a href="#@item.ID" class="edit-js" data-tab="" title="Sửa:@item.Name" data-type="@ViewBag.Type">
+                                            <span class="lnr lnr-pencil"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Delete == true)
+                                    {
+                                        <a href="#@item.ID" class="delete-js" data-type="@ViewBag.Type" title="Xóa:@item.Name">
+                                            <span class="lnr lnr-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="label-check">
+                                        <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                        <label for="Check@(item.ID)"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            registerGridView("#Griditems");
+        });
+    </script>
+    @if (Model.CommonJsonAdmin.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.CommonJsonAdmin.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

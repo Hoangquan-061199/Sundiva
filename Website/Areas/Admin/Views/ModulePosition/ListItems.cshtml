@@ -1,0 +1,312 @@
+﻿@model Website.Areas.Admin.ViewModels.ModulePositionViewModel
+@using ADCOnline.Utils
+@using ADCOnline.Simple.Admin
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="badge badge-info" style="margin-bottom:10px;cursor:pointer;" id="ShowAll">Xem hết danh mục</div>
+    <div class="badge badge-warning" style="margin-bottom:10px;cursor:pointer;" id="HideAll">Ẩn danh mục</div>
+    <table id="tblContent" class="table table-bordered">
+        <thead>
+            <tr role="row">
+                <th class="wd30"></th>
+                <th>Tên vị trí</th>
+                <th>Mã vị trí</th>
+                <th>Thư mục cha</th>
+                <th>Kiểu</th>
+                <th class="text-center wd100">
+                    Thứ tự
+                    @if (Model.SystemActionAdmin.Edit == true)
+                    {
+                        <a href="javascript:" data-toggle="tooltip" data-placement="bottom" title="Chỉnh sửa số thứ tự" class="EditOrderAll badge badge-primary"><span class="lnr lnr-pencil"></span></a>
+                        <a href="javascript:" data-toggle="tooltip" data-placement="bottom" title="Lưu số thứ tự đã chỉnh sửa" class="SaveAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                    }
+                </th>
+                <th class="text-center wd80">Trạng thái</th>
+                <th class="act_roles wd100">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><span class="lnr lnr-checkmark-circle"></span><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><span class="lnr lnr-cross-circle"></span><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                var module = new ModulePositionAdmin();
+
+                foreach (var item in Model.ListItem.Where(x => x.ParentId == 0).OrderBy(x => x.OrderDisplay))
+                {
+                    module = Model.ListItem.FirstOrDefault(c => c.ID == item.ParentId);
+                    <tr id="item_@item.ID" class="parent @(item.IsShow != true ? "hid" : string.Empty)@(item.ID == Model.ModulePosition.ID ? " active" : string.Empty)">
+                        <td style="text-align:center;">
+                            @if (Model.ListItem.Any(x => x.ParentId == item.ID))
+                            {
+                                <span class="lnr lnr-enter" data-id="@item.ID"></span>
+                            }
+                        </td>
+                        <td class="open-child" data-id="@item.ID">
+                            <a href="#@item.ID" class="edit" data-tab="" title="Sửa">
+                                @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
+                            </a>
+                        </td>
+                        <td>@item.Code</td>
+                        <td>@(module != null ? module.Name : "")</td>
+                        <td>@item.TypeView</td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Order)
+                            {
+                                <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                            }
+                            else
+                            {
+                                @item.OrderDisplay
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Active)
+                            {
+                                <a href="#@item.ID" class="hiddens">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                            }
+                            else
+                            {
+                                @Html.Raw(StaticEnum.Show(item.IsShow))
+                            }
+                        </td>
+                        <td class="act_delete">
+                            @if (Model.SystemActionAdmin.Add)
+                            {
+                                <a href="#@item.ID" data-toggle="tooltip" data-tab="" data-placement="bottom" class="add btn" title="Thêm">
+                                    <span class="lnr lnr-plus-circle"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit btn" data-tab="" data-toggle="tooltip" data-placement="bottom" title="Sửa">
+                                    <span class="lnr lnr-pencil"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.ID" class="delete btn" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                    <span class="lnr lnr-trash"></span>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                    @foreach (var child in Model.ListItem.Where(x => x.ParentId == item.ID).OrderBy(x => x.OrderDisplay))
+                    {
+                        module = Model.ListItem.FirstOrDefault(c => c.ID == item.ID);
+                        <tr id="item_@child.ID" class="child-@item.ID level level-2 parent-@item.ID @(child.IsShow != true ? "hid" : string.Empty) @(child.ID==Model.ModulePosition.ID?" active":string.Empty)" data-id="@item.ID">
+                            <td style="text-align:center;">
+                                @if (Model.ListItem.Any(x => x.ParentId == child.ID))
+                                {
+                                    <span class="fa fa-minus-square-o collepse" data-id="@child.ID"></span>
+                                }
+                            </td>
+                            <td class="open-child name" data-id="@child.ID">
+                                <a href="#@child.ID" class="edit" data-tab="" title="Sửa">
+                                    @Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow.Value))
+                                </a>
+                            </td>
+                            <td>@child.Code</td>
+                            <td>@(module != null ? module.Name : "")</td>
+                            <td>@child.TypeView</td>
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child.ID', this.value)" value="@child.OrderDisplay" disabled />
+                                }
+                                else
+                                {
+                                    @child.OrderDisplay
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Active)
+                                {
+                                    <a href="#@child.ID" class="hiddens">@Html.Raw(StaticEnum.Show(child.IsShow))</a>
+                                }
+                                else
+                                {
+                                    @Html.Raw(StaticEnum.Show(child.IsShow))
+                                }
+                            </td>
+                            <td class="act_delete">
+                                @if (Model.SystemActionAdmin.Add)
+                                {
+                                    <a href="#@child.ID" class="add btn" data-tab="" title="Thêm mới: @child.Name">
+                                        <span class="lnr lnr-plus-circle"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Edit)
+                                {
+                                    <a href="#@child.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @child.Name">
+                                        <span class="lnr lnr-pencil"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Delete)
+                                {
+                                    <a href="#@child.ID" class="delete btn" title="Xóa: @child.Name">
+                                        <span class="lnr lnr-trash"></span>
+                                    </a>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="label-check">
+                                    <input type="checkbox" id="Check@(child.ID)" class="minimal check" value="@child.ID">
+                                    <label for="Check@(child.ID)"></label>
+                                </div>
+                            </td>
+                        </tr>
+                        @foreach (var child2 in Model.ListItem.Where(x => x.ParentId == child.ID).OrderBy(x => x.OrderDisplay))
+                        {
+                            module = Model.ListItem.FirstOrDefault(c => c.ID == child.ID);
+                            <tr id="item_@child2.ID" class="child-@child.ID level level-3 parent-@child.ID @(child2.IsShow != true ? "hid" : string.Empty) @(child2.ID==Model.ModulePosition.ID?" active":string.Empty)" data-id="@child.ID">
+                                <td style="text-align:center;">
+                                    @if (Model.ListItem.Any(x => x.ParentId == child2.ID))
+                                    {
+                                        <span class="fa fa-minus-square-o collepse" data-id="@child2.ID"></span>
+                                    }
+                                </td>
+                                <td class="open-child name" data-id="@child.ID">
+                                    <a href="#@child2.ID" class="edit" data-tab="" title="Sửa">
+                                        @Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow.Value))
+                                    </a>
+                                </td>
+                                <td>@child2.Code</td>
+                                <td>@(module != null ? module.Name : "")</td>
+                                <td>@child2.TypeView</td>
+                                <td class="text-center">
+                                    @if (Model.SystemActionAdmin.Order)
+                                    {
+                                        <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child2.ID', this.value)" value="@child2.OrderDisplay" disabled />
+                                    }
+                                    else
+                                    {
+                                        @child2.OrderDisplay
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (Model.SystemActionAdmin.Active)
+                                    {
+                                        <a href="#@child2.ID" class="hiddens">@Html.Raw(StaticEnum.Show(child2.IsShow))</a>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(StaticEnum.Show(child2.IsShow))
+                                    }
+                                </td>
+                                <td class="act_delete">
+                                    @if (Model.SystemActionAdmin.Add)
+                                    {
+                                        <a href="#@child2.ID" class="add btn" data-tab="" title="Thêm mới: @child2.Name">
+                                            <span class="lnr lnr-plus-circle"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Edit)
+                                    {
+                                        <a href="#@child2.ID" class="edit btn" data-tab="TabGenaral" title="Chỉnh sửa: @child2.Name">
+                                            <span class="lnr lnr-pencil"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Delete)
+                                    {
+                                        <a href="#@child2.ID" class="delete btn" title="Xóa: @child2.Name">
+                                            <span class="lnr lnr-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="label-check">
+                                        <input type="checkbox" id="Check@(child2.ID)" class="minimal check" value="@child2.ID">
+                                        <label for="Check@(child2.ID)"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    <style>
+        .table-bordered .parent td  {
+        }
+        #tblContent tbody tr.level-2 td.name {
+            padding-left: 20px;
+        }
+
+        #tblContent tbody tr.level-3 td.name {
+            padding-left: 40px;
+        }
+
+            @*#tblContent tbody tr td.level-1 a, #tblContent tbody tr.level-3 td.name a, #tblContent tbody tr.level-2 td.name a {
+                display: block;
+            }*@
+
+        #tblContent tbody tr.level td.name:before {
+            display: none;
+        }
+
+        .lnr-enter, .open-child {
+            cursor: pointer;
+        }
+    </style>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function () {
+            registerGridView("#tblContent");
+            $('.lnr-enter, .open-child').click(function () {
+                var id = $(this).data('id');
+                $('.child-' + id).toggleClass('hide');
+            });
+            $('#ShowAll').click(function () {
+                $("tr[class^='child-']").removeClass('hide');
+            });
+            $('#HideAll').click(function () {
+                $("tr[class^='child-']").addClass('hide');
+            });
+            $('table tbody tr.active').each(function () {
+                var id = $(this).data('id');
+                $('.child-' + id).removeClass('hide');
+                var parent = $('#item_' + id).data('id');
+                $('.child-' + parent).removeClass('hide');
+            });
+            $('#page').val(@Model.SearchModel.page);
+        });
+    </script>
+    @if (Model.ModulePosition.ID > 0)
+    {
+        <script>
+            $(function () {
+                var item = $('#item_@(Model.ModulePosition.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

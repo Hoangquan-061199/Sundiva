@@ -1,0 +1,80 @@
+﻿@model Website.Areas.Admin.ViewModels.AdvertisingViewModel
+@using Website.Utils
+@{
+    ViewBag.Title = "Banner";
+    ViewBag.Name = "Banner";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View == true)
+{
+    if (Model.ListModule.Any(x => x.Tag == "ModulePosition"))
+    {
+        <div class="col-sm-12">
+            <a href="/@WebConfig.AdminAlias/ModulePosition/Index" class="badge badge-info">Vị trị chỉ định/Quảng cáo</a>
+        </div>
+    }
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr form-inline">
+                    <input style="width: calc(100% - 101px); margin-bottom: 10px; vertical-align:top;" type="text" class="form-control title" id="Keyword" name="Keyword" placeholder="Nhập từ khóa cần tìm" value="@Html.Raw(Context.Request.Query["Keyword"])">
+                    <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                    <select name="position" id="position" class="form-control">
+                        <option value="">-- Vị trí</option>
+                        @if (Model.ListModulePositionAdmin.Any())
+                        {
+                            foreach (var item in Model.ListModulePositionAdmin.Where(x => x.ParentId == 0).OrderBy(x => x.OrderDisplay))
+                            {
+                                <option value="@item.ID">@item.Name</option>
+                                @foreach (var child in Model.ListModulePositionAdmin.Where(x => x.ParentId == item.ID).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <option value="@child.ID">- @child.Name (@child.TypeView)</option>
+                                    @foreach (var child2 in Model.ListModulePositionAdmin.Where(x => x.ParentId == child.ID).OrderBy(x => x.OrderDisplay))
+                                    {
+                                        <option value="@child2.ID">-- @child2.Name (@child2.TypeView)</option>
+                                    }
+                                }
+                            }
+                        }
+                    </select>
+                    <input type="text" class="form-control" style="width: 100px !important;" name="page" value="" id="page" placeholder="Trang" />
+                </div>
+                <div id="tab_filter" class="collapse">
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView"></div>
+        </div>
+        <div class="tab-pane fade" id="tab_add"></div>
+    </div>
+    <script>
+        $(function() {
+            ValidInput();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            var form = $("#searchFrm");
+            $("#btnSearch").click(function(e) {
+                LoadSearch(form);
+            });
+            form.validate({
+                submitHandler: function() {
+                    LoadSearch(form);
+                }
+            });
+            $('#searchFrm select').change(function() {
+                LoadSearch(form);
+            });
+            function LoadSearch(t) {
+                window.location.href = '#' + getValueFormMutilSelect(t);
+                return false;
+            }
+        });
+    </script>
+}

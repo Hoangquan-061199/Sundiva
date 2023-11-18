@@ -1,0 +1,70 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.MemberViewModel
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr role="row">
+                <th>ID</th>
+                <th>Tên khách hàng</th>
+                <th>Email</th>
+                <th>Số ĐT</th>
+                <th>Ngày gửi</th>
+                <th>Nội dung</th>
+                <th class="act_delete noexport">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Hành động <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><i class="fa  fa-check"></i><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><i class="fa fa-exclamation"></i><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><i class="fa fa-trash"></i><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50"><input type="checkbox" class="minimal checkAll" value=""></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr>
+                        <td>@Utility.FormatNumber(item.ID)</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Mobile</td>
+                        <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy hh:mm") : string.Empty)</td>
+                        <td>@item.Content</td>
+                        <td class="act_delete noexport">
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit" title="Chỉnh sửa: @item.ID"><i class="fa fa-edit"></i></a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.ID" class="delete" title="Xóa: @item.ID"><i class="fa fa-trash"></i></a>
+                            }
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="minimal check" value="@item.ID"></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+}
+
+
+

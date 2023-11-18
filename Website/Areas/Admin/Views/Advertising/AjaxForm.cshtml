@@ -1,0 +1,215 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.AdvertisingViewModel
+@using ADCOnline.Simple.Admin
+@if (Model.SystemActionAdmin.Edit == true || Model.SystemActionAdmin.Add == true)
+{
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-success btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại danh sách</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.Advertising.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Tiêu đề</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.Advertising.Name" placeholder="@Model.Advertising.Name " />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Tiêu đề khác:</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="Title" id="Title" value="@Model.Advertising.Title" placeholder="@Model.Advertising.Title " />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Link url</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control link" name="LinkUrl" id="LinkUrl" value="@Model.Advertising.LinkUrl" placeholder="@Model.Advertising.LinkUrl" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Vị trí hiển thị</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="hidden" name="PositionIds" id="ValueModulePosition" value="@Model.Advertising.PositionIds" />
+                                    <button id="SelectPosition" type="button" class="primaryAction btn btn-info btn-sm">Chọn vị trí</button>
+                                    <div id="TextModulePosition" class="checkBoxValues">@string.Join(", ", Model.ListModulePosition.Select(c => c.Name))</div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Ảnh</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce form-control link" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" style="margin:0;" value="@Model.Advertising.UrlPicture" />
+                                    </div>
+                                    <div id="AddAvatar">
+                                        @if (Model.Advertising.UrlPicture != null)
+                                        {
+                                            <table class="removeParent">
+                                                <tr>
+                                                    <td>
+                                                        <img style="max-width:100px;max-height:100px;" src="@Model.Advertising.UrlPicture">
+                                                        <input type="hidden" name="UrlPicture" value="@Model.Advertising.UrlPicture">
+                                                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Module</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="@Model.Advertising.ModuleIds" />
+                                    <button id="SelectModule" type="button" class="primaryAction btn btn-info btn-sm" style="float: left;margin-right: 10px;">Chọn module</button>
+                                    <div id="Text_ModuleValues" class="checkBoxValues">@string.Join(", ", Model.ListWebsiteModuleAdmin.Select(c => c.Name))</div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Ảnh Mobile/Icon</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatarMB','UrlPictureMobile',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce form-control link" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatarMB', 'UrlPictureMobile',0)" style="margin:0;" value="@Model.Advertising.UrlPictureMobile" />
+                                    </div>
+                                    <div id="AddAvatarMB">
+                                        @if (Model.Advertising.UrlPictureMobile != null)
+                                        {
+                                            <table class="removeParent">
+                                                <tr>
+                                                    <td>
+                                                        <img style="max-width:100px;max-height:100px;" src="@Model.Advertising.UrlPictureMobile">
+                                                        <input type="hidden" name="UrlPictureMobile" value="@Model.Advertising.UrlPictureMobile">
+                                                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                @if(Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.Advertising.OrderDisplay" placeholder="@Model.Advertising.OrderDisplay" />
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Active == true || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-4">
+                                        <label>Hiển thị</label>
+                                        <label>
+                                            <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Advertising.IsShow == false) ? "" : "checked") />
+                                            <input type="hidden" name="IsShow" value="false" />
+                                        </label>
+                                    </div>
+                                }
+                                <div class="col-sm-1">
+                                    <label>Video / File</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('Video','Video',2);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn file</button>
+                                        </span>
+                                        <input type="text" class="form-control link" id="Video" name="Video" placeholder="Link video" style="margin:0;" value="@Model.Advertising.Video" />
+                                    </div>
+                                    <span>Hướng dẫn: Chọn file hoặc Copy link youtube (bHLG1RVt7Kw)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Mô tả</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="Description" name="Description" class="form-control textarea">@Model.Advertising.Description</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            $('.back-grid-view').click(function() {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=@(Model.Advertising.ID)";
+                loadAjax(listItems, "#loadGridView");
+                $('a[href="#tab_search"]').click();
+            });
+            LoadCKEDITOR('Description', true);
+            removeObject();
+            $("#AddEditForm").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    Name: "Tên banner bắt buộc nhập."
+                },
+                submitHandler: function() { //onSubmit
+                    updateEditor();
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+            $('#SelectModule').on('click', function() {
+                var moduleSelected = $("#Value_ModuleValues").val();
+                ModalADC.Open({
+                    title: "Chọn module",
+                    urlLoad: '@Url.Action("AjaxTreeSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + moduleSelected + "&module=News",
+                    bottom: false
+                });
+            });
+            $('#SelectPosition').on('click', function() {
+                var moduleSelected = $("#ValueModulePosition").val();
+                ModalADC.Open({
+                    title: "Chọn module",
+                    urlLoad: '/Adminadc/ModulePosition/AjaxTreeSelect?ValuesSelected=' + moduleSelected + "",
+                    bottom: false
+                });
+            });
+        });
+    </script>
+}
+

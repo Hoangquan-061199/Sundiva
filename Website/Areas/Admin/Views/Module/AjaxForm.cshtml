@@ -1,0 +1,169 @@
+﻿@model Website.Areas.Admin.ViewModels.ModuleViewModel
+@using ADCOnline.Simple.Admin
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="ModuleForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.Module.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-xs-2">
+                                    <label>Tên chuyên mục</label>
+                                </div>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control title" name="NameModule" id="NameModule" value="@Model.Module.NameModule" placeholder="@Model.Module.NameModule" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-2">
+                                    <label>Link chuyên mục</label>
+                                </div>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control code" name="Tag" id="Tag" value="@Model.Module.Tag" placeholder="@Model.Module.Tag" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-2">
+                                    <label>Link chuyển hướng</label>
+                                </div>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control link" name="Redirect" id="Redirect" value="@Model.Module.Redirect" placeholder="@Model.Module.Redirect" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-2">
+                                    <label>Icon</label>
+                                </div>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control notvalid" name="ClassCss" id="ClassCss" value="@Model.Module.ClassCss" placeholder="@Model.Module.ClassCss" />
+                                </div>
+                            </div>
+                            @if(Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                            {
+                                <div class="form-group">
+                                    <div class="col-xs-2">
+                                        <label>Thứ tự hiển thị</label>
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="Ord" name="Ord" type="number" value="@Model.Module.Ord" placeholder="@Model.Module.Ord" />
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <div class="col-xs-2">
+                                    <label>Chuyên mục cha</label>
+                                </div>
+                                <div class="col-xs-10">
+                                    <select name="ParentID" id="ParentID" class="form-control">
+                                        <option value="1">--Thư mục gốc--</option>
+                                        @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                                        {
+                                            var listParent = Model.ListItem.Where(c => c.ParentID == 1);
+                                            var listChild = new List<ModuleAdmin>();
+                                            foreach (var item in listParent.OrderBy(x => x.Ord))
+                                            {
+                                                <option value="@item.ID" @(item.ID == Model.Module.ParentID ? "selected" : string.Empty)>@item.NameModule</option>
+                                                listChild = Model.ListItem.Where(c => c.ParentID == item.ID).ToList();
+                                                if (listChild != null && listChild.Count > 0)
+                                                {
+
+                                                    foreach (var child in listChild.OrderBy(x => x.Ord))
+                                                    {
+                                                        var listChild1 = Model.ListItem.Where(c => c.ParentID == child.ID).ToList();
+                                                        <option value="@child.ID" @(child.ID == Model.Module.ParentID ? "selected" : string.Empty)>|--@child.NameModule</option>
+                                                        if (listChild1 != null && listChild1.Count > 0)
+                                                        {
+
+                                                            foreach (var child1 in listChild1.OrderBy(x => x.Ord))
+                                                            {
+                                                                var listChild2 = Model.ListItem.Where(c => c.ParentID == child1.ID).ToList();
+                                                                <option value="@child1.ID" @(child1.ID == Model.Module.ParentID ? "selected" : string.Empty)>|----@child1.NameModule</option>
+                                                                if (listChild2 != null && listChild2.Count > 0)
+                                                                {
+
+                                                                    foreach (var child2 in listChild2.OrderBy(x => x.Ord))
+                                                                    {
+                                                                        <option value="@child2.ID" @(child2.ID == Model.Module.ParentID ? "selected" : string.Empty)>|------@child2.NameModule</option>
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-xs-2">
+                                        <label>Hiển thị</label>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <label>
+                                            <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Module.IsShow == false) ? string.Empty : " checked" ) />
+                                            <input type="hidden" name="IsShow" value="false" />
+                                        </label>
+                                    </div>
+                                }
+                                <div class="col-xs-2">
+                                    <label>Quyền</label>
+                                </div>
+                                <div class="col-xs-2">
+                                    <label>
+                                        <input type="checkbox" name="CheckRole" id="CheckRole" value="True" @((Model.Module.CheckRole == false) ? string.Empty : " checked") />
+                                        <input type="hidden" name="CheckRole" value="false" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <label>Mô tả</label>
+                                    <textarea rows="10" id="Content" name="Content" class="form-control">@Model.Module.Content</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            LoadCKEDITOR('Content', true);
+            $("#ModuleForm").validate({
+                rules: {
+                    NameModule:
+                    {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 255
+                    }
+                },
+                submitHandler: function() { //onSubmit
+                    updateEditor();
+                    Post(urlPostAction, "#ModuleForm");
+                    return false;
+                }
+            });
+        });
+    </script>
+}

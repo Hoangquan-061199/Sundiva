@@ -1,0 +1,34 @@
+﻿@*@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.WebsiteModulesViewModel
+@{
+    ViewBag.Title = ViewBag.ActionText + " module";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#DepartmentTreeView").treeview({
+            collapsed: false,
+            animated: "medium",
+            control: "#ModuleTreeView",
+            persist: "location"
+        });
+        $("#DepartmentTreeView li span.file").click(function () {
+            var emlVal = $(this).attr("rel");
+            $("#DepartmentTreeView li span.file").removeClass("active");
+            $(this).addClass("active");
+            if (emlVal != '') {
+                loadAjax("/@WebConfig.AdminAlias/UserAdministration/ListItems?ModuleID=" + emlVal, "#ContentGriditems");
+                initAjaxLoad("/@WebConfig.AdminAlias/UserAdministration/ListItems?ModuleID=" + emlVal, "#ContentGriditems");
+            }
+        });
+    });
+</script>
+<div>
+    <ul id="DepartmentTreeView" class="filetree">
+        <li><span>Phòng ban</span>
+            <ul>
+                @Html.Raw(Model.StringBuilder)
+            </ul>
+        </li>
+    </ul>
+</div>*@

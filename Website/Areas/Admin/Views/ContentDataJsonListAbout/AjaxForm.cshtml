@@ -1,0 +1,133 @@
+﻿@model Website.Areas.Admin.ViewModels.ContentDataJsonViewModel
+@{
+    ViewBag.Title = ViewBag.ActionText + " Quản lý tiện nghi đầy đủ";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <script type="text/javascript">
+        $(function () {
+            ValidInput();
+            $('.back-grid-view').click(function () {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=@(Model.CommonJsonAdmin.ID)";
+                loadAjax(listItems, "#loadGridView");
+                $('a[href="#tab_search"]').click();
+            });
+            removeObject();
+            $("#AddEditForm").validate({
+                rules: {
+                    Name: { required: true, maxlength: 255 },
+                },
+                messages: {
+                    Name: "Tiêu đề bắt buộc nhập.",
+                },
+                submitHandler: function () { //onSubmit
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+
+        });
+    </script>
+
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.CommonJsonAdmin.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Tiêu đề</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.CommonJsonAdmin.Name">
+                                </div>
+                                <label class="col-sm-1">Tiêu đề tiếng anh</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control title" name="NameEn" id="NameEn" value="@Model.CommonJsonAdmin.NameEn">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Icon</label>
+                                <div class="col-sm-5">
+                                    <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlImg',0);" class="btn btn-danger btn-sm">Chọn ảnh</button>
+                                    <div id="AddAvatar">
+                                        @if (Model.CommonJsonAdmin.UrlImg != null)
+                                        {
+                                            <table class="table table-bordered removeParent">
+                                                <tr>
+                                                    <td style="width: 160px"><b>Ảnh</b></td>
+                                                    <td>
+                                                        <img style="width: 50px; height: 50px;" src="@Model.CommonJsonAdmin.UrlImg">
+                                                        <input type="hidden" name="UrlImg" value="@Model.CommonJsonAdmin.UrlImg">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 160px"><b>Hành động</b></td>
+                                                    <td>
+                                                        <label style="margin-left: 10px;"> Xóa:</label>
+                                                        <a href="javascript:void(0);" class="removeObject">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.CommonJsonAdmin.OrderDisplay" placeholder="@Model.CommonJsonAdmin.OrderDisplay" />
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-2">
+                                        <label>
+                                            <span>Hiển thị</span>
+                                            <input type="checkbox" name="show" id="show" value="True" @((Model.CommonJsonAdmin.show == false) ? "" : "checked") />
+                                            <input type="hidden" name="show" value="false" />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Nội dung</label>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="Content" name="Content" class="form-control textarea">@Model.CommonJsonAdmin.Content</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Nội dung tiếng anh</label>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="ContentEn" name="ContentEn" class="form-control textarea">@Model.CommonJsonAdmin.ContentEn</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+

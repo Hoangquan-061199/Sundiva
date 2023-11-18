@@ -1,0 +1,38 @@
+﻿@using Website.Utils;
+@using ADCOnline.Utils;
+@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@{
+    Layout = null;
+}
+@if (Model.CommentAdmins.Any())
+{
+    foreach (var item in Model.CommentAdmins)
+    {
+        if (item.Act == "Rate")
+        {
+            if (item.ParentID != null)
+            {
+                <a class="dropdown-item hidden" href="/Adminadc/Rate/IndexReply?parentId=@item.ParentID" style="display:block;padding:10px;">[Đánh giá] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+            }
+            else
+            {
+                <a class="dropdown-item hidden" href="/Adminadc/Rate/Index?productId=@item.ProductID" style="display: block; padding: 10px;">[Đánh giá] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+            }
+        }
+        if (item.Act == "Comment")
+        {
+            if (item.ParentID != null)
+            {
+                <a class="dropdown-item hidden" href="/Adminadc/Comment/IndexReply?parentId=@item.ParentID" style="display: block; padding: 10px;">[Bình luận] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+            }
+            else
+            {
+                <a class="dropdown-item hidden" href="/Adminadc/Comment/Index?productId=@item.ProductID" style="display: block; padding: 10px;">[Bình luận] - @item.ProductName @item.ProductCode<br />@item.Timespan</a>
+            }
+        }
+    }
+    if (Model.CommentAdmins.FirstOrDefault().TotalRecord > 15)
+    {
+        <input type="hidden" id="Page" value="@(Model.SearchModel.page+1)" />
+    }
+}

@@ -1,0 +1,94 @@
+﻿<div class="form-content comment reply-comment" onclick="showFormComment(this)">
+    <form action="/reply-comment" id="form-reply-comment" method="post">
+        <input type="hidden" name="ProductID" id="ContentID_Reply" value="[ProductID]">
+        <input type="hidden" name="ParentID" id="CommentID_Reply" value="[ParentID]">
+        <textarea name="Content" placeholder="[EnterComment]">[Content]</textarea>
+        <div class="bottom">
+            <div class="input-file">
+                <input type="file" hidden multiple="" id="AvatarReplyComment" name="AvatarFile">
+                <label for="AvatarReplyComment"><i class="fa-regular fa-image"></i><span>[DinhKemAnh]</span></label>
+                <div class="img-block" style="display: none">
+                    <div class="del-img">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <div class="img"></div>
+                </div>
+            </div>
+            <input type="text" name="Fullname" value="" placeholder="[FullName] *">
+            <input type="text" name="Email" value="" placeholder="Email *">
+            <button id="btn-reply-comment" type="button">[Send]</button>
+        </div>
+        <script>
+            function readURLReplyComment(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.fileName = input.files[0].name;
+                    reader.onload = function (e) {
+                        let img = `<img src="${e.target.result}" />`;
+                        $('.reply-comment .input-file .img-block .img').html(img);
+                        $('.reply-comment .input-file .img-block').show();
+                        $('.reply-comment .input-file label span').text(e.target.fileName);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $('.reply-comment #AvatarReplyComment').change(function () {
+                readURLReplyComment(this);
+            });
+            $('.reply-comment .input-file .img-block .del-img').click(function () {
+                $(".reply-comment #AvatarReplyComment").val("");
+                $('.reply-comment .input-file .img-block .img').html('');
+                $('.reply-comment .input-file .img-block').hide();
+                $('.reply-comment .input-file label span').text(GetSource("DinhKemAnh"));
+            });
+        </script>
+    </form>
+    <script>
+        $(function () {
+            ReplyCommentAction();
+            $('input.valid').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\.|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+            $('input.valid2').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+            $('textarea.valid').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+
+            $('input.email').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|�|�|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+            $('input.number').on('keyup', function () {
+                var old = $(this).val();
+                old = old.replace(/\D/g, '');
+                $(this).val(old);
+            })
+            $('input.fullname').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|_|–|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                old = old.replace(/0|1|2|3|4|5|6|7|8|9/g, '');
+                old = old.replace(/^\-+|\-+$/g, "");
+                $(this).val(old);
+            });
+        })
+    </script>
+</div>

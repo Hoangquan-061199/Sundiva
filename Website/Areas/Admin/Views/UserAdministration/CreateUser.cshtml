@@ -1,0 +1,102 @@
+﻿@*@model ADCWebsite.Areas.Admin.Models.UserAdministration.CreateUserViewModel
+@{
+    ViewBag.Title = "Thêm mới quản trị viên";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<section class="content-header">
+    <h1>Thêm mới quản trị viên</h1>
+</section>
+<div class="row">
+    <div class="form-group col-xs-12">
+        <div class="col-xs-2">
+            @Html.ActionLink("Quay lại danh sách", "Index", "UserAdministration", new { }, new { @class = "primaryAction btn btn-primary", @id = "btn_back" })
+        </div>
+    </div>
+</div>
+<div class="row">
+    @using (Html.BeginForm("CreateUser", "UserAdministration"))
+    {
+        @Html.ValidationSummary(true)
+        <form id="ModuleForm">
+            <div class="box-body">
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <label>Phòng ban</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control" name="DepartmentID" id="DepartmentID">
+                            @foreach (var item in Model.ListDepartment)
+                            {
+                                <option value="@item.ID"@(item.ID.ToString()==Request["ModuleID"]?" selected":"")>@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <label>Tên tài khoản</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" class="form-control" name="Username" style="" width="300px" id="Username" value="@Model.Username" placeholder="@Model.Username" />
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <label>Mật khẩu</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="password" class="form-control" name="Password" id="Password" value="@Model.Password" placeholder="@Model.Password" />
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <label>Nhập lại mật khẩu</label>
+                    </div>
+                   <div class="col-xs-3">
+                        <input type="password" class="form-control" name="ConfirmPassword" id="ConfirmPassword" value="@Model.ConfirmPassword" placeholder="@Model.ConfirmPassword" />
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <label>Họ tên</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" class="form-control" name="FullName" id="FullName" value="@Model.FullName" placeholder="@Model.FullName" />
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <label>Email</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="email" class="form-control" name="Email" id="Email" value="@Model.Email" placeholder="@Model.Email" />
+                    </div>
+                </div>
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                        <label>Gán quyền cho quản trị</label>
+                    </div>
+                    <div class="col-xs-10">
+                        @for (var i = 0; i < Model.InitialRoles.Count; i++)
+                        {
+                            var role = Model.InitialRoles.ElementAt(i);
+                            <div>
+                                <input name="InitialRoles[@i].Key" type="hidden" value="@role.Key" />
+                                <span>@Html.CheckBox("InitialRoles[" + i + "].Value", role.Value) @role.Key</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="form-group col-xs-12">
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-10">
+                        <button id="submit" type="submit" class="btn btn btn-success">Thêm mới tài khoản</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+</div>*@

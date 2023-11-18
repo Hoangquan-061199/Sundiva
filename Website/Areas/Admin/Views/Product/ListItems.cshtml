@@ -1,0 +1,595 @@
+﻿@model Website.Areas.Admin.ViewModels.ProductViewModel
+@using ADCOnline.Utils
+@using Website.Utils
+@{
+    bool isGia = false;
+    bool isGiaSoc = false;
+    bool isBanChay = false;
+    bool isMoi = false;
+    bool isNoiBat = true;
+    bool isHome = true;
+    bool isVat = false;
+    bool isStatus = false;
+    bool isSale = false;
+    bool isFrame = false;
+    bool isInsert = false;
+    bool isProductCode = false;
+    bool isBrand = true;
+    bool isView = false;
+    bool isSold = false;
+    bool isAmount = false;
+    bool isBinhLuan = false;
+    bool isDanhGia = false;
+    var moduleId = Model.moduleParentID;
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div id="tblContent">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr role="row">
+                    <th class="wd80">Ảnh</th>
+                    <th>Tên sản phẩm (Tổng: @Model.Total)</th>
+                    @if (isGia == true)
+                    {
+                        <th class="wd100">
+                            Giá
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a href="javascript:" title="Chỉnh sửa giá" class="EditPriceOldAll badge badge-primary" style="margin-left:5px;"><span class="lnr lnr-pencil"></span></a>
+                                <a href="javascript:" title="Lưu giá đã chỉnh sửa" class="SavePriceOldAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                            }
+                        </th>
+                    }
+                    <th class="wd250">Cập nhật lần cuối</th>
+                    <th class="wd200">Danh mục</th>
+                    <th class="text-center wd80">
+                        Thứ tự
+                        @if (Model.SystemActionAdmin.Order)
+                        {
+                            <a href="javascript:" title="Chỉnh sửa số thư tự" class="EditOrderAll badge badge-primary"><span class="lnr lnr-pencil"></span></a>
+                            <a href="javascript:" title="Lưu số thư tự đã chỉnh sửa" class="SaveAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                        }
+                    </th>
+                    <th class="act_roles wd150 text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                            <ul class="dropdown-menu dropdown-action dropdown-column" role="menu">
+                                @if (Model.SystemActionAdmin.Active)
+                                {
+                                    <li><a href="javascript:" class="showAll btn btn-info" title="Hiển thị danh sách đã chọn"><i class="lnr lnr-checkmark-circle"></i><span>Hiển thị</span></a></li>
+                                    <li><a href="javascript:" class="hideAll btn btn-default" title="Ẩn danh sách đã chọn"><i class="lnr lnr-warning"></i><span>Ẩn</span></a></li>
+                                }
+                                @if (Model.SystemActionAdmin.Edit)
+                                {
+                                    if (isGiaSoc == true)
+                                    {
+                                        <li><a href="javascript:" class="shock btn btn-info" title="Giá sốc danh sách đã chọn"><i class="lnr lnr-checkmark-circle"></i><span>Giá sốc</span></a></li>
+                                        <li><a href="javascript:" class="notshock btn btn-default" title="Bỏ giá sốc danh sách đã chọn"><i class="lnr lnr-warning"></i><span>Bỏ giá sốc</span></a></li>
+                                    }
+                                    if (isBanChay == true)
+                                    {
+                                        <li><a href="javascript:" class="bestSell btn btn-info" title="Tích chọn sản phẩm bán chạy"><i class="lnr lnr-checkmark-circle"></i><span>Bán chạy</span></a></li>
+                                        <li><a href="javascript:" class="notbestSell btn btn-default" title="Bỏ tích chọn sản phẩm bán chạy"><i class="lnr lnr-warning"></i><span>Bỏ bán chạy</span></a></li>
+                                    }
+                                    if (isMoi == true)
+                                    {
+                                        <li><a href="javascript:" class="isNew btn btn-info" title="Tích chọn sản phẩm mới"><i class="lnr lnr-checkmark-circle"></i><span>Mới</span></a></li>
+                                        <li><a href="javascript:" class="notNew btn btn-default" title="Bỏ tích chọn sản phẩm mới"><i class="lnr lnr-warning"></i><span>Bỏ mới</span></a></li>
+                                    }
+                                    if (isNoiBat == true)
+                                    {
+                                        <li><a href="javascript:" class="isHot btn btn-info" title="Tích chọn sản phẩm nổi bật"><i class="lnr lnr-checkmark-circle"></i><span>Nổi bật</span></a></li>
+                                        <li><a href="javascript:" class="notHot btn btn-default" title="Bỏ tích chọn sản phẩm nổi bật"><i class="lnr lnr-warning"></i><span>Bỏ nổi bật</span></a></li>
+                                    }
+                                    if (isHome == true)
+                                    {
+                                        <li><a href="javascript:" class="isHome btn btn-info" title="Tích chọn Trang chủ"><i class="lnr lnr-checkmark-circle"></i><span>Trang chủ</span></a></li>
+                                        <li><a href="javascript:" class="notHome btn btn-default" title="Bỏ tích chọn trang chủ"><i class="lnr lnr-warning"></i><span>Bỏ trang chủ</span></a></li>
+                                    }
+                                    if (isVat == true)
+                                    {
+                                        <li><a href="javascript:" class="isvatall btn btn-info" title="Giá đã có VAT"><i class="lnr lnr-checkmark-circle"></i><span>Giá đã có VAT</span></a></li>
+                                        <li><a href="javascript:" class="notvatall btn btn-default" title="Bỏ giá đã có VAT"><i class="lnr lnr-warning"></i><span>Bỏ giá đã có VAT</span></a></li>
+                                    }
+                                }
+                                @if (Model.SystemActionAdmin.Sitemap)
+                                {
+                                    <li><a href="javascript:" class="issitemapall btn btn-info" title="Thêm sitemap"><i class="lnr lnr-checkmark-circle"></i><span>Thêm sitemap</span></a></li>
+                                    <li><a href="javascript:" class="notsitemapall btn btn-default" title="Bỏ sitemap"><i class="lnr lnr-warning"></i><span>Bỏ sitemap</span></a></li>
+                                }
+                                @if (Model.SystemActionAdmin.Edit)
+                                {
+                                    <li><a href="javascript:" class="allmodule btn btn-info" title="Thêm danh mục các sản phẩm đã chọn"><i class="lnr lnr-pencil"></i><span>Thêm danh mục</span></a></li>
+                                    <li><a href="javascript:" class="notallmodule btn btn-default" title="Bỏ bớt danh mục các sản phẩm đã chọn"><i class="lnr lnr-pencil"></i><span>Bỏ danh mục</span></a></li>
+                                    if (isStatus == true)
+                                    {
+                                        <li><a href="javascript:" class="status-change btn btn-success" data-type="1" title="Còn hàng"><i class="lnr lnr-checkmark-circle"></i><span>Còn hàng</span></a></li>
+                                        <li><a href="javascript:" class="status-change btn btn-warning" data-type="0" title="Hết hàng"><i class="lnr lnr-warning"></i><span>Hết hàng</span></a></li>
+                                        <li style="width:100%;"><a href="javascript:" class="status-change btn btn-danger" data-type="2" title="Ngừng kinh doanh"><i class="lnr lnr-warning"></i><span>Ngừng kinh doanh</span></a></li>
+
+                                    }
+                                    if (isSale == true)
+                                    {
+                                        <li><a href="javascript:" class="allsale btn btn-info" title="Cập nhật % Giảm giá các sản phẩm đã chọn"><i class="lnr lnr-pencil"></i><span>% giảm giá</span></a></li>
+                                    }
+                                }
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <li><a href="javascript:" class="resetsort btn btn-success" title="Cập nhật số thứ tự các sản phẩm đã chọn (Nếu không chọn sản phẩm nào thì cập nhật thứ tự tất cả sản phẩm)"><i class="lnr lnr-pencil"></i><span>Cập nhật số thứ tự</span></a></li>
+                                }
+                                @if (isInsert == true)
+                                {
+                                    <li><a href="javascript:" class="getlisttoarticle btn btn-warning" title="Lấy danh sách sản phẩm đưa vào chi tiết bài viết"><i class="lnr lnr-file-empty"></i><span>Dùng trong bài viết</span></a></li>
+                                }
+                                @if (Model.SystemActionAdmin.Delete)
+                                {
+                                    <li><a href="javascript:" class="deleteAll btn btn-danger" title="Xóa danh sách đã chọn"><i class="lnr lnr-trash"></i><span>Xóa</span></a></li>
+                                }
+                                @if (Model.SystemActionAdmin.Edit == true && isFrame == true)
+                                {
+                                    <li><a href="javascript:" class="addframes btn btn-info" title="Thêm khung các sản phẩm đã chọn"><i class="lnr lnr-pencil"></i><span>Thêm khung</span></a></li>
+                                    <li><a href="javascript:" class="removeframes btn btn-danger" title="Bỏ khung các sản phẩm đã chọn"><i class="lnr lnr-pencil"></i><span>Bỏ khung</span></a></li>
+                                }
+                                <li><a href="javascript:" class="resize btn btn-warning"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th class="text-center wd50">
+                        <div class="label-check">
+                            <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                            <label for="checkAll"></label>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                {
+                    foreach (var item in Model.ListItem)
+                    {
+                        <tr id="item_@item.ID" class="@(item.ID==Model.Product.ID ? "active" : string.Empty)">
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Edit)
+                                {
+                                    <a href="#@item.ID" class="edit" data-tab="">
+                                        @if (!string.IsNullOrEmpty(item.UrlPicture))
+                                        {
+                                            <span style="display: inline-block; position: relative;">
+                                                <img src="@Common.ImageUrl(item.UrlPicture,Context,80,80)" title="@item._Name" style="margin-top: 10px;max-width:50px;max-height:50px;" />
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-warning">Thêm</span>
+                                        }
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span style="display: inline-block; position: relative;">
+                                        @if (!string.IsNullOrEmpty(item.UrlPicture))
+                                        {
+                                            <img src="@Common.ImageUrl(item.UrlPicture,Context,80,80)" title="@item._Name" style="margin-top: 10px;" />
+                                        }
+                                    </span>
+                                }
+                            </td>
+                            <td class="@(("," + item.ViewHome+ ",").Contains(",0,") ? "new" : string.Empty)">
+                                @if ((!string.IsNullOrEmpty(item.NameAscii) || !string.IsNullOrEmpty(item.LinkUrl)) && Model.SystemActionAdmin.Edit == true)
+                                {
+                                    <a href="#@item.ID" class="edit" data-tab="">@Html.Raw(Utility.DisplayShowName(item._Name, item.IsShow))</a>
+                                }
+                                else
+                                {
+                                    @Html.Raw(Utility.DisplayShowName(item._Name, item.IsShow))
+                                }
+                                <p style="margin-bottom: 0">
+                                    Lượt xem: <b>@(item.TotalViews > 0 ? item.TotalViews : 0)</b>
+                                </p>
+                                @if (("," + item.ViewHome + ",").Contains(",1,"))
+                                {
+                                    <span class="badge badge-success">Trang chủ</span>
+                                }
+                                @if (("," + item.ViewHome + ",").Contains(",3,"))
+                                {
+                                    <span class="badge badge-warning">Nổi bật</span>
+                                }
+                                @if (isProductCode == true && !string.IsNullOrEmpty(item.ProductCode))
+                                {
+                                    <div>Mã: <b>@item.ProductCode</b> Nhóm: <b>@item.ProductGroupCode</b></div>
+                                }
+                                @*@if (isBrand == true && !string.IsNullOrEmpty(item.NameBrand))
+                    {
+                    <div>
+                    Thương hiệu: @item.NameBrand
+                    @if (!string.IsNullOrEmpty(item.LogoBrand))
+                    {
+                    <img src="@(!string.IsNullOrEmpty(item.LogoBrand) ? item.LogoBrand : string.Empty)" style="max-height:20px;" />
+                    }
+                    </div>
+                    }*@
+                                @*<div class="quantity">Số lượng: @item.Quantity @item.Unit</div>*@
+                                @if (isStatus == true)
+                                {
+                                    <span>Trạng thái:</span>
+                                    <select @(Model.SystemActionAdmin.Edit == true ? string.Empty : "disabled") class="change-status form-control @(item.Status == 1 ? "badge-success" : (item.Status == 0 ? "badge-default" : "badge-danger"))" data-id="@item.ID">
+                                        <!option value="1" @(item.Status == 1 ? "selected" : string.Empty)>Còn hàng</!option>
+                                        <!option value="0" @(item.Status == 0 ? "selected" : string.Empty)>Hết hàng</!option>
+                                        <!option value="2" @(item.Status == 2 ? "selected" : string.Empty)>Ngừng kinh doanh</!option>
+                                    </select>
+                                }
+                                @if (Model.SystemActionAdmin.Active)
+                                {
+                                    <a href="#@item.ID" class="hiddens" title="Nhấn click để @(ConvertUtil.ToBool(item.IsShow)?" Ẩn "+item._Name:" Hiển thị "+item._Name) sản phẩm">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                                }
+                                @if (Model.SystemActionAdmin.Sitemap)
+                                {
+                                    <a href="#@item.ID" class="sitemaps" title="Nhấn click để @(ConvertUtil.ToBool(item.IsSitemap)?" gỡ "+item._Name:" thêm "+item._Name) sản phẩm vào sitemap">@Html.Raw(StaticEnum.Sitemap(item.IsSitemap))</a>
+                                }
+                                @*@{
+                    var ids = "," + item.ViewHome + ",";
+                    }
+                    @if (Model.SystemActionAdmin.Edit)
+                    {
+                    <select class="form-control ChangeSpecial" data-id="@item.ID" data-old="@item.ViewHome" multiple style="margin-top:10px;">
+                    @if (isHome == true)
+                    {
+                    <option value="@StaticEnum.IsHome" @(ids.Contains("," + StaticEnum.IsHome + ",") ? "selected" : string.Empty)>Trang chủ</option>
+                    }
+                    @if (isNoiBat == true)
+                    {
+                    <option value="@StaticEnum.IsHot" @(ids.Contains("," + StaticEnum.IsHot + ",") ? "selected" : string.Empty)>Nổi bật</option>
+                    }
+                    @if (isBanChay == true)
+                    {
+                    <option value="@StaticEnum.IsSelling" @(ids.Contains("," + StaticEnum.IsSelling + ",") ? "selected" : string.Empty)>Bán chạy</option>
+                    }
+                    </select>
+                    }
+                    else
+                    {
+                    if (ids.Contains("," + StaticEnum.IsHome + ",") && isHome == true)
+                    {
+                    <span class="badge badge-success">Trang chủ</span>
+                    }
+                    if (ids.Contains("," + StaticEnum.IsHot + ",") && isNoiBat == true)
+                    {
+                    <span class="badge badge-success">Nổi bật</span>
+                    }
+                    }*@
+                            </td>
+                            @if (isGia == true)
+                            {
+                                <td class="@(item.TypeSaleValue>0 ? "sale" : string.Empty)">
+                                    @*<input type="text" style="margin-bottom:10px;" class="InputPriceOld @(item.IsShowPrice!=true ? "hidden-price" : string.Empty) form-control" name="PriceOld" onchange="changePriceOld('@item.ID', this.value)" value="@Utility.GetFormatPriceType(item.PriceOld, 1, string.Empty)" disabled />*@
+                                    <input type="text" style="color:red;" class="InputPrice @(item.IsShowPrice!=true ? "hidden-price" : string.Empty) form-control" name="Price" onchange="changePrice('@item.ID', this.value)" value="@Utility.GetFormatPriceType(item.Price, 1, string.Empty)" disabled />
+                                    @if (item.TypeSaleValue.HasValue && item.TypeSaleValue.Value > 0 && item.TypeSale == 1 && isSale == true)
+                                    {
+                                        <span class="badge badge-warning"><span class="lnr lnr-arrow-down"></span>@(item.TypeSaleValue.HasValue ? Math.Round(item.TypeSaleValue.Value, 0) : 0)%</span>
+                                    }
+                                    @if (isVat == true)
+                                    {
+                                        if (Model.SystemActionAdmin.Edit == true)
+                                        {
+                                            <a href="#@item.ID" class="isvat">@Html.Raw(StaticEnum.VAT(item.IsVAT))</a>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(StaticEnum.VAT(item.IsVAT))
+                                        }
+                                    }
+                                </td>
+                            }
+                            @if (item.ModifiedDate != null)
+                            {
+                                <td>
+                                    Lần cuối: @item.ModifiedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") <b>(@item.Timespan)</b> <span class="color-warning" style="font-size:12px;">bởi @item.ModifiedName</span><br />
+                                    Tạo: @item.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") <span class="color-info" style="font-size:12px;">bởi @item.CreatorName</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>Tạo: @item.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") <span class="color-info" style="font-size:12px;">bởi @item.CreatorName</span></td>
+                            }
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <td>
+                                    <a href="#@item.ID" class="edit badge badge-primary" data-tab="TabModule"><span class="lnr lnr-pencil"></span></a>
+                                    <a href="#@item.ID" class="edit" data-tab="TabModule" data-toggle="tooltip" data-placement="bottom" title="@item.ModuleNames">@Utility.TrimLength(item.ModuleNames,50)</a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>@Utility.TrimLength(item.ModuleNames,50)</td>
+                            }
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                                }
+                                else
+                                {
+                                    @item.OrderDisplay
+                                }
+                            </td>
+                            <td class="act_delete">
+                                    @if (item.TypeView == "1")
+                                    {
+                                        <a href="/Adminadc/ProductSub/Index?parentId=@item.ID" class="btn" title="Nội dung phụ" style="width:auto;">
+                                            <i class="fa fa-book" aria-hidden="true"></i>
+                                        </a>
+                                    }
+                                @if (Model.ListModule.Any(x => x.Tag == "Comment"))
+                                {
+                                    if (isBinhLuan == true)
+                                    {
+                                        <a href="/adminadc/Comment/Index#type=Rate&productId=@item.ID" target="_blank" class="btn color-success" title="Danh sách đánh giá sản phẩm" style="width:auto;">
+                                            (@(item.AverageRate) <span class="lnr lnr-star" style="margin:0;color:orange"></span>)
+                                        </a>
+                                    }
+                                    if (isDanhGia == true)
+                                    {
+                                        <a href="/adminadc/Comment/Index#type=Comment&productId=@item.ID" target="_blank" class="btn color-success" title="Danh sách bình luận sản phẩm" style="width:auto;">
+                                            <span class="lnr lnr-bubble"></span>(<span style="color:red;">@item.TotalNotApproved</span>/@item.TotalComment)
+                                        </a>
+                                    }
+                                }
+                                @if (isInsert == true)
+                                {
+                                    <a href="javascript:;" class="getproducttoarticle" data-id="@item.ID" title="Chèn sản phẩm vào bài viết">
+                                        <span class="lnr lnr-file-empty"></span>
+                                    </a>
+                                }
+                                @if (!string.IsNullOrEmpty(item._NameAscii) || !string.IsNullOrEmpty(item.LinkUrl))
+                                {
+                                    <a href="@(string.IsNullOrEmpty(item.LinkUrl) ? Utility.Link(string.Empty,item._NameAscii,item.LinkUrl) : item.LinkUrl)" target="_blank" class="quickview btn" title="Đường dẫn xem sản phẩm">
+                                        <span class="lnr lnr-eye"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Edit)
+                                {
+                                    <a href="#@item.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Nhấn click để chỉnh sửa sản phẩm">
+                                        <span class="lnr lnr-pencil"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Delete)
+                                {
+                                    <a href="#@item.ID" class="delete" title="Nhấn click để xóa sản phẩm">
+                                        <span class="lnr lnr-trash"></span>
+                                    </a>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="label-check">
+                                    <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                    <label for="Check@(item.ID)"></label>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    @Html.Raw(ViewBag.GridHtml)
+    <style>
+        .change-status {
+            margin-top: 5px;
+            color: #ffffff;
+            height: 25px;
+            line-height: 1;
+            font-size: 13px;
+            display: inline-block;
+            width: initial;
+        }
+
+            .change-status option {
+                background: #ffffff;
+            }
+
+        .dropdown-action li {
+            margin-bottom: 5px;
+        }
+
+            .dropdown-action li a {
+                line-height: 23px !important;
+            }
+
+            .dropdown-action li:last-child {
+                margin-bottom: 0px;
+            }
+
+        #tblContent td img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        #tblContent td {
+            position: relative;
+        }
+
+            #tblContent td.new {
+                padding-left: 20px;
+            }
+
+                #tblContent td.new:before {
+                    content: '';
+                    position: absolute;
+                    width: 35px;
+                    height: 35px;
+                    background: url(/Admin/images/icon-new.png);
+                    top: 0;
+                    left: 0;
+                    background-size: 100%;
+                }
+
+            #tblContent td.sale:before {
+                content: '';
+                position: absolute;
+                width: 27px;
+                height: 35px;
+                background: url(/Admin/images/icon-sale.png);
+                top: 11px;
+                right: 5px;
+                background-size: 100%;
+            }
+
+        .dropdown-column {
+            width: 340px;
+        }
+
+            .dropdown-column li {
+                width: 50%;
+                float: left;
+            }
+    </style>
+    <link href="/lib/jquery/css/sumoselect.css" rel="stylesheet" />
+    <script src="/lib/jquery/js/jquery.sumoselect.min.js"></script>
+    <script>
+        window.testSelAll = $('.ChangeSpecial').SumoSelect({ search: true, searchText: 'Đặc biệt', csvDispCount: 3, okCancelInMulti: false, selectAll: true });
+        $(function () {
+            registerGridView("#tblContent");
+        });
+    </script>
+    <script>
+        var slector = '#tblContent';
+        $(slector).on('click', 'a.resetsort', function (e) {
+            e.preventDefault();
+            var arrRowId = '';
+            $(slector + " input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").each(function () {
+                arrRowId += $(this).val() + ",";
+            });
+            arrRowId = (arrRowId.length > 0) ? arrRowId.substring(0, arrRowId.length - 1) : arrRowId;
+            var frm = $("#searchFrm");
+            var hastag = getValueFormMutilSelect(frm);
+            if (arrRowId != "") {
+                hastag = "ItemId=" + arrRowId + '&' + hastag;
+                $.post(urlPostResetOrder, hastag, function (data) {
+                    if (data.errors == false) {
+                        window.location.reload();
+                    } else {
+                        $.growl.error({ title: "Thông báo", message: data.message, location: 'br', size: 'large', duration: 3000 });
+                        $("#btnOrder").attr("disabled", false);
+                    }
+                });
+            }
+            else {
+                $.post(urlPostResetOrder, hastag, function (data) {
+                    if (data.errors == false) {
+                        window.location.reload();
+                    } else {
+                        $.growl.error({ title: "Thông báo", message: data.message, location: 'br', size: 'large', duration: 3000 });
+                        $("#btnOrder").attr("disabled", false);
+                    }
+                });
+            }
+            $(this).parents('.btn-group').removeClass('open');
+            return false;
+        });
+        $(slector + " .ChangeSpecial").on('sumo:closed', function (sumo) {
+            var itemId = $(this).data("id");
+            var newids = $(this).val();
+            var vh = $(this).data("old");
+            var oldids = vh.toString().split(',');
+            var change = false;
+
+            if (newids.length == oldids.length) {
+                for (var i = 0; i < oldids.length; i++) {
+                    if (!newids.includes(oldids[0])) {
+                        change = true;
+                    }
+                }
+            }
+            else if (vh == "" && newids.length == 0) {
+                change = false
+            }
+            else {
+                change = true;
+            }
+            if (change == true) {
+                $.post(urlPostAction, "Do=ChangeViewHome&ViewHome=" + newids.toString() + "&ItemId=" + itemId, function (data) {
+                    if (data.errors == false) {
+                        window.location.reload();
+                    } else {
+                        swal({ title: "Thông báo", text: data.message, type: "error", showConfirmButton: true, animation: false });
+                        $("#btnOrder").attr("disabled", false);
+                    }
+                });
+            }
+        });
+    </script>
+    @if (Model.Product.ID > 0)
+    {
+        <script>
+            $(function () {
+                var item = $('#item_@(Model.Product.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+    @if (Model.SearchModel.ModuleId.HasValue && Model.SearchModel.ModuleId != 0)
+    {
+        <script>
+            urlForm = '@Url.Action("AjaxForm")?ModuleId=' + @Model.SearchModel.ModuleId;
+            $('.selectpicker').selectpicker('val', '@Model.SearchModel.ModuleId');
+            var type = $('#ModuleId option[value="@Model.SearchModel.ModuleId"]').data('type');
+        </script>
+        if (Model.SystemActionAdmin.Add == true)
+        {
+            <script>
+                $('#btnImport').show();
+                $('.list-import').show();
+                var urlImport = '@Url.Action("ImportExcel", new { ModuleId = Model.SearchModel.ModuleId })';
+                $("#btnImport").click(function () {
+                    loadAjax(urlImport, "#tab_add");
+                });
+            </script>
+        }
+    }
+    else
+    {
+        <script>
+            $('#btnImport').hide();
+            $('.list-import').hide();
+            $(".import-data").click(function () {
+                loadAjax('@Url.Action("ImportExcel")', "#tab_add");
+                $("#btnEdit").click();
+            });
+        </script>
+    }
+    <script>
+        $(function () {
+            $('#Keyword').val('@Html.Raw(Model.SearchModel.keyword)');
+            $('#page').val(@Model.SearchModel.page);
+            $('#Show option[value="@Model.SearchModel.Show"]').attr('selected', 'selected');
+            $('#Status option[value="@Model.SearchModel.Status"]').attr('selected', 'selected');
+            $('#type option[value="@Model.SearchModel.type"]').attr('selected', 'selected');
+            $('#pagesize option[value="@Model.SearchModel.pagesize"]').attr('selected', 'selected');
+
+            $('#btnImportWarehouse').show();
+            $('.list-import-warehouse').show();
+
+            var urlImportWarehouse = '@Url.Action("ImportExcelWarehouse", new { ModuleId = Model.SearchModel.ModuleId != null ? Model.SearchModel.ModuleId : moduleId })';
+            $("#btnImportWarehouse").click(function () {
+                loadAjax(urlImportWarehouse, "#tab_add_warehouse");
+            });
+        });
+    </script>
+    @if (Model.SearchModel.BrandId.HasValue && Model.SearchModel.BrandId > 0)
+    {
+        <script>
+            $('.brandpicker').selectpicker('val', '@Model.SearchModel.BrandId');
+        </script>
+    }
+    @if (Model.SearchModel.sort.HasValue)
+    {
+        <script>
+            $(function () {
+                $('#sort option[value="@Model.SearchModel.sort"]').attr('selected', 'selected');
+            });
+        </script>
+    }
+}

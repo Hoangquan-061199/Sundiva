@@ -1,0 +1,414 @@
+﻿@using ADCOnline.Simple.Base
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.SystemConfigViewModel
+@if (Model.SystemActionAdmin.Add || Model.SystemActionAdmin.Edit)
+{
+    <form id="ModulePositionContent" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.SystemConfig.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab == "TabEmail" ? "active" : string.Empty)"><a href="#TabEmail" aria-controls="TabEmail" role="tab" data-toggle="tab">Cấu hình Email</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab == "TabSEO" ? "active" : string.Empty)"><a href="#TabSEO" aria-controls="TabSEO" role="tab" data-toggle="tab">SEO</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Tên</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.SystemConfig.Name" placeholder="@Model.SystemConfig.Name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Hotline</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+                                        <input type="text" class="form-control valid" name="Hotline" id="Hotline" value="@Model.SystemConfig.Hotline" placeholder="@Model.SystemConfig.Hotline" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Email</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                        <input type="text" class="form-control valid" name="Email2" id="Email2" value="@Model.SystemConfig.Email2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Trụ sở</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                        <input type="text" class="form-control" name="Address1" id="Address1" value="@Model.SystemConfig.Address1" placeholder="@Model.SystemConfig.Address1" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>TT giao dịch</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        </span>
+                                        <input type="text" class="form-control" name="Address2" id="Address2" value="@Model.SystemConfig.Address2" placeholder="@Model.SystemConfig.Address2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Copyright</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-copyright"></i></span>
+                                        <input type="text" class="form-control valid" name="Copyright" id="Copyright" value="@Model.SystemConfig.Copyright" placeholder="@Model.SystemConfig.Copyright" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Zalo</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+                                        <input type="text" class="form-control link" name="Zalo" id="Zalo" value="@Model.SystemConfig.Zalo" placeholder="@Model.SystemConfig.Zalo" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Tiktok</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tiktok" viewBox="0 0 16 16">
+                                                <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3V0Z" />
+                                            </svg>
+                                        </span>
+                                        <input type="text" class="form-control link" name="Tiktok" id="Tiktok" value="@Model.SystemConfig.Tiktok" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Youtube</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-youtube"></i></span>
+                                        <input type="text" class="form-control link" name="Youtube" id="Youtube" value="@Model.SystemConfig.Youtube" placeholder="@Model.SystemConfig.Youtube" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Facebook</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-facebook"></i></span>
+                                        <input type="text" class="form-control link" name="Facebook" id="Facebook" value="@Model.SystemConfig.Facebook" placeholder="@Model.SystemConfig.Facebook" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Twitter</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-twitter" aria-hidden="true"></i>
+                                        </span>
+                                        <input type="text" class="form-control" name="Twitter" id="Twitter" value="@Model.SystemConfig.Twitter" placeholder="@Model.SystemConfig.Twitter" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Message</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-facebook"></i></span>
+                                        <input type="text" class="form-control" name="LinkFacebook" id="LinkFacebook" value="@Model.SystemConfig.LinkFacebook" placeholder="@Model.SystemConfig.LinkFacebook" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Instagram</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-instagram"></i></span>
+                                        <input type="text" class="form-control link" name="Instagram" id="Instagram" value="@Model.SystemConfig.Instagram" placeholder="@Model.SystemConfig.Instagram" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Map</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
+                                        <input type="text" class="form-control notvalid" name="MapGoogle1" id="MapGoogle1" value="@Model.SystemConfig.MapGoogle1" placeholder="@Model.SystemConfig.MapGoogle1" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Fax</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+                                        <input type="text" class="form-control" name="Fax1" id="Fax1" value="@Model.SystemConfig.Fax1" placeholder="@Model.SystemConfig.Fax1" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Website</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-globe" aria-hidden="true"></i></span>
+                                        <input type="text" class="form-control" name="Website" id="Website" value="@Model.SystemConfig.Website" placeholder="@Model.SystemConfig.Website" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 col-sm-offset-1">
+                                    <label>
+                                        <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.SystemConfig.IsShow == false) ? "" : "checked") />
+                                        <input type="hidden" name="IsShow" value="false" />
+                                        Mở website
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab == "TabEmail" ? "active" : string.Empty)" id="TabEmail">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Email nhận</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                        <input type="text" class="form-control valid" name="Email" id="Email" value="@Model.SystemConfig.Email" placeholder="@Model.SystemConfig.Email" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Email gửi</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                                        <input type="email" class="form-control" name="EmailCms" id="EmailCms" value="@Model.SystemConfig.EmailCms" placeholder="@Model.SystemConfig.EmailCms" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Mật khẩu email</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                        <input type="password" class="form-control" name="PassEmailCms" id="PassEmailCms" value="@Model.SystemConfig.PassEmailCms" placeholder="@Model.SystemConfig.PassEmailCms" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Port</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                                        <input type="number" class="form-control" min="0" name="Port" id="Port" value="@Model.SystemConfig.Port" placeholder="@Model.SystemConfig.Port" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Servername</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                        <input type="text" class="form-control title" name="Severname" id="Severname" value="@Model.SystemConfig.Severname" placeholder="@Model.SystemConfig.Severname" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1 col-sm-offset-1">
+                                    <label>
+                                        <input type="checkbox" name="SSLEmail" id="SSLEmail" value="True" @((Model.SystemConfig.SSLEmail == false) ? "" : "checked") />
+                                        <input type="hidden" name="SSLEmail" value="false" />
+                                        SSL email
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <p class="color-danger">
+                                        * Phần cho phép cấu hình Email gửi và email nhận trong hệ thống<br />
+                                        * Port: 587, 465, 21,...<br />
+                                        * Servername: smtp.gmail.com đối với google mail
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab == "TabSEO" ? "active" : string.Empty)" id="TabSEO">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Seo Title</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" maxlength="70" class="form-control title count" name="SEOTitle" id="SEOTitle" value="@Model.SystemConfig.SEOTitle" placeholder="@Model.SystemConfig.SEOTitle" />
+                                </div>
+                                <div class="col-sm-3"><span class="Val-SEOTitle"><span><b>0</b> ký tự <b>0</b> từ</span> (Khuyến cáo 10 - 70 ký tự)</span></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Seo Description</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" maxlength="300" class="form-control title count" name="SEODescription" id="SEODescription" value="@Model.SystemConfig.SEODescription" placeholder="@Model.SystemConfig.SEODescription" />
+                                </div>
+                                <div class="col-sm-3"><span class="Val-SEODescription"><span><b>0</b> ký tự <b>0</b> từ</span> (Khuyến cáo 150 - 300 ký tự)</span></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Seo Keyword</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="SEOKeyword" id="SEOKeyword" value="@Model.SystemConfig.SEOKeyword" placeholder="@Model.SystemConfig.SEOKeyword" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Index google</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="IndexGoogle" id="IndexGoogle" value="@Model.SystemConfig.IndexGoogle" placeholder="noodp,index,follow" />
+                                    <span>
+                                        Mặc định: <b>noodp,index,follow</b><br />
+                                        noodp,noindex,nofollow: Không hiển thị trên các trang tìm kiếm<br />
+                                        noodp,index,follow: Hiển thị trên các trang tìm kiếm
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>og:image</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;vertical-align:top;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','ogimage',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'ogimage',0)" style="margin:0;" value="@Model.SystemConfig.ogimage" />
+                                        <span>Ảnh thumbnail hiển thị khi chia sẻ link trang chủ</span>
+                                    </div>
+                                    <div id="AddAvatar">
+                                        @if (Model.SystemConfig.ogimage != null)
+                                        {
+                                            <table class="removeParent">
+                                                <tr>
+                                                    <td>
+                                                        <img style="width: 100px; max-height: 100px;" src="@Model.SystemConfig.ogimage">
+                                                        <input type="hidden" name="ogimage" value="@Model.SystemConfig.ogimage">
+                                                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>og:image:alt</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control title" name="ogimagealt" id="ogimagealt" value="@Model.SystemConfig.ogimagealt" placeholder="@Model.SystemConfig.ogimagealt" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>favicon</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;vertical-align:top;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddFavicon','favicon',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddFavicon', 'favicon',0)" style="margin:0;" value="@Model.SystemConfig.favicon" />
+                                        <span>Click vào chọn ảnh để cập nhật favicon.<br /> Các file hỗ trợ gif,png,jpg,ico. Kích thước favicon có thể 16x16, 32x32, 48x48</span>
+                                    </div>
+                                    <div id="AddFavicon">
+                                        @if (Model.SystemConfig.ogimage != null)
+                                        {
+                                            <table class="removeParent">
+                                                <tr>
+                                                    <td>
+                                                        <img style="width: 100px; max-height: 100px;" src="@Model.SystemConfig.favicon">
+                                                        <input type="hidden" name="favicon" value="@Model.SystemConfig.favicon">
+                                                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <p class="color-danger">* Phần cho phép cấu hình SEO tại trang chủ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function () {
+            ValidInput();
+            DateVi("#TimeEnd");
+            Count();
+            $("#ModulePositionContent").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    Name: "Tên bắt buộc nhập."
+                },
+                submitHandler: function () { //onSubmit
+                    updateDateDDMMYYYY();
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#ModulePositionContent");
+                    return false;
+                }
+            });
+
+        });
+    </script>
+}

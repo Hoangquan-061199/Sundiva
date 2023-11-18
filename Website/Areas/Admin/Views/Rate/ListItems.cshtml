@@ -1,0 +1,215 @@
+﻿@model Website.Areas.Admin.ViewModels.CommentViewmodel
+@using ADCOnline.Utils
+@using Website.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr role="row">
+                <th colspan="2">Nội dung</th>
+                <th>Ảnh</th>
+                <th>Email</th>
+                @if (!Model.SearchModel.contentId.HasValue && !Model.SearchModel.productId.HasValue)
+                {
+                    <th>Sản phẩm/Bài viết</th>
+                }
+                <th class="text-center wd100">Trạng thái</th>
+                <th class="act_roles text-center" style="width:80px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><span class="lnr lnr-checkmark-circle"></span><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><span class="lnr lnr-warning"></span><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="#approvedAll" title="Duyệt" class="approvedAll"><i class="lnr lnr-checkmark-circle"></i><span>Duyệt</span></a></li>
+                                <li><a href="#notapprovedAll" title="Bỏ duyệt" class="notapprovedAll"><i class="lnr lnr-warning"></i><span>Bỏ duyệt</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr class="@(item.IsApproved==false ? "comment" : string.Empty)">
+                        <td colspan="2" class="detail_comment">
+                            <b>@item.Fullname</b>
+                            <div class="vote-star">
+                                <div class="rating">
+                                    <div class="full star-v1 @(item.Rate.HasValue && item.Rate.Value>0 ? "active" : string.Empty)"></div>
+                                    <div class="full star-v1 @(item.Rate.HasValue && item.Rate.Value>1.5 ? "active" : string.Empty)"></div>
+                                    <div class="full star-v1 @(item.Rate.HasValue && item.Rate.Value>2.5 ? "active" : string.Empty)"></div>
+                                    <div class="full star-v1 @(item.Rate.HasValue && item.Rate.Value>3.5 ? "active" : string.Empty)"></div>
+                                    <div class="full star-v1 @(item.Rate.HasValue && item.Rate.Value>4.5 ? "active" : string.Empty)"></div>
+                                </div>
+                            </div>
+                            <br />
+                            @Html.Raw((!string.IsNullOrEmpty(item.Content) ? Utility.TrimLength(item.Content, 100) : ""))<br />
+                            <i>(@(item.Good.HasValue ? item.Good : 0)) <span class="color-blue" style="font-weight:600;">Hữu ích</span> &#8226; @item.Timespan</i>
+                        </td>
+                        <td class="text-center"><img src="@item.UrlPicture" style="max-width:30px; max-height:30px;" /></td>
+                        <td>@item.Email</td>
+                        @if (item.ContentID.HasValue)
+                        {
+                            <td>
+                                <b>Bài viết:</b> <a target="_blank" href="@Utility.Link(item.ContentModuleNameAscii,item.ContentNameAscii, string.Empty)?comment=@item.ID">@item.ContentName</a>
+                                <a target="_blank" href="@Utility.Link(item.ContentModuleNameAscii,item.ContentNameAscii, string.Empty)?comment=@item.ID" class="badge badge-success">Xem bình luận</a>
+                            </td>
+                        }
+                        else if (item.ProductID.HasValue)
+                        {
+                            <td>
+                                <b>Sản phẩm:</b> <a target="_blank" href="@Utility.Link(string.Empty,item.ProductNameAscii, string.Empty)?comment=@item.ID">@item.ProductName @item.ProductCode</a>
+                                <a target="_blank" href="@Utility.Link(string.Empty,item.ProductNameAscii, string.Empty)?comment=@item.ID" class="badge @(item.Act == "Rate" ? "badge-warning" : "badge-success")">Xem @(item.Act == "Rate" ? "đánh giá" : "bình luận")</a>
+                            </td>
+                        }
+                        <td style="text-align:center;">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <a href="#@item.ID" class="hiddens" title="@(ConvertUtil.ToBool(item.IsShow) ? " Ẩn " + item.Fullname : " Hiển thị " + item.Fullname)">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                                <a href="#@item.ID" class="notapproved" title="@(ConvertUtil.ToBool(item.IsShow) ? " Bỏ duyệt " + item.Fullname : " Duyệt " + item.Fullname)">@Html.Raw(StaticEnum.Approved(item.IsApproved))</a>
+                            }
+                            else
+                            {
+                                @Html.Raw(StaticEnum.Show(item.IsShow)) @Html.Raw(StaticEnum.Approved(item.IsApproved))
+                            }
+                        </td>
+                        <td class="act_delete" style="width:180px;">
+                            @if (Model.SystemActionAdmin.Add == true)
+                            {
+                                <a href="#@item.ID" data-toggle="tooltip" data-tab="" data-placement="bottom" class="add badge badge-default" style="width:initial;line-height:1 !important;border-radius:3px;overflow:hidden;" title="" data-original-title="Trả lời">
+                                    Trả lời
+                                </a>
+                            }
+                            <a href="javascript:" class="btn" title="Trả lời: @item.Fullname" style="width:auto;">
+                                <span class="lnr lnr-bubble"></span>(@item.TotalReply)
+                            </a>
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a href="#@item.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @item.Fullname">
+                                    <span class="lnr lnr-pencil"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.Fullname">
+                                    <span class="lnr lnr-trash"></span>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                    if (item.Replies.Any())
+                    {
+                        foreach (var rep in item.Replies)
+                        {
+                            <tr class="reply">
+                                <td style="width:15px; min-width: 15px;"></td>
+                                <td>
+                                    <a class="edit" data-tab="" href="#@rep.ID">
+                                        <b>@rep.Fullname</b>
+                                        @if (rep.AdminId != null)
+                                        {
+                                            <span class="badge badge-warning">Quản trị viên</span>
+                                        }
+                                        @if (rep.AdminId != null)
+                                        {
+                                            @Html.Raw(rep.Content)
+                                            <i>(@(rep.Good.HasValue ? rep.Good : 0)) Thích &#8226; @item.Timespan</i>
+                                        }
+                                        else
+                                        {
+                                            <p>@Html.Raw(rep.Content)</p>
+                                            <i>(@(rep.Good.HasValue ? rep.Good : 0)) Hài lòng &#8226; (@(rep.Bad.HasValue ? rep.Bad : 0)) Không hài lòng &#8226; @item.Timespan</i>
+                                        }
+                                    </a>
+                                </td>
+                                <td class="text-center"><img src="@rep.UrlPicture" style="max-width:30px; max-height:30px;" /></td>
+                                <td>@rep.Email</td>
+                                <td>&nbsp;</td>
+                                <td style="text-align:center;">
+                                    @if (Model.SystemActionAdmin.Active == true)
+                                    {
+                                        <a href="#@rep.ID" class="hiddens" title="@(ConvertUtil.ToBool(rep.IsShow) ? " Ẩn " + rep.Fullname : " Hiển thị " + rep.Fullname)">@Html.Raw(StaticEnum.Show(rep.IsShow))</a>
+                                        <a href="#@rep.ID" class="notapproved" title="@(ConvertUtil.ToBool(rep.IsShow) ? " Bỏ duyệt " + rep.Fullname : " Duyệt " + item.Fullname)">@Html.Raw(StaticEnum.Approved(rep.IsApproved))</a>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(StaticEnum.Show(rep.IsShow)) @Html.Raw(StaticEnum.Approved(rep.IsApproved))
+                                    }
+                                </td>
+                                <td class="act_delete" style="width:150px;">
+                                    @if ((rep.AdminId == null || rep.AdminId == Model.Member.UserId) && Model.SystemActionAdmin.Edit)
+                                    {
+                                        <a href="#@rep.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @rep.Fullname">
+                                            <i class="lnr lnr-pencil"></i>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Delete == true)
+                                    {
+                                        <a href="#@rep.ID" class="delete btn" title="Xóa: @rep.Fullname">
+                                            <i class="lnr lnr-trash"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="label-check">
+                                        <input type="checkbox" id="Check@(rep.ID)" class="minimal check" value="@rep.ID">
+                                        <label for="Check@(rep.ID)"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+
+    <style>
+        .comment td { background: #dddddd !important; }
+        .reply td { border-left: none !important; border-right: none !important; background: #ffffff !important; }
+        .vote-star { display: inline-block; vertical-align: middle; }
+            .vote-star .rating { border: none; display: table-cell; vertical-align: middle; }
+                .vote-star .rating > input { display: none; }
+                .vote-star .rating > label:before, .vote-star .rating > .star-v1:before { margin: 2px; font-size: 13px; font-family: FontAwesome; display: inline-block; content: "\f005"; text-shadow: 0 0 1px rgba(0, 0, 0, 0.5); }
+                .vote-star .rating > label, .vote-star .rating > .star-v1 { color: #ddd; float: right; margin-bottom: 0; }
+                .vote-star .rating > .star-v1 { float: left; }
+                    .vote-star .rating > .star-v1.active { color: #f5a623; }
+                .vote-star .rating > input:checked ~ label,
+                .vote-star .rating:not(:checked) > label:hover,
+                .vote-star .rating:not(:checked) > label:hover ~ label { color: #FFD700; }
+                    .vote-star .rating > input:checked + label:hover
+                    .vote-star .rating > input:checked ~ label:hover,
+                    .vote-star .rating > label:hover ~ input:checked ~ label,
+                    .vote-star .rating > input:checked ~ label:hover ~ label { color: #FFED85; }
+    </style>
+}

@@ -1,0 +1,84 @@
+﻿@model CommentViewModel
+
+@{
+    Layout = null;
+}
+
+@if (Model.CommentItems.Any())
+{
+    @foreach (var item in Model.CommentItems)
+    {
+        <div class="item">
+            <div class="info">
+                <div class="avt">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="content">
+                    <div class="user-text">@item.Fullname</div>
+                    <p>@item.Content</p>
+                    @if (!string.IsNullOrEmpty(item.UrlPicture))
+                    {
+                        <div class="img-cmt" data-src="@item.UrlPicture" data-fancybox="comment" data-caption="@item.Fullname">
+                            <img src="@item.UrlPicture" alt="@item.Fullname" />
+                        </div>
+                    }
+                </div>
+                <div class="action item-@item.ID">
+                    <span class="_like" onclick="LikeComment(@item.ID)"><i class="fa-solid fa-thumbs-up"></i> <span>(@(item.Good > 0 ? item.Good : 0))</span>@ResourceData.Resource("Thich", ViewBag.Lang)</span>
+                    <span class="show-repply-comment" data-id="@item.ID" data-pid="@item.ID" data-name="@item.Fullname">
+                        <i class="fa-regular fa-comment-dots"></i> @ResourceData.Resource("TraLoi", ViewBag.Lang)
+                    </span>
+                    <span class="time-span">@item.Timespan</span>
+                </div>
+                <div class="list-repply-comment reply-@item.ID">
+                    @if (item.Replies.Any())
+                    {
+                        foreach (var itemchild in item.Replies)
+                        {
+                            <div class="item">
+                                <div class="info">
+                                    <div class="avt">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div class="content">
+                                        @if (!string.IsNullOrEmpty(itemchild.AdminId.ToString()))
+                                        {
+                                            <div class="user-text">@itemchild.Fullname<span>Administrator</span></div>
+                                            @Html.Raw(itemchild.Content)
+                                        }
+                                        else
+                                        {
+                                            <div class="user-text">@itemchild.Fullname</div>
+                                            <p>@itemchild.Content</p>
+                                        }
+                                        @if (!string.IsNullOrEmpty(itemchild.UrlPicture))
+                                        {
+                                            <div class="img-cmt" data-src="@itemchild.UrlPicture" data-fancybox="comment" data-caption="@itemchild.Fullname">
+                                                <img src="@itemchild.UrlPicture" alt="@itemchild.Fullname" />
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="action item-@itemchild.ID">
+                                        <span class="_like" onclick="LikeComment(@itemchild.ID)"><i class="fa-solid fa-thumbs-up"></i> <span>(@(itemchild.Good > 0 ? itemchild.Good : 0))</span>@ResourceData.Resource("Thich", ViewBag.Lang)</span>
+                                        <span class="time-span">@itemchild.Timespan</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        if (item.TotalReply > 5)
+                        {
+                            <div class="pagi page-reply" data-product-id="@Model.productId" data-parentid="@item.ID">@ResourceData.Resource("XemThemCauTraLoi", ViewBag.Lang) (@(item.TotalReply - item.Replies.Count()))</div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.Total > Model.PageSize)
+    {
+        <div class="pagi page-comment">
+            @Html.Raw(ViewBag.GridPageHtml)
+        </div>
+    }
+}

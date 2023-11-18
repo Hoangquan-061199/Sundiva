@@ -1,0 +1,160 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Utils
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptChaConfig
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+}
+
+@if (Model.ModuleItem != null)
+{
+    @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        <div class="banner-slide">
+            <div class="@(Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) > 1 ? "slide owl-carousel owl-theme" : "banner mt-top")">
+                @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3).OrderBy(x => x.AlbumOrderDisplay))
+                {
+                    <div class="item">
+                        <img src="@item.AlbumUrl" alt="@item.AlbumTitle">
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @if (Model.WebsiteModulesItems.Any())
+    {
+        foreach(var module in Model.WebsiteModulesItems.OrderBy(x => x.OrderDisplay))
+        {
+            switch (module.ModuleTypeCode)
+            {
+                case StaticEnum.News:
+                    {
+                        if (module.ListContentItem.Any())
+                        {
+                            <div class="news-page-2">
+                                <div class="container">
+                                    <div class="top">
+                                        <h2 class="title"><a href="@Utility.Link(module.NameAscii,string.Empty, module.LinkUrl)" title="@module.Name">@(!string.IsNullOrEmpty(module.Title) ? module.Title :  module.Name)</a></h2>
+                                        <a href="@Utility.Link(module.NameAscii,string.Empty, module.LinkUrl)" title="@ResourceData.Resource("XemThem", ViewBag.Lang)" class="btn-see-more">@ResourceData.Resource("XemThem", ViewBag.Lang)</a>
+                                    </div>
+                                    <div class="list-news">
+                                        @foreach(var content in module.ListContentItem.Take(3))
+                                        {
+                                            <div class="item-news">
+                                                <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="item-img">
+                                                    <img src="@content.UrlPicture" alt="@content.Name" />
+                                                </a>
+                                                <h3 class="name">
+                                                    <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name">
+                                                        @content.Name
+                                                    </a>
+                                                </h3>
+                                                <div class="item-bottom">
+                                                    <div class="item-timer">
+                                                        <img src="/html/style/images/icon-oclock.webp" alt="Clock" />
+                                                        <span>@(content.CreatedDate.HasValue ? content.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</span>
+                                                    </div>
+                                                    <a class="btn-see-detail" href="@Utility.Link(content.NameAscii,string.Empty, content.LinkUrl)" title="@content.Name">
+                                                        <p>@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</p>
+                                                        <span><i class="fa-solid fa-chevron-right"></i></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        break;
+                    }
+                case StaticEnum.TinCongTy:
+                    {
+                        if (module.ListContentItem.Any())
+                        {
+                            <div class="news-about-TAG">
+                                <div class="container">
+                                    <div class="top">
+                                        <h2 class="title"><a href="@Utility.Link(module.NameAscii,string.Empty, module.LinkUrl)" title="@module.Name">@(!string.IsNullOrEmpty(module.Title) ? module.Title : module.Name)</a></h2>
+                                        <a href="@Utility.Link(module.NameAscii,string.Empty, module.LinkUrl)" title="@ResourceData.Resource("XemThem", ViewBag.Lang)" class="btn-see-more">@ResourceData.Resource("XemThem", ViewBag.Lang)</a>
+                                    </div>
+                                    <div class="list-activity">
+                                        @foreach(var content in module.ListContentItem)
+                                        {
+                                            <div class="item">
+                                                <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="item-img img-hover">
+                                                    <img src="@content.UrlPicture" alt="@content.Name" />
+                                                </a>                                               
+                                                <div class="item-content">
+                                                    <h3 class="name">
+                                                        <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name">
+                                                            @content.Name
+                                                        </a>
+                                                    </h3>
+                                                    <div class="item-timer">
+                                                        <img src="/html/style/images/icon-oclock.webp" alt="Clock" />
+                                                        <span>@(content.CreatedDate.HasValue ? content.CreatedDate.Value.ToString() : string.Empty)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }                                        
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        break;
+                    }
+                case StaticEnum.Gallery:
+                    {
+                        if (module.ListModuleChild.Any())
+                        {
+                            <div class="news-page-3">
+                                <div class="container">
+                                    <div class="top">
+                                        <h2 class="title"><a href="@Utility.Link(module.NameAscii,string.Empty, module.LinkUrl)" title="@module.Name">@(!string.IsNullOrEmpty(module.Title) ? module.Title :  module.Name)</a></h2>
+                                        <a href="@Utility.Link(module.NameAscii,string.Empty, module.LinkUrl)" title="@ResourceData.Resource("XemThem", ViewBag.Lang)" class="btn-see-more">@ResourceData.Resource("XemThem", ViewBag.Lang)</a>
+                                    </div>
+                                    <div class="list-news">
+                                        @foreach (var child in module.ListModuleChild)
+                                        {
+                                            <div class="item-news">
+                                                <a href="@Utility.Link(child.NameAscii, string.Empty, child.LinkUrl)" title="@child.Name" class="item-img">
+                                                    <img src="@child.UrlPicture" alt="@child.Name" />
+                                                    @if (child.ModuleTypeCode == StaticEnum.Video)
+                                                    {
+                                                        <span class="play"></span>
+                                                    }
+                                                </a>
+                                                <h3 class="name">
+                                                    <a href="@Utility.Link(child.NameAscii, string.Empty, child.LinkUrl)" title="@child.Name">
+                                                        @child.Name
+                                                    </a>
+                                                </h3>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        break;
+                    }
+            }
+        }
+    }
+}

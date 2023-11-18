@@ -1,0 +1,268 @@
+﻿@using ADCOnline.Utils
+@using Newtonsoft.Json
+@model Website.Areas.Admin.ViewModels.CustomerViewModel
+
+<div id="orderdetailprint">
+    <h2 style="text-align:center;padding-top:20px">@Model.Text</h2>
+    @if (Model.Type != "3")
+    {
+        <div class="table table-responsive table-order">
+            @if (Model.ListProducts.Any())
+            {
+                var i = 1;
+                <table border="1" cellpadding="3" style="border-collapse:collapse;width:100%;">
+                    <tbody>
+                        <tr>
+                            <td style="width:8%;" class="text-center"><span><strong>STT</strong></span></td>
+                            <td style="width:100px" class="text-center"><span><strong>Hình ảnh</strong></span></td>
+                            <td class="text-center"><span><strong>Sản phẩm</strong></span></td>
+                            <td class="text-center"><span><strong>Giá</strong></span></td>
+                        </tr>
+                        @foreach (var item in Model.ListProducts)
+                        {
+
+                            <tr>
+                                <td class="text-center"><span>@i</span></td>
+                                <td class="text-center" style="vertical-align:top;width:100px"><img src="@item.UrlPicture" alt="@item.Name" style="width:50px;height:50px" /></td>
+                                <td class="text-center">
+                                    <a href="@Utility.Link(item.ModuleNameAscii,item.NameAscii,item.LinkUrl)">@item.Name</a>
+                                </td>
+                                <td class="text-center">
+                                    @Utility.GetFormatPriceType(item.Price, 1, "Liên hệ", item.IsShowPrice)
+                                </td>
+                            </tr>
+                            i++;
+                        }
+
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p style="margin-bottom:15px; text-align:center">Không có sản phẩm nào.</p>
+            }
+        </div>
+    }
+    else
+    {
+        @if (Model.ListCartItem.Any())
+        {
+            <div class="cartlft">
+                <p style="text-align: center; font-size: 16px; margin-bottom: 20px; font-weight: bold;">(@Model.ListCartItem.Count() sản phẩm)</p>
+
+                <div class="lst-itped">
+                    @foreach (var v in Model.ListCartItem)
+                    {
+                        string attr = "";
+                        <div class="itpicked">
+                            <div class="img-itpicked">
+                                <a target="_blank" href="/@v.NameAscci">
+                                    <img src="@v.ImageProduct" alt="@v.ProductName" />
+                                </a>
+                            </div>
+                            <div class="txt-itpicked">
+                                <a href="/@v.NameAscci" title="@v.ProductName" class="nm-itpicked">@v.ProductName</a>
+                                @if (!string.IsNullOrEmpty(v.ProductCode))
+                                {
+                                    <p class="id-itpicked">MSP : @v.ProductCode</p>
+                                }
+                                @foreach (var item in v.AttributeItems.Where(c => c.ParentID == 0))
+                                {
+                                    attr = string.Join("-", v.AttributeItems.Where(c => c.ParentID == item.ID).Select(c => c.ID));
+                                }
+                                <div class="grid-price">
+                                    <div class="pick-am">
+                                        <p>Số lượng:</p>
+                                        <div class="pickamct">
+                                            <div class="input-dw">
+                                                @if (!string.IsNullOrEmpty(attr))
+                                                {
+
+                                                    <input type="text" value="@v.Quantity" disabled>
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" value="@v.Quantity" disabled>
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    @foreach (var item in v.AttributeItems.Where(c => c.ParentID == 0))
+                                    {
+
+                                        <div class="pick-sz">
+                                            <p>@item.Name:</p>
+                                            <select disabled>
+                                                @foreach (var itemC in v.AttributeItems.Where(c => c.ParentID == item.ID))
+                                                {
+                                                    <option>@itemC.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+                                    <p class="price-itpicked">Giá tiền: <span>@Utility.GetFormatPriceType(v.PriceProduct, 1, "Liên hệ")</span></p>
+                                    <p class="price-itpicked">Tạm tính: <span>@Utility.GetFormatPriceType(v.SumMoney, 1, "Liên hệ")</span></p>
+                                    @if (v.DiscountModuleItem.HasValue && v.DiscountModuleItem > 0)
+                                    {
+                                        <p class="price-itpicked">Giảm giá: <span>@Utility.GetFormatPriceType(v.DiscountModuleItem, 1, "Liên hệ")</span></p>
+                                    }
+                                    <p class="price-itpicked">Thành tiền: <span>@Utility.GetFormatPriceType(v.TotalAfterSaleModule, 1, "Liên hệ")</span></p>
+                                </div>
+                                <div class="click-itp">
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="cartrght">
+                <p style="border-top: 2px solid #000; margin-top: 20px; padding-top: 10px; font-size: 16px; font-weight: bold;">Tổng tiền</p>
+                <div id="VoucherApplyHtml">
+                    <div class="it-cartr">
+                        <p>Tạm tính:</p>
+                        <p>@Utility.GetFormatPriceType(Model.TotalPriceCart, 1, "Liên hệ")</p>
+                    </div>
+                    @if (Model.DisCountModule > 0)
+                    {
+                        <div class="it-cartr">
+                            <p>Giảm giá:</p>
+                            <p>@Utility.GetFormatPriceType(Model.DisCountModule, 1, "Liên hệ")</p>
+                        </div>
+                    }
+                    <div class="it-cartr">
+                        <p>Vận chuyển:</p>
+                        <p>Miễn phí vận chuyển</p>
+                    </div>
+                    <div class="it-cartr">
+                        <p>Thành tiền:<span>(Đã bao gồm VAT)</span></p>
+                        <p>@Utility.GetFormatPriceType(Model.TotalPriceCartAfterDisCount, 1, "Liên hệ")</p>
+                    </div>
+                </div>
+
+            </div>
+            <style>
+                .grid-price { display: grid; display: -ms-grid; grid-template-columns: 32% 34% 34%; }
+                .txt-itpicked .price-itpicked { font-size: 14px; float: left; color: #333; font-weight: 600; line-height: 30px; margin-bottom: 0; margin-left: 25px }
+                .txt-itpicked .grid-price .pick-am, .txt-itpicked .grid-price .pick-sz, .txt-itpicked .grid-price .price-itpicked { float: initial; margin-left: 0; margin-bottom: 10px; }
+                .cart .title-h2 h2 a:before, .cart .title-h2 h2 span:before, .cart2 .title-h2 h2 a:before, .cart2 .title-h2 h2 span:before { width: 70px; bottom: -11px }
+                .bakbuy { padding: 4px 15px 4px 30px; background: url(../images/ic-leftb.png) no-repeat; display: inline-block; width: auto; border: 1px solid #dbdbdb; margin-bottom: 25px; background-color: #f9f9f9; background-position-x: 14px; background-position-y: 11px; transition: .2s linear; }
+                .itpicked { display: block; overflow: hidden; padding: 25px 0; border-bottom: 1px solid #dbdbdb }
+                    .itpicked:first-child { padding-top: 0 }
+                    .itpicked:last-child { padding-bottom: 0; border-bottom: none }
+                .bakbuy a { font-size: 14px; color: #333; text-decoration: none; transition: .2s linear; text-transform: uppercase }
+                .bakbuy:hover a { color: #ffffff }
+                .bakbuy:hover { border: 1px solid #da2032; background: url(../images/ic-leftw.png) no-repeat; background-position-x: 13px; background-position-y: 12px; background-color: #da2032; }
+                .cart-ct { display: block; overflow: hidden; padding-bottom: 70px }
+                    .cart-ct .cartlft { width: 70%; float: left; padding-right: 15px }
+                .cart2 .cart-ct .cartlft { width: 65% }
+                .cart2 .cart-ct .cart-rghta { float: left; width: calc(35% - 15px); padding-bottom: 30px; margin-left: 15px }
+                .cart2 .cart-ct .cartrght { width: 100%; margin-left: 0 }
+                .info-payment .checkmark { left: 0; }
+                .info-payment .radio-inline { margin-bottom: 0; }
+                .itpicked .img-itpicked { width: 114px; height: 114px; border: 1px solid #dbdbdb; text-align: center; line-height: 114px; float: left; overflow: hidden }
+                .img-itpicked a { display: block }
+                    .img-itpicked a img { max-width: 100%; min-height: 100%; object-fit: cover; transition: .3s linear }
+                .img-itpicked:hover a img { transform: scale(1.1,1.1) }
+                .itpicked .txt-itpicked { width: calc(100% - 114px); float: left; padding-left: 25px }
+                .txt-itpicked .pick-am { float: left; }
+                .nm-itpicked { color: #333; text-decoration: none; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; transition: .2s linear; text-transform: uppercase; text-decoration: none !important }
+                .cart .title-h2 h2:before, .cart2 .title-h2 h2:before { bottom: -9px; }
+                .nm-itpicked:hover { color: #da2032 }
+                .cart .title-h2 h2, .cart2 .title-h2 h2 { }
+                .id-itpicked { font-size: 14px; color: #333; margin-bottom: 5px; }
+                .pick-right a:last-child { margin-bottom: 0 }
+                .pick-am { height: 32px; line-height: 32px; }
+                    .pick-am p, .pick-sz p { margin-bottom: 0; font-size: 14px; font-weight: 600; color: #333; float: left; }
+                    .pick-am .pickamct { display: inline-block; margin-left: 10px; border: 1px solid #e0e0e0; overflow: hidden; }
+                .pickamct .input-dw { width: 50px; height: 30px; float: left; }
+                .pickamct.gold .input-dw { width: 100% !important }
+                .pickamct.gold { width: 112px !important }
+                .pickamct .input-dw input { font-size: 14px; width: 50px; height: 30px; border: initial; text-align: center; padding: 0; }
+                    .pickamct .input-dw input:focus, .pick-sz select:focus { outline: none }
+                .pickamct .dw-am, .pickamct .up-am { width: 30px; height: 30px; float: left; position: relative; cursor: pointer; }
+                .pickamct .dw-am { border-right: 1px solid #e0e0e0; }
+                .pickamct .up-am { border-left: 1px solid #e0e0e0; }
+                .pickamct .dw-am:before { content: ''; width: 15px; height: 1px; background: #999; position: absolute; top: 15px; left: 7px; }
+                .pickamct .up-am:after { content: ''; width: 1px; height: 15px; background: #999; position: absolute; top: 8px; left: 14px; }
+                .pickamct .up-am:before { content: ''; width: 15px; height: 1px; background: #999; position: absolute; top: 15px; left: 7px; }
+                .pick-sz { height: 32px; line-height: 32px; float: left; margin-left: 25px }
+                .cart-ct .cartrght { width: calc(30% - 15px); float: left; margin-left: 15px; background: #f2f2f2; padding: 12px 18px 35px 20px }
+                .cartrght p:last-child { font-size: 16px; color: #333; margin-bottom: 0; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid #cdcdcd }
+                .cart2 .cartrght p:last-child { border-bottom: none; margin-bottom: 6px; }
+                .cartrght .it-cartr p { border-bottom: none; text-transform: none; margin-bottom: 0; font-size: 14px; color: #333 }
+                .it-cartr p:first-child { float: left }
+                .it-cartr p:nth-of-type(2) { float: right }
+                .it-cartr { width: 100%; display: block; overflow: hidden; border-bottom: 1px solid #cdcdcd; padding: 8px 0 }
+                    .it-cartr.total-a p:nth-of-type(2) { font-weight: 600; color: #da2032 }
+                    .it-cartr.total-a p:first-child span { display: block; font-weight: 400 }
+                    .it-cartr.frm-vou { padding: 12px 0 8px; border-bottom: none }
+                        .it-cartr.frm-vou p { margin-bottom: 8px }
+                        .it-cartr.frm-vou input { height: 34px; width: calc(100% - 74px); border: 1px solid #e2e2e2; padding-left: 10px }
+                        .it-cartr.frm-vou button { width: 74px; float: right; font-size: 14px; color: #fff; border: none; background: #393939; height: 34px; font-weight: 600 }
+                    .it-cartr input, .it-cartr button { outline: none }
+                .cartrght .gorder { width: 100%; display: block; text-align: center; font-size: 14px; color: #fff; text-decoration: none; background: #da2032; text-transform: uppercase; padding: 9px 0; font-weight: 600 }
+                .cartlft .chooses { display: block; overflow: hidden; margin-bottom: 5px }
+            </style>
+        }
+        else
+        {
+            <div class="lst-itped" style="text-align:center;    padding-bottom: 10px;">Giỏ hàng không có sản phẩm</div>
+            <style>
+                .conti a i { margin-right: 5px }
+                .conti a { color: #fff; font-weight: bold; text-transform: uppercase }
+                    .conti a:hover, .ccc-aa:hover { color: #fff !important; }
+                .conti { border-radius: 5px; width: 210px; margin-top: 20px; margin: 40px auto 0; padding: 5px; background: #da2032; color: #fff; text-align: center; }
+            </style>
+        }
+    }
+</div>
+
+<style>
+    .success { display: none }
+
+    .login-dialog.modal.fade .modal-dialog { max-height: calc(100vh - 50px); margin-bottom: 20px; max-width: calc(100vw - 50px); }
+
+        .login-dialog.modal.fade .modal-dialog .modal-content { margin-bottom: 15px; }
+
+    .detail-order { padding: 0 20px; }
+
+        .detail-order h2 { text-align: center; color: #008a7f; text-transform: uppercase; font-weight: bold; font-size: 24px; position: relative; margin: 25px; }
+
+            .detail-order h2:before { content: ''; position: absolute; bottom: -10px; height: 2px; width: 50px; left: 50%; margin-left: -25px; background: red; }
+
+        .detail-order .date-order { text-align: center; text-transform: uppercase; font-size: 14px; line-height: 24px; margin: 0; color: #333; }
+
+            .detail-order .date-order span { font-weight: bold; color: #000; }
+
+    .list-ifod { list-style: none; overflow: hidden; margin: 20px 0 10px; }
+
+        .list-ifod li { width: 50%; float: left; padding: 2px; }
+
+            .list-ifod li p { line-height: 24px; margin: 0; }
+
+    .table-order { w }
+
+        .table-order tr { border-top: 1px solid #ddd; border-left: 1px solid #ddd; }
+
+            .table-order tr td { border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; padding: 5px; }
+
+        .table-order p { margin-bottom: 0; }
+
+        .table-order table { /* border-bottom:1px solid #ddd; */ }
+
+    #Detail-order .close { position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; z-index: 1060; opacity: 1; box-shadow: 0 0 5px #000; background: #008a7f; transition: all .35s; }
+
+        #Detail-order .close:before, #Detail-order .close:after { content: ''; position: absolute; width: 12px; height: 2px; background: #fff; left: 4px; top: 50%; margin-top: -1px; transform: rotate(45deg); border-radius: 2px; }
+
+        #Detail-order .close:after { transform: rotate(135deg); }
+
+        #Detail-order .close:hover { background: #003f3a; }
+
+    .btn-del.disabled { /* pointer-events: none; */ background: #676262; cursor: no-drop; }
+    @@media (min-width: 768px) {
+        .modal-dialog { width: 900px; }
+    }
+    .print { right: 35px; position: absolute; top: 15px; background: #008a7f; color: #fff; padding: 5px 10px 7px; border-radius: 3px; cursor: pointer }
+</style>

@@ -1,0 +1,225 @@
+﻿@model Website.Areas.Admin.ViewModels.AttributesViewModel
+@using ADCOnline.Utils
+@using Website.Utils
+@if (Model.SystemActionAdmin.View == true)
+{
+    <table id="tblContent" class="table table-bordered">
+        <thead>
+            <tr role="row">
+                <th class="wd30">ID</th>
+                <th class="wd50">Ảnh</th>
+                <th>Tên</th>
+                @*<th>Loại</th>*@
+                <th>Mã</th>
+                <th class="text-center wd100">
+                    Thứ tự
+                    @if (Model.SystemActionAdmin.Order == true)
+                    {
+                        <a href="javascript:" class="EditOrderAll badge badge-primary"><span class="lnr lnr-pencil"></span></a> <a href="javascript:" class="SaveAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                    }
+                </th>
+                <th class="text-center wd80">Trạng thái</th>
+                <th class="act_roles wd150 text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><span class="lnr lnr-checkmark-circle"></span><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><span class="lnr lnr-cross-circle"></span><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                if (Model.SearchModel.parentId > 0)
+                {
+                    <tr>
+                        <td>@Model.Attributes.ID</td>
+                        <td>
+                            <a href="/Adminadc/Attributes/Index#parentId=@Model.Attributes.ID">@Html.Raw(Common.Image(Model.Attributes.UrlPicture, Context, 0 ,0, ""))</a>
+                        </td>
+                        <td>
+                            <b>@Html.Raw(Utility.DisplayShowName(Model.Attributes.Name, Model.Attributes.IsShow.Value))</b>
+                        </td>
+                        @* <td>
+            @if (Model.ListAttributeType != null && Model.ListAttributeType.Any(x => x.ID.ToString() == Model.Attributes.Type))
+            {
+            var type = Model.ListAttributeType.FirstOrDefault(x => x.ID.ToString() == Model.Attributes.Type);
+            <span>@type.Name</span>
+            }
+            </td>*@
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.Attributes.Code) && Model.ListAttrbuteCode.ContainsKey(Model.Attributes.Code))
+                            {
+                                <span>@Model.ListAttrbuteCode[Model.Attributes.Code] (@Model.Attributes.Code)</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Order)
+                            {
+                                <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" autocomplete="off" onchange="changeOrder('@Model.Attributes.ID', this.value)" value="@Model.Attributes.OrderDisplay" disabled />
+                            }
+                            else
+                            {
+                                @Model.Attributes.OrderDisplay
+                            }
+                        </td>
+                        <td class="text-center">@Html.Raw(StaticEnum.Show(Model.Attributes.IsShow))</td>
+                        <td class="act_delete">
+                            @if (Model.Attributes.IsAllowsFillter == true)
+                            {
+                                <a><span class="lnr lnr-funnel"></span></a>
+                            }
+                            @if (Model.SystemActionAdmin.Add == true)
+                            {
+                                <a href="#@Model.Attributes.ID" class="add btn" data-tab="" title="Thêm mới: @Model.Attributes.Name">
+                                    <span class="lnr lnr-plus-circle"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a href="#@Model.Attributes.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @Model.Attributes.Name">
+                                    <span class="lnr lnr-pencil"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <a href="#@Model.Attributes.ID" class="delete btn" title="Xóa: @Model.Attributes.Name">
+                                    <span class="lnr lnr-trash"></span>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(Model.Attributes.ID)" class="minimal check" value="@Model.Attributes.ID">
+                                <label for="Check@(Model.Attributes.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                foreach (var item in Model.ListItem)
+                {
+                    <tr id="item_@item.ID" class="@(item.ID == Model.AttributesItem.ID ? "active" : string.Empty)">
+                        <td>@item.ID</td>
+                        <td>@Html.Raw(Common.Image(item.UrlPicture, Context, 0, 0, ""))</td>
+                        <td>
+                            @(item.ParentID.Value > 0 ? " - " : "")
+                            @if (item.Number > 0)
+                            {
+                                <a href="/Adminadc/Attributes/Index#parentId=@item.ID">@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))</a>
+                                <span class="badge badge-danger" style="margin-left:5px;">@item.Number</span>
+                            }
+                            else
+                            {
+                                @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
+                            }
+                        </td>
+                        @*   <td>
+            @if (Model.ListAttributeType != null && Model.ListAttributeType.Any(x => x.ID.ToString() == item.Type))
+            {
+            var type = Model.ListAttributeType.FirstOrDefault(x => x.ID.ToString() == item.Type);
+            <span>@type.Name</span>
+            }
+            </td>*@
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Code) && Model.ListAttrbuteCode.ContainsKey(item.Code))
+                            {
+                                <span>@Model.ListAttrbuteCode[item.Code] (@item.Code)</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Order == true)
+                            {
+                                <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" autocomplete="off" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                            }
+                            else
+                            {
+                                @item.OrderDisplay
+                            }
+                        </td>
+                        <td class="text-center">@Html.Raw(StaticEnum.Show(item.IsShow))</td>
+                        <td class="act_delete">
+                            @if (item.IsAllowsFillter == true)
+                            {
+                                <a><span class="lnr lnr-funnel"></span></a>
+                            }
+                            @if (Model.SystemActionAdmin.Add == true)
+                            {
+                                <a href="#@item.ID" class="add btn" data-tab="" title="Thêm mới: @item.Name"><span class="lnr lnr-plus-circle"></span></a>
+                            }
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @item.Name"><span class="lnr lnr-pencil"></span></a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.Name"><span class="lnr lnr-trash"></span></a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+    @if (Model.SearchModel.sort.HasValue)
+    {
+        <script>
+            $(function() {
+                $('#sort option[value="@Model.SearchModel.sort"]').attr('selected', 'selected');
+            });
+        </script>
+    }
+
+    @if (Model.SearchModel.parentId.HasValue && Model.SearchModel.parentId != 0)
+    {
+        <script>
+            $('.selectpicker').selectpicker('val', '@Model.SearchModel.parentId');
+        </script>
+    }
+    @if (Model.AttributesItem.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.AttributesItem.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+    @if (Model.SearchModel.page > 0)
+    {
+        <script>
+            $(function() {
+                $('#page').val(@Model.SearchModel.page);
+            });
+        </script>
+    }
+}

@@ -1,0 +1,45 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Utils
+@using ADCOnline.Simple.Item
+@{
+    Layout = null;
+}
+
+@if (Model.ListContentItem.Any())
+{
+    int rest = Model.Total.Value - 6 - ((Model.Page.Value - 2) * Model.PageSize.Value) - Model.ListContentItem.Count();
+    @foreach (var item in Model.ListContentItem)
+    {
+        <div class="item item-news">
+            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+            </a>
+            <div class="text">
+                <div class="time">
+                    <p>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
+                </div>
+                <h3 class="big-title title-item">
+                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                        @item.Name
+                    </a>
+                </h3>
+            </div>
+        </div>
+    }
+
+    if (rest > 0)
+    {
+        <div class="btn-block">
+            <div class="btn-page more other-padding" data-page="@(Model.Page + 1)">
+                <p>@ResourceData.Resource("XemNhieuHon", ViewBag.Lang)</p>
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" fill="currentColor"
+                         class="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    }
+}

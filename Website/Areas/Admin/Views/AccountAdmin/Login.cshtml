@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Website.Utils
+@{
+    ViewBag.Title = "Đăng nhập";
+    ViewBag.Name = "Đăng nhập";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutLogin.cshtml";
+}
+<environment include="Development">
+    <script src="~/Admin/js/loginAdmin.js"></script>
+</environment>
+<form id="loginAdminFrm" action="@Url.Action("LoginAction","AccountAdmin")" method="post">
+    @Html.AntiForgeryToken()
+    <div class="body">
+        <input type="hidden" id="ReturnUrl" name="ReturnUrl" value="@ViewBag.ReturnUrl">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input class="form-control" data-val="true" data-val-required="The User name field is required." id="UserName" name="UserName" placeholder="Tên đăng nhập" type="text" value="">
+            </div>
+            <span class="field-validation-valid" data-valmsg-for="UserName" data-valmsg-replace="true"></span>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i></span>
+                <input class="form-control" data-val="true" data-val-required="The Password field is required." id="Password" name="Password" placeholder="Mật khẩu" type="password">
+            </div>
+            <span class="field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+        </div>
+        @*<div class="form-group">
+            <div class="g-recaptcha" data-sitekey="@WebConfig.KeyCapcha"></div>
+        </div>*@
+    </div>
+    <div class="footer text-center">
+        <input type="submit" id="btnLogin" class="btn btn-primary" value="Đăng nhập" title="Đăng nhập">
+    </div>
+</form>

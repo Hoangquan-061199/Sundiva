@@ -1,0 +1,110 @@
+﻿@model ContentViewModels
+@using ADCOnline.Simple.Item
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ContentItem != null)
+    {
+        ViewBag.Title = !string.IsNullOrEmpty(Model.ContentItem.SEOTitle) ? Model.ContentItem.SEOTitle : Model.ContentItem.Name;
+        ViewBag.Name = Model.ContentItem.Name;
+        ViewBag.Description = !string.IsNullOrEmpty(Model.ContentItem.SeoDescription) ? Model.ContentItem.SeoDescription : Model.ContentItem.Name;
+        ViewBag.Keywords = !string.IsNullOrEmpty(Model.ContentItem.SeoKeyword) ? Model.ContentItem.SeoKeyword : Model.ContentItem.Name;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ContentItem.UrlPicture) ? Model.ContentItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ContentItem.SEOTitle) ? Model.ContentItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ContentItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ContentItem.Canonical) ? Model.ContentItem.Canonical : string.Empty;
+    ViewBag.IsSchema = false;
+    ViewBag.LangModule = Model.ModuleItem.Lang;
+}
+@if (Model.ContentItem != null)
+{
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        <div class="banner-noslide">
+            @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3).OrderBy(x => x.AlbumOrderDisplay))
+            {
+                <div class="item">
+                    <div class="item-img">
+                        <img src="@item.AlbumUrl" alt="@item.AlbumTitle">
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="breadcrumb">
+        <div class="container">
+            <ul>
+                <li>
+                    <a href="/" title="@ResourceData.Resource(" TrangChu", ViewBag.Lang)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146ZM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5Z" />
+                        </svg>
+                    </a><i class="fa-solid fa-angle-right"></i>
+                </li>
+                <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+                <li>
+                    <a href="@Utility.Link(Model.ModuleItem.NameAscii, string.Empty, Model.ModuleItem.LinkUrl)"
+                       title="@Model.ModuleItem.Name">@Model.ModuleItem.Name</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="project-detail layout-1 container">
+        <div class="right">
+            <h2>@Model.ContentItem.Name</h2>
+
+            <div class="text detail-content">
+                @Html.Raw(Model.ContentItem.Description)
+
+                <div class="clrindexknh">
+                    <div class="bxindexknh">
+                        <div class="indxtitle mucluc">
+                            <div class="icon">
+                                <img src="/html/style//images/icon-bars.webp" alt="icon" width="23" height="14" />
+                            </div>
+                            @ResourceData.Resource("NoiDungChinh", ViewBag.Lang)
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="ctindxknh table-of-content">
+                        </div>
+                    </div>
+                </div>
+
+                @Html.Raw(Model.ContentItem.Content)
+            </div>
+            <div class="social-back">
+                <a href="" class="back back-link-history"><i class="fa-solid fa-arrow-left"></i>@ResourceData.Resource("QuayLai", ViewBag.Lang)</a>
+                <div class="fb-like"
+                     data-href="@url"
+                     data-width=""
+                     data-layout=""
+                     data-action=""
+                     data-size=""
+                     data-share="true"></div>
+            </div>
+        </div>
+        @if (Model.ListContentItem.Any())
+        {
+            <div class="left left-project">
+                <span>@ResourceData.Resource("DuAnKhac", ViewBag.Lang)</span>
+
+                @foreach (WebsiteContentItem item in Model.ListContentItem)
+                {
+                    <div class="item img-hover">
+                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="item-img save-link-history">
+                            <img src="@item.UrlPicture" alt="@item.Name" />
+                        </a>
+                        <h3><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="save-link-history">@item.Name</a></h3>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <vc:other-component code="PluginFacebook"></vc:other-component>
+}

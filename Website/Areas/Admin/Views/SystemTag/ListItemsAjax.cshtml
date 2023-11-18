@@ -1,0 +1,109 @@
+﻿@model Website.Areas.Admin.ViewModels.SystemTagViewModel
+@using ADCOnline.Utils
+
+@if (Model.SystemActionAdmin.View)
+{
+    if (ViewBag.IsSearch == false)
+    {
+        <div class="w_searchgr form-inline" id="SearchAjax@(ViewBag.Code)">
+            <input type="text" class="form-control title" name="keyword" id="keyword@(ViewBag.Code)" value="" placeholder="Nhập từ khóa cần tìm" style="width:200px">
+            <button type="button" class="btn btn-info btn-sm" id="btnSearch@(ViewBag.Code)"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+        </div>
+    }
+    <div id="tblContentAjax@(ViewBag.Code)">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr role="row">
+                    <th class="text-center wd50">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                    </th>
+                    <th>Từ khóa</th>
+                    <th class="wd50">ID</th>
+                    <th class="text-center wd80">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                {
+                    foreach (var item in Model.ListItem)
+                    {
+                        <tr id="item_@item.ID" class="@(item.IsShow!=true ? "hid" : string.Empty)@(item.ID==Model.ObjBase.ID ? "active" : string.Empty)">
+                            <td class="text-center">
+                                <input type="checkbox" data-title="@item.Name" id="Check@(item.ID)" class="minimal check" value="@item.ID" @(("," + Model.ValueSelected + ",").Contains("," + item.ID + ",") ? "checked" : string.Empty)>
+                            </td>
+                            <td>@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))</td>
+                            <td>@item.ID</td>
+                            <td class="text-center"><span>@Html.Raw(StaticEnum.Show(item.IsShow))</span></td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+        @Html.Raw(ViewBag.GridHtml)
+    </div>
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+    <script>
+        $('#tblContentAjax@(ViewBag.Code) .checkAll').click(function() {
+            $('#tblContentAjax@(ViewBag.Code) input.check[type=checkbox]').not(".checkAll").not("#checkAll").prop("checked", $(this).is(":checked"));
+        });
+        $(function() {
+            var textContainer = "#@(ViewBag.Code)Remove";
+            var hiddenContainer = "#@(ViewBag.Code)s";
+            $('#tblContentAjax@(ViewBag.Code) input[type=checkbox]').not('.checkAll').change(function() {
+                var values = $(hiddenContainer).val();
+                var arrVal = values != '' ? values.split(',') : [];
+                var id = $(this).val();
+                var txt = $(this).data("title");
+                var v = $(this).is(":checked");
+                if (v == true) {
+                    if (containsObject(id, arrVal) == false) {
+                        arrVal.push(id);
+                        var html = `<li data-id="` + id + `"><span id="` + id + `">` + txt + `</span><a style="margin-left:5px;" class="badge badge-danger" title="Xóa: ` + txt + `" href="javascript:removeRelate(` + id + `,'@(ViewBag.Code)','@(ViewBag.Code)');"><span class="lnr lnr-trash"></span></a></li>`;
+                        $(textContainer).append(html);
+                    }
+                }
+                else {
+                    if (containsObject(id, arrVal) == true) {
+                        removeElement(arrVal, id);
+                        $(textContainer + ' li[data-id=' + id + ']').remove();
+                    }
+                }
+                if (arrVal != null && arrVal.length > 0) {
+                    $(hiddenContainer).val(arrVal.toString());
+                }
+                else {
+                    $(textContainer).html('');
+                    $(hiddenContainer).val('');
+                }
+            });
+        });
+        var hiddenContainer = "#@(ViewBag.Code)s";
+        var values = $(hiddenContainer).val();
+        $('#tblContentAjax@(ViewBag.Code) .pagi ul li a').click(function() {
+            values = $(hiddenContainer).val();
+            var page = $(this).data('page');
+            var url = '@Url.Action("ListItemsAjax", "SystemTag")?code=@(ViewBag.Code)&ids=' + values + '&isSearch=true';
+            url += '&' + getValueFormMutilSelect($('#SearchAjax@(ViewBag.Code)')) + "&page=" + page;
+            loadAjax(url, '#tblContentAjax@(ViewBag.Code)');
+        });
+    </script>
+    @if (ViewBag.IsSearch == false)
+    {
+        <script>
+            ValidInput();
+            var hiddenContainer = "#@(ViewBag.Code)Ids";
+            var values = $(hiddenContainer).val();
+            $('#btnSearch@(ViewBag.Code)').click(function() {
+                debugger
+                var url = '@Url.Action("ListItemsAjax", "SystemTag")?code=@(ViewBag.Code)&ids=' + values + '&isSearch=true';
+                url += '&' + getValueFormMutilSelect($('#SearchAjax@(ViewBag.Code)'));
+                loadAjax(url, '#tblContentAjax@(ViewBag.Code)');
+            });
+        </script>
+    }
+}

@@ -1,0 +1,238 @@
+﻿@using Website.Utils
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.AttributesViewModel
+@if (Model.SystemActionAdmin.Add)
+{
+    <script src="/Admin/js/UpdateImageAdmin.js"></script>
+    <form id="QuickAddAttrForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <button id="close" type="button" class="primaryAction btn btn-danger" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="AddQuick" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.Attributes.ID" />
+            <input type="hidden" name="ParentID" value="@Model.Attributes.ParentID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Tên thuộc tính</label>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control title @(ViewBag.Action.Equals("Add") ? "autoPermalink" : "")" name="Name" id="NameAttr" value="@Model.Attributes.Name" placeholder="Tên" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="IsShow">
+                                        Ẩn/Hiện
+                                        <input type="checkbox" name="IsShow" id="IsShow" value="true" @((Model.Attributes.IsShow == false) ? "" : "checked") />
+                                        <input type="hidden" name="IsShow" value="false" />
+                                    </label>
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Link</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control link" name="NameAscii" id="NameAscciAttr" value="@Model.Attributes.NameAscii" placeholder="Link" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>*@
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Thuộc tính cha</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select id="ParentID" disabled class="form-control selectparent" data-live-search="true" title="Thuộc tính cha" data-hide-disabled="true">
+                                        <option value="0">-- Chọn --</option>
+                                        @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                                        {
+                                            foreach (var item in Model.ListItem.Where(p => ConvertUtil.ToInt32(p.ParentID) == 0).OrderBy(p => p.OrderDisplay))
+                                            {
+                                                <option value="@item.ID" @((item.ID == Model.Attributes.ParentID) ? " selected" : string.Empty)>@item.Name</option>
+
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                @* <div class="col-sm-2">
+                            <label>Loại</label>
+                            </div>
+                            <div class="col-sm-4">
+                            <select class="form-control selecttype" name="Type" id="Type" data-live-search="true" title="Loại thuộc tính" data-hide-disabled="true">
+                            <option value="">-- Chọn --</option>
+                            @if (Model.ListAttributeType.Any())
+                            {
+                            foreach (var item in Model.ListAttributeType.OrderBy(x => x.Name))
+                            {
+                            <option value="@item.ID" @(Model.Attributes.Type == item.ID.ToString() ? "selected" : string.Empty)>@item.Name</option>
+                            }
+                            }
+                            </select>
+                            </div>*@
+                            </div>
+                            <div class="form-group">
+                                @*<div class="col-sm-2">
+                                    <label>Mã</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select class="form-control selectcode" name="Code" id="Code" data-live-search="true" title="Mã thuộc tính" data-hide-disabled="true">
+                                        <option value="">-- Chọn --</option>
+                                        @if (Model.ListAttrbuteCode.Any())
+                                        {
+                                            foreach (var item in Model.ListAttrbuteCode.OrderBy(x => x.Value))
+                                            {
+                                                <option value="@item.Key" @(Model.Attributes.Code == item.Key ? "selected" : string.Empty)>@item.Value (@item.Key)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>*@
+                                @* <div class="col-sm-2">
+                            <label>Loại hiển thị</label>
+                            </div>
+                            <div class="col-sm-4">
+                            <select name="TypeShow" id="TypeShow" class="form-control">
+                            <option value="1" @(Model.Attributes.TypeShow == 1 ? "selected" : string.Empty)>Dạng text</option>
+                            <option value="2" @(Model.Attributes.TypeShow == 2 ? "selected" : string.Empty)>Dạng hình ảnh</option>
+                            </select>
+                            </div>*@
+
+                            </div>
+                            @*<div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Ảnh/Logo</label>
+                                </div>
+                                <div class="col-sm-4 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <input type="text" class="changeUrlTinyMce form-control" onchange="ChangeUrlTinyMce($(this),'AddAvatarAttr', 'UrlPictureAttr',0)" value="@Model.Attributes.UrlPicture" placeholder="Link ảnh" />
+                                        <span class="input-group-addon" style="background:transparent;padding-right:10px;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatarAttr','UrlPictureAttr',0);" class="btn btn-info btn-sm"><span class="lnr lnr-upload" style="margin-right:5px;"></span>File ảnh</button>
+                                        </span>
+                                    </div>
+                                    <div id="AddAvatarAttr">
+                                        @if (Model.Attributes.UrlPicture != null)
+                                        {
+                                            <table class="removeParent text-center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <img class="tooltipImage" style="max-width:100px;max-height:100px;" src="@Model.Attributes.UrlPicture">
+                                                            <input type="hidden" name="UrlPictureAttr" value="@Model.Attributes.UrlPicture">
+                                                            <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Mã màu</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control code" id="ClassCss" name="ClassCss" type="text" value="@Model.Attributes.ClassCss" placeholder="@Model.Attributes.ClassCss" />
+                                </div>
+                            </div>*@
+                           @* <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Thứ tự</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.Attributes.OrderDisplay" placeholder="@Model.Attributes.OrderDisplay" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="IsShow">
+                                        Ẩn/Hiện
+                                        <input type="checkbox" name="IsShow" id="IsShow" value="true" @((Model.Attributes.IsShow == false) ? "" : "checked") />
+                                        <input type="hidden" name="IsShow" value="false" />
+                                    </label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="IsAllowsFillter">
+                                        Lọc
+                                        <input type="checkbox" name="IsAllowsFillter" id="IsAllowsFillter" value="true" @((Model.Attributes.IsAllowsFillter == false) ? "" : "checked") />
+                                        <input type="hidden" name="IsAllowsFillter" value="false" />
+                                    </label>
+                                </div>
+                            </div>*@
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Module</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="hidden" name="ListModuleIds" id="Value_ModuleValuesAttr" value="@string.Join(",", Model.ListWebsiteModule.Select(c => c.ID))" />
+                                    <button id="SelectModuleAttr" type="button" class="primaryAction btn btn-info btn-sm">Chọn module</button>
+                                    <div id="Text_ModuleValuesAttr" class="checkBoxValues">@string.Join(", ", Model.ListWebsiteModule.Select(c => c.Name))</div>
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Mô tả ngắn</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <textarea rows="5" id="Description" name="Description" placeholder="Mô tả ngắn" class="form-control">@Model.Attributes.Description</textarea>
+                                </div>
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            removeObject();
+            @*LoadCKEDITOR('Description', true, 200);*@
+            $('.selectparent').selectpicker('val', '@Model.Attributes.ParentID');
+            $('.selecttype').selectpicker('val', '@Model.Attributes.Type');
+            $('.selectcode').selectpicker('val', '@Model.Attributes.Code');
+            $("#QuickAddAttrForm").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    },
+                    ModuleTypeCode: {
+                        required: true
+                    }
+                },
+                messages: {
+                    Name: "Tên Module bắt buộc nhập.",
+                    ModuleTypeCode: {
+                        required: "Kiểu hiển thị bắt buộc nhập."
+                    }
+                },
+                submitHandler: function() { //onSubmit
+                    updateEditor();
+                    PostAjaxQuickAttr("/Adminadc/Attributes/Actions", "#QuickAddAttrForm", "#append_attr_@Model.Attributes.ParentID");
+                    return false;
+                }
+            });
+            $('#SelectModuleAttr').on('click', function() {
+                ModalADC.Open({
+                    title: "Chọn module",
+                    urlLoad: '@Url.Action("AjaxTreeSelectProductNotLang", "WebsiteModule")?MutilFile=True&Container=ModuleValues&ValuesSelected=' + $("#Value_ModuleValuesAttr").val(),
+                    bottom: false
+                });
+            });
+            $('.autoPermalink').on('keyup', function(e) {
+                e.preventDefault();
+                $('#NameAscciAttr').val(RemoveUnicode($(this).val()).toLowerCase());
+            });
+        });
+
+    </script>
+}
+

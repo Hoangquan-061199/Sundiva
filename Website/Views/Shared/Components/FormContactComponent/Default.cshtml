@@ -1,0 +1,59 @@
+﻿@using ADCOnline.Simple.Item
+@model List<CommonJsonItem>
+@*
+    <link href="/lib/datepicker/jquery.datetimepicker.min.css" rel="stylesheet" />
+    <script src="/lib/datepicker/jquery.datetimepicker.full.min.js"></script>*@
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptChaConfig
+
+<form action="@Url.Action("SendContact","Home")" id="SendContact" method="post" autocomplete="off">
+    <div class="paragraph">
+        <vc:other-component code="TitleFormContact"></vc:other-component>
+    </div>
+    <div class="group-input">
+        <input type="text" name="FullName" placeholder="@ResourceData.Resource("FullName",ViewBag.Lang)*" />
+        <input type="text" name="Email" placeholder="@ResourceData.Resource("Email",ViewBag.Lang)*" />
+    </div>
+    <div class="group-input">
+        <input type="text" name="Phone" placeholder="@ResourceData.Resource("PhoneNumber",ViewBag.Lang)*" />
+        <input type="text" name="Title" placeholder="@ResourceData.Resource("Title",ViewBag.Lang)*" />
+    </div>
+
+    <div class="textarea-form">
+        <textarea name="Content" id="" cols="30" rows="5" placeholder="@ResourceData.Resource("Messagge", ViewBag.Lang)"></textarea>
+    </div>
+    <button type="submit" class="more uppercase bold fs16 submit-contact">
+        <p>@ResourceData.Resource("GuiLienHe", ViewBag.Lang)</p>
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" fill="currentColor"
+                 class="bi bi-chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+            </svg>
+        </div>
+    </button>
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Token" id="ModelTokenContact" />
+</form>
+
+<script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptChaConfig.Value.SiteKey"></script>
+<script>
+    function getTokenContact() {
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@GoogleCaptChaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
+                document.getElementById('ModelTokenContact').value = token;
+            });
+        });
+    }
+    setInterval(getTokenContact, 11500);
+    $(function () {
+        //var d = new Date();
+        //$('#Time').datetimepicker({
+        //    format: 'd/m/Y', timepicker: false, theme: 'dark', minDate: d
+        //});
+        getTokenContact();
+        var process = new ProcessData();
+        process.SendContact();
+    });
+</script>

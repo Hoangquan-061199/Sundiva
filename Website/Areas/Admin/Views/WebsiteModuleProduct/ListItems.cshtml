@@ -1,0 +1,1140 @@
+﻿@model Website.Areas.Admin.ViewModels.WebsiteModuleViewModel
+@using ADCOnline.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="badge badge-info" style="margin-bottom:10px;cursor:pointer;" id="ShowAll">Xem hết danh mục</div>
+    <div class="badge badge-warning" style="margin-bottom:10px;cursor:pointer;" id="HideAll">Ẩn danh mục</div>
+    <table id="gridItems" class="table table-bordered table-hover">
+        <thead>
+            <tr role="row">
+                <th>Tên</th>
+                <th class="wd120 text-center">Kiểu hiển thị</th>
+                <th class="wd100 text-center">Sản phẩm</th>
+                @*<th class="wd100">Thuộc tính</th>*@
+                <th class="text-center wd50">
+                    Thứ tự
+                    @if (Model.SystemActionAdmin.Order == true)
+                    {
+                        <a href="javascript:" data-toggle="tooltip" data-placement="bottom" title="Chỉnh sửa số thư tự" class="EditOrderAll badge badge-primary"><span class="lnr lnr-pencil"></span></a>
+                        <a href="javascript:" data-toggle="tooltip" data-placement="bottom" title="Lưu số thư tự đã chỉnh sửa" class="SaveAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                    }
+                </th>
+                <th class="text-center wd120">Trạng thái</th>
+                <th class="act_roles wd150 text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu dropdown-action" role="menu">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="javascript:" class="showAll"><i class="lnr lnr-checkmark-circle"></i><span>Hiển thị</span></a></li>
+                                <li><a href="javascript:" class="hideAll"><i class="lnr lnr-warning"></i><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="javascript:" class="deleteAll"><i class="lnr lnr-trash"></i><span>Xóa</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Sitemap == true)
+                            {
+                                <li><a href="javascript:" class="issitemapall"><i class="lnr lnr-checkmark-circle"></i><span>Thêm sitemap</span></a></li>
+                                <li><a href="javascript:" class="notsitemapall"><i class="lnr lnr-warning"></i><span>Bỏ sitemap</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <li><a href="javascript:" class="updateproducts"><i class="lnr lnr-trash"></i><span>Cập nhất số sản phẩm</span></a></li>
+                                <li><a href="javascript:" class="updateattrs"><i class="lnr lnr-trash"></i><span>Cập nhất số thuộc tính</span></a></li>
+                            }
+                            <li><a href="javascript:" class="resize"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                if (Model.SearchModel != null && (!string.IsNullOrEmpty(Model.SearchModel.keyword) || !string.IsNullOrEmpty(Model.SearchModel.Show)))
+                {
+                    foreach (var item in Model.ListItem.Where(x => x.ParentID == 0))
+                    {
+                        <tr id="item_@(item.ID)" class="@(item.IsShow != true ? "hid" : string.Empty)@(item.ID==Model.WebsiteModule.ID?" active":string.Empty)">
+                            <td class="open-child active" data-id="@item.ID" data-level="1">
+                                @if (Model.SystemActionAdmin.Edit == true)
+                                {
+                                    <a href="#@item.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                        <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="lnr lnr-chevron-down"></span>
+
+                                    @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+                                }
+                            </td>
+                            <td>@item.ModuleType</td>
+                            <td>
+                                <a href="/Adminadc/Product/Index#ModuleId=@item.ID" class="color-info">Tới sản phẩm</a>
+                            </td>
+                            @*@if (Model.SystemActionAdmin.Edit)
+            {
+            <td><a class="edit color-info" href="#@item.ID" data-tab="TabAttr">Đã chọn (@(item.Attributes != null ? item.Attributes.Count(x => x.ParentID == 0) : 0))</a></td>
+            }
+            else
+            {
+
+            <td>Đã chọn (@(item.Attributes != null ? item.Attributes.Count(x => x.ParentID == 0) : 0))</td>
+            }*@
+                            <td>
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                                }
+                                else
+                                {
+                                    @item.OrderDisplay
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Active == true)
+                                {
+                                    <a href="#@item.ID" class="@(ConvertUtil.ToBool(item.IsShow)==true?"hiddens":"show")">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                                }
+                                else
+                                {
+                                    @Html.Raw(StaticEnum.Show(item.IsShow))
+                                }
+                                @if (Model.SystemActionAdmin.Sitemap == true)
+                                {
+                                    <a href="#@item.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(item.IsSitemap))</a>
+                                }
+                            </td>
+                            <td class="act_delete">
+                                @if (Model.SystemActionAdmin.Add == true)
+                                {
+                                    <a href="#@item.ID" class="add btn" title="Thêm">
+                                        <span class="lnr lnr-plus-circle"></span>
+                                    </a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.NameAscii) || !string.IsNullOrEmpty(item.LinkUrl))
+                                {
+                                    <a href="@(string.IsNullOrEmpty(item.LinkUrl) ? Utility.Link(item.NameAscii,string.Empty,item.LinkUrl) : item.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Xem">
+                                        <span class="lnr lnr-eye"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Edit == true)
+                                {
+                                    <a href="#@item.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                        <span class="lnr lnr-pencil"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Delete == true)
+                                {
+                                    <a href="#@item.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                        <span class="lnr lnr-trash"></span>
+                                    </a>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="label-check">
+                                    <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" data-title="@item.Name" class="minimal check" value="@item.ID">
+                                    <label for="Check@(item.ID)"></label>
+                                </div>
+                            </td>
+                        </tr>
+                        foreach (var child in Model.ListItem.Where(x => x.ParentID == item.ID).OrderBy(x => x.OrderDisplay))
+                        {
+                            <tr id="item_@(child.ID)" class="child-@item.ID level-1@(child.IsShow != true ? " hid" : string.Empty) @(child.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@item.ID">
+                                <td class="open-child active" data-id="@child.ID" data-level="2">
+                                    @if (Model.SystemActionAdmin.Edit == true)
+                                    {
+                                        <a href="#@child.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                            <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="lnr lnr-chevron-down"></span>
+
+                                        @Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+                                    }
+                                </td>
+                                <td>@child.ModuleType</td>
+                                <td>
+                                    <a href="/Adminadc/Product/Index#ModuleId=@child.ID" class="color-info">Tới sản phẩm</a>
+                                </td>
+                                @*<td>
+            @if (Model.SystemActionAdmin.Edit)
+            {
+            <a class="edit color-info" href="#@child.ID" data-tab="TabAttr">Đã chọn (@(child.Attributes != null ? child.Attributes.Count(x => x.ParentID == 0) : 0))</a>
+            }
+            else
+            {
+            <span>Đã chọn (@(child.Attributes != null ? child.Attributes.Count(x => x.ParentID == 0) : 0))</span>
+            }
+            </td>*@
+                                <td>
+                                    @if (Model.SystemActionAdmin.Order)
+                                    {
+                                        <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child.ID', this.value)" value="@child.OrderDisplay" disabled />
+                                    }
+                                    else
+                                    {
+                                        @child.OrderDisplay
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (Model.SystemActionAdmin.Active == true)
+                                    {
+                                        <a href="#@child.ID" class="@(ConvertUtil.ToBool(child.IsShow)==true?"hiddens":"show")">@Html.Raw(StaticEnum.Show(child.IsShow))</a>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(StaticEnum.Show(child.IsShow))
+                                    }
+                                    @if (Model.SystemActionAdmin.Sitemap == true)
+                                    {
+                                        <a href="#@child.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child.IsSitemap))</a>
+                                    }
+                                </td>
+                                <td class="act_delete">
+                                    @if (Model.SystemActionAdmin.Add == true)
+                                    {
+                                        <a href="#@child.ID" class="add btn" title="Thêm">
+                                            <span class="lnr lnr-plus-circle"></span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(child.NameAscii) || !string.IsNullOrEmpty(child.LinkUrl))
+                                    {
+                                        <a href="@(string.IsNullOrEmpty(child.LinkUrl) ? Utility.Link(child.NameAscii,string.Empty,child.LinkUrl) : child.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                            <span class="lnr lnr-eye"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Edit == true)
+                                    {
+                                        <a href="#@child.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                            <span class="lnr lnr-pencil"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Delete == true)
+                                    {
+                                        <a href="#@child.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                            <span class="lnr lnr-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="label-check">
+                                        <input type="checkbox" data-url="@child.UrlPicture" id="Check@(child.ID)" data-title="@child.Name" class="minimal check" value="@child.ID">
+                                        <label for="Check@(child.ID)"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            foreach (var child2 in Model.ListItem.Where(x => x.ParentID == child.ID).OrderBy(x => x.OrderDisplay))
+                            {
+                                <tr id="item_@(child2.ID)" class="child-@item.ID child-@child.ID level-2@(child2.IsShow != true ? " hid" : string.Empty) @(child2.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@child.ID">
+                                    <td class="open-child active" data-id="@child2.ID" data-level="3">
+                                        @if (Model.SystemActionAdmin.Edit == true)
+                                        {
+                                            <a href="#@child2.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="lnr lnr-chevron-down"></span>
+
+                                            @Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+                                        }
+                                    </td>
+                                    <td>@child2.ModuleType</td>
+                                    <td>
+                                        <a href="/Adminadc/Product/Index#ModuleId=@child2.ID" class="color-info">Tới sản phẩm</a>
+                                    </td>
+                                    @*<td><a class="edit color-info" href="#@child2.ID" data-tab="TabAttr">Đã chọn (@(child2.Attributes != null ? child2.Attributes.Count(x => x.ParentID == 0) : 0))</a></td>*@
+                                    <td>
+                                        @if (Model.SystemActionAdmin.Order)
+                                        {
+                                            <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child2.ID', this.value)" value="@child2.OrderDisplay" disabled />
+                                        }
+                                        else
+                                        {
+                                            @child2.OrderDisplay
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (Model.SystemActionAdmin.Active == true)
+                                        {
+                                            <a href="#@child2.ID" class="@(ConvertUtil.ToBool(child2.IsShow)==true?"hiddens":"show")">@Html.Raw(StaticEnum.Show(child2.IsShow))</a>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(StaticEnum.Show(child2.IsShow))
+                                        }
+                                        @if (Model.SystemActionAdmin.Sitemap == true)
+                                        {
+                                            <a href="#@child2.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child2.IsSitemap))</a>
+                                        }
+                                    </td>
+                                    <td class="act_delete">
+                                        @if (Model.SystemActionAdmin.Add == true)
+                                        {
+                                            <a href="#@child2.ID" class="add btn" title="Thêm">
+                                                <span class="lnr lnr-plus-circle"></span>
+                                            </a>
+                                        }
+                                        @if (!string.IsNullOrEmpty(child2.NameAscii) || !string.IsNullOrEmpty(child2.LinkUrl))
+                                        {
+                                            <a href="@(string.IsNullOrEmpty(child2.LinkUrl) ? Utility.Link(child2.NameAscii,string.Empty,child2.LinkUrl) : child2.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                                <span class="lnr lnr-eye"></span>
+                                            </a>
+                                        }
+                                        @if (Model.SystemActionAdmin.Edit == true)
+                                        {
+                                            <a href="#@child2.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                <span class="lnr lnr-pencil"></span>
+                                            </a>
+                                        }
+                                        @if (Model.SystemActionAdmin.Delete == true)
+                                        {
+                                            <a href="#@child2.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                                <span class="lnr lnr-trash"></span>
+                                            </a>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="label-check">
+                                            <input type="checkbox" data-url="@child2.UrlPicture" id="Check@(child2.ID)" data-title="@child2.Name" class="minimal check" value="@child2.ID">
+                                            <label for="Check@(child2.ID)"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                foreach (var child3 in Model.ListItem.Where(x => x.ParentID == child2.ID).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <tr id="item_@(child3.ID)" class="child-@item.ID child-@child.ID child-@child2.ID level-3@(child3.IsShow != true ? " hid" : string.Empty) @(child3.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@child2.ID">
+                                        <td class="open-child active" data-id="@child3.ID" data-level="4">
+                                            @if (Model.SystemActionAdmin.Edit == true)
+                                            {
+                                                <a href="#@child3.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                    <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child3.Name, child3.IsShow))
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="lnr lnr-chevron-down"></span>
+
+                                                @Html.Raw(Utility.DisplayShowName(child3.Name, child3.IsShow))
+                                            }
+                                            @if (Model.ListItem.Count(x => x.ParentID == child3.ID) > 0)
+                                            {
+                                                <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child3.ID)</span>
+                                            }
+                                        </td>
+                                        <td>@child3.ModuleType</td>
+                                        <td>
+                                            <a href="/Adminadc/Product/Index#ModuleId=@child3.ID" class="color-info">Tới sản phẩm</a>
+                                        </td>
+                                        @*@if (Model.SystemActionAdmin.Edit)
+            {
+            <td><a class="edit color-info" href="#@child3.ID" data-tab="TabAttr">Đã chọn (@(child3.Attributes != null ? child3.Attributes.Count(x => x.ParentID == 0) : 0))</a></td>
+            }
+            else
+            {
+            <td>Đã chọn (@(child3.Attributes != null ? child3.Attributes.Count(x => x.ParentID == 0) : 0))</td>
+            }*@
+                                        <td>
+                                            @if (Model.SystemActionAdmin.Order)
+                                            {
+                                                <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child3.ID', this.value)" value="@child3.OrderDisplay" disabled />
+                                            }
+                                            else
+                                            {
+                                                @child3.OrderDisplay
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (Model.SystemActionAdmin.Active)
+                                            {
+                                                <a href="#@child3.ID" class="@(ConvertUtil.ToBool(child3.IsShow)==true?"hiddens":"show")" data-toggle="tooltip" data-placement="bottom" title="Nhấn click để @(ConvertUtil.ToBool(child3.IsShow)?" Ẩn "+child3.Name:" Hiển thị "+child3.Name) danh mục">@Html.Raw(StaticEnum.Show(child3.IsShow))</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(StaticEnum.Show(child3.IsShow))
+                                            }
+                                            @if (Model.SystemActionAdmin.Sitemap == true)
+                                            {
+                                                <a href="#@child3.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child3.IsSitemap))</a>
+                                            }
+                                        </td>
+                                        <td class="act_delete">
+                                            @if (Model.SystemActionAdmin.Add)
+                                            {
+                                                <a href="#@child3.ID" class="add btn" title="Thêm">
+                                                    <span class="lnr lnr-plus-circle"></span>
+                                                </a>
+                                            }
+                                            @if (!string.IsNullOrEmpty(child3.NameAscii) || !string.IsNullOrEmpty(child3.LinkUrl))
+                                            {
+                                                <a href="@(string.IsNullOrEmpty(child3.LinkUrl) ? Utility.Link(child3.NameAscii,string.Empty,child3.LinkUrl) : child3.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                                    <span class="lnr lnr-eye"></span>
+                                                </a>
+                                            }
+                                            @if (Model.SystemActionAdmin.Edit)
+                                            {
+                                                <a href="#@child3.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                    <span class="lnr lnr-pencil"></span>
+                                                </a>
+                                            }
+                                            @if (Model.SystemActionAdmin.Delete)
+                                            {
+                                                <a href="#@child3.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                                    <span class="lnr lnr-trash"></span>
+                                                </a>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="label-check">
+                                                <input type="checkbox" data-url="@child3.UrlPicture" id="Check@(child3.ID)" data-title="@child3.Name" class="minimal check" value="@child3.ID">
+                                                <label for="Check@(child3.ID)"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    foreach (var child4 in Model.ListItem.Where(x => x.ParentID == child3.ID).OrderBy(x => x.OrderDisplay))
+                                    {
+                                        <tr id="item_@(child4.ID)" class="child-@item.ID child-@child.ID child-@child2.ID child-@child3.ID level-4@(child4.IsShow != true ? " hid" : string.Empty) @(child4.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@child3.ID">
+                                            <td class="open-child active" data-id="@child4.ID" data-level="5">
+                                                @if (Model.SystemActionAdmin.Edit == true)
+                                                {
+                                                    <a href="#@child4.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                        <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child4.Name, child4.IsShow))
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="lnr lnr-chevron-down"></span>
+
+                                                    @Html.Raw(Utility.DisplayShowName(child4.Name, child4.IsShow))
+                                                }
+                                                @if (Model.ListItem.Count(x => x.ParentID == child4.ID) > 0)
+                                                {
+                                                    <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child4.ID)</span>
+                                                }
+                                            </td>
+                                            <td>@child4.ModuleType</td>
+                                            <td>
+                                                <a href="/Adminadc/Product/Index#ModuleId=@child4.ID" class="color-info">Tới sản phẩm</a>
+                                            </td>
+                                            @*@if (Model.SystemActionAdmin.Edit)
+            {
+            <td><a class="edit color-info" href="#@child4.ID" data-tab="TabAttr">Đã chọn (@(child4.Attributes != null ? child4.Attributes.Count(x => x.ParentID == 0) : 0))</a></td>
+            }
+            else
+            {
+            <td>Đã chọn (@(child4.Attributes != null ? child4.Attributes.Count(x => x.ParentID == 0) : 0))</td>
+            }*@
+
+                                            <td>
+                                                @if (Model.SystemActionAdmin.Order)
+                                                {
+                                                    <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child4.ID', this.value)" value="@child4.OrderDisplay" disabled />
+                                                }
+                                                else
+                                                {
+                                                    @child4.OrderDisplay
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (Model.SystemActionAdmin.Active)
+                                                {
+                                                    <a href="#@child4.ID" class="@(ConvertUtil.ToBool(child4.IsShow)==true?"hiddens":"show")" data-toggle="tooltip" data-placement="bottom" title="Nhấn click để @(ConvertUtil.ToBool(child4.IsShow)?" Ẩn "+child4.Name:" Hiển thị "+child4.Name) danh mục">@Html.Raw(StaticEnum.Show(child4.IsShow))</a>
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw(StaticEnum.Show(child4.IsShow))
+                                                }
+                                                @if (Model.SystemActionAdmin.Sitemap == true)
+                                                {
+                                                    <a href="#@child4.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child4.IsSitemap))</a>
+                                                }
+                                            </td>
+                                            <td class="act_delete">
+                                                @if (Model.SystemActionAdmin.Add)
+                                                {
+                                                    <a href="#@child4.ID" class="add btn" title="Thêm">
+                                                        <span class="lnr lnr-plus-circle"></span>
+                                                    </a>
+                                                }
+                                                @if (!string.IsNullOrEmpty(child4.NameAscii) || !string.IsNullOrEmpty(child4.LinkUrl))
+                                                {
+                                                    <a href="@(string.IsNullOrEmpty(child4.LinkUrl) ? Utility.Link(child4.NameAscii,string.Empty,child4.LinkUrl) : child4.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                                        <span class="lnr lnr-eye"></span>
+                                                    </a>
+                                                }
+                                                @if (Model.SystemActionAdmin.Edit)
+                                                {
+                                                    <a href="#@child4.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                        <span class="lnr lnr-pencil"></span>
+                                                    </a>
+                                                }
+                                                @if (Model.SystemActionAdmin.Delete)
+                                                {
+                                                    <a href="#@child4.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                                        <span class="lnr lnr-trash"></span>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in Model.ListItem.Where(x => x.ParentID == 0))
+                    {
+                        <tr id="item_@(item.ID)" class="@(item.IsShow != true ? "hid" : string.Empty)@(item.ID==Model.WebsiteModule.ID?" active":string.Empty)">
+                            <td class="open-child active" data-id="@item.ID" data-level="1">
+                                @if (Model.SystemActionAdmin.Edit == true)
+                                {
+                                    <a href="#@item.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                        <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="lnr lnr-chevron-down"></span>
+
+                                    @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+                                }
+                                @if (Model.ListItem.Count(x => x.ParentID == item.ID) > 0)
+                                {
+                                    <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == item.ID)</span>
+                                }
+                            </td>
+                            <td>@item.ModuleType</td>
+                            <td>
+                                @if (Model.ListModule.Any(x => x.Tag == "Product"))
+                                {
+                                    <a href="/Adminadc/Product/Index#ModuleId=@item.ID" class="color-info">Tới sản phẩm</a>
+                                }
+                                else
+                                {
+                                    <span>Tới sản phẩm</span>
+                                }
+                            </td>
+                            @*<td>
+            @if (Model.SystemActionAdmin.Edit == true)
+            {
+            <a class="edit color-info" href="#@item.ID" data-tab="TabAttr">Đã chọn (@(item.TotalAttributes.HasValue ? item.TotalAttributes.Value : 0))</a>
+            }
+            else
+            {
+            <span>Đã chọn (@(item.TotalAttributes.HasValue ? item.TotalAttributes.Value : 0))</span>
+            }
+            </td>*@
+
+                            <td>
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                                }
+                                else
+                                {
+                                    @item.OrderDisplay
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Active == true)
+                                {
+                                    <a href="#@item.ID" class="@(ConvertUtil.ToBool(item.IsShow)==true?"hiddens":"show")">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                                }
+                                else
+                                {
+                                    @Html.Raw(StaticEnum.Show(item.IsShow))
+                                }
+                                @if (Model.SystemActionAdmin.Sitemap == true)
+                                {
+                                    <a href="#@item.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(item.IsSitemap))</a>
+                                }
+                            </td>
+                            <td class="act_delete">
+                                @if (Model.SystemActionAdmin.Add == true)
+                                {
+                                    <a href="#@item.ID" class="add btn" title="Thêm">
+                                        <span class="lnr lnr-plus-circle"></span>
+                                    </a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.NameAscii) || !string.IsNullOrEmpty(item.LinkUrl))
+                                {
+                                    <a href="@(string.IsNullOrEmpty(item.LinkUrl) ? Utility.Link(item.NameAscii,string.Empty,item.LinkUrl) : item.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Xem">
+                                        <span class="lnr lnr-eye"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Edit == true)
+                                {
+                                    <a href="#@item.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                        <span class="lnr lnr-pencil"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Delete == true)
+                                {
+                                    <a href="#@item.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                        <span class="lnr lnr-trash"></span>
+                                    </a>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="label-check">
+                                    <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" data-title="@item.Name" class="minimal check" value="@item.ID">
+                                    <label for="Check@(item.ID)"></label>
+                                </div>
+                            </td>
+                        </tr>
+                        foreach (var child in Model.ListItem.Where(x => x.ParentID == item.ID).OrderBy(x => x.OrderDisplay))
+                        {
+                            <tr id="item_@(child.ID)" class="child-@item.ID level-1@(child.IsShow != true ? " hid" : string.Empty) @(child.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@item.ID">
+                                <td class="open-child active" data-id="@child.ID" data-level="2">
+                                    @if (Model.SystemActionAdmin.Edit == true)
+                                    {
+                                        <a href="#@child.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                            <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="lnr lnr-chevron-down"></span>
+
+                                        @Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+                                    }
+                                    @if (Model.ListItem.Count(x => x.ParentID == child.ID) > 0)
+                                    {
+                                        <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child.ID)</span>
+                                    }
+                                </td>
+                                <td>@child.ModuleType</td>
+                                <td>
+                                    @if (Model.ListModule.Any(x => x.Tag == "Product"))
+                                    {
+                                        <a href="/Adminadc/Product/Index#ModuleId=@child.ID" class="color-info">Tới sản phẩm</a>
+                                    }
+                                    else
+                                    {
+                                        <span>Tới sản phẩm</span>
+                                    }
+                                </td>
+                                @*<td>
+            @if (Model.SystemActionAdmin.Edit == true)
+            {
+            <a class="edit color-info" href="#@child.ID" data-tab="TabAttr">Đã chọn (@(child.TotalAttributes.HasValue ? child.TotalAttributes.Value : 0))</a>
+            }
+            else
+            {
+            <span>Đã chọn (@(child.TotalAttributes.HasValue ? child.TotalAttributes.Value : 0))</span>
+            }
+            </td>*@
+
+                                <td>
+                                    @if (Model.SystemActionAdmin.Order)
+                                    {
+                                        <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child.ID', this.value)" value="@child.OrderDisplay" disabled />
+                                    }
+                                    else
+                                    {
+                                        @child.OrderDisplay
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (Model.SystemActionAdmin.Edit == true)
+                                    {
+                                        <a href="#@child.ID" class="@(ConvertUtil.ToBool(child.IsShow)==true?"hiddens":"show")">@Html.Raw(StaticEnum.Show(child.IsShow))</a>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(StaticEnum.Show(child.IsShow))
+                                    }
+                                    @if (Model.SystemActionAdmin.Sitemap == true)
+                                    {
+                                        <a href="#@child.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child.IsSitemap))</a>
+                                    }
+                                </td>
+                                <td class="act_delete">
+                                    @if (Model.SystemActionAdmin.Add == true)
+                                    {
+                                        <a href="#@child.ID" class="add btn" title="Thêm">
+                                            <span class="lnr lnr-plus-circle"></span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(child.NameAscii) || !string.IsNullOrEmpty(child.LinkUrl))
+                                    {
+                                        <a href="@(string.IsNullOrEmpty(child.LinkUrl) ? Utility.Link(child.NameAscii,string.Empty,child.LinkUrl) : child.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                            <span class="lnr lnr-eye"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Edit == true)
+                                    {
+                                        <a href="#@child.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                            <span class="lnr lnr-pencil"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Delete == true)
+                                    {
+                                        <a href="#@child.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                            <span class="lnr lnr-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="label-check">
+                                        <input type="checkbox" data-url="@child.UrlPicture" id="Check@(child.ID)" data-title="@child.Name" class="minimal check" value="@child.ID">
+                                        <label for="Check@(child.ID)"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            foreach (var child2 in Model.ListItem.Where(x => x.ParentID == child.ID).OrderBy(x => x.OrderDisplay))
+                            {
+                                <tr id="item_@(child2.ID)" class="child-@item.ID child-@child.ID level-2@(child2.IsShow != true ? " hid" : string.Empty) @(child2.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@child.ID">
+                                    <td class="open-child" data-id="@child2.ID" data-level="3">
+                                        @if (Model.SystemActionAdmin.Edit == true)
+                                        {
+                                            <a href="#@child2.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="lnr lnr-chevron-down"></span>
+
+                                            @Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+                                        }
+                                        @if (Model.ListItem.Count(x => x.ParentID == child2.ID) > 0)
+                                        {
+                                            <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child2.ID)</span>
+                                        }
+                                    </td>
+                                    <td>@child2.ModuleType</td>
+                                    <td>
+                                        @if (Model.ListModule.Any(x => x.Tag == "Product"))
+                                        {
+                                            <a href="/Adminadc/Product/Index#ModuleId=@child2.ID" class="color-info">Tới sản phẩm</a>
+                                        }
+                                        else
+                                        {
+                                            <span>Tới sản phẩm</span>
+                                        }
+                                    </td>
+                                    @*<td>
+            @if (Model.SystemActionAdmin.Edit == true)
+            {
+            <a class="edit color-info" href="#@child2.ID" data-tab="TabAttr">Đã chọn (@(child2.TotalAttributes.HasValue ? child2.TotalAttributes.Value : 0))</a>
+            }
+            else
+            {
+            <span>Đã chọn (@(child2.TotalAttributes.HasValue ? child2.TotalAttributes.Value : 0))</span>
+            }
+            </td>*@
+
+                                    <td>
+                                        @if (Model.SystemActionAdmin.Order)
+                                        {
+                                            <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child2.ID', this.value)" value="@child2.OrderDisplay" disabled />
+                                        }
+                                        else
+                                        {
+                                            @child2.OrderDisplay
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (Model.SystemActionAdmin.Active == true)
+                                        {
+                                            <a href="#@child2.ID" class="@(ConvertUtil.ToBool(child2.IsShow)==true?"hiddens":"show")" data-toggle="tooltip" data-placement="bottom" title="Nhấn click để @(ConvertUtil.ToBool(child2.IsShow)?" Ẩn "+child2.Name:" Hiển thị "+child2.Name) danh mục">@Html.Raw(StaticEnum.Show(child2.IsShow))</a>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(StaticEnum.Show(child2.IsShow))
+                                        }
+                                        @if (Model.SystemActionAdmin.Sitemap == true)
+                                        {
+                                            <a href="#@child2.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child2.IsSitemap))</a>
+                                        }
+                                    </td>
+                                    <td class="act_delete">
+                                        @if (Model.SystemActionAdmin.Add == true)
+                                        {
+                                            <a href="#@child2.ID" class="add btn" title="Thêm">
+                                                <span class="lnr lnr-plus-circle"></span>
+                                            </a>
+                                        }
+                                        @if (!string.IsNullOrEmpty(child2.NameAscii) || !string.IsNullOrEmpty(child2.LinkUrl))
+                                        {
+                                            <a href="@(string.IsNullOrEmpty(child2.LinkUrl) ? Utility.Link(child2.NameAscii,string.Empty,child2.LinkUrl) : child2.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                                <span class="lnr lnr-eye"></span>
+                                            </a>
+                                        }
+                                        @if (Model.SystemActionAdmin.Edit == true)
+                                        {
+                                            <a href="#@child2.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                <span class="lnr lnr-pencil"></span>
+                                            </a>
+                                        }
+                                        @if (Model.SystemActionAdmin.Delete == true)
+                                        {
+                                            <a href="#@child2.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                                <span class="lnr lnr-trash"></span>
+                                            </a>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="label-check">
+                                            <input type="checkbox" data-url="@child2.UrlPicture" id="Check@(child2.ID)" data-title="@child2.Name" class="minimal check" value="@child2.ID">
+                                            <label for="Check@(child2.ID)"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                foreach (var child3 in Model.ListItem.Where(x => x.ParentID == child2.ID).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <tr id="item_@(child3.ID)" class="child-@item.ID child-@child.ID child-@child2.ID level-3@(child3.IsShow != true ? " hid" : string.Empty) @(child3.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@child2.ID">
+                                        <td class="open-child" data-id="@child3.ID" data-level="4">
+                                            @if (Model.SystemActionAdmin.Edit == true)
+                                            {
+                                                <a href="#@child3.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                    <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child3.Name, child3.IsShow))
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="lnr lnr-chevron-down"></span>
+
+                                                @Html.Raw(Utility.DisplayShowName(child3.Name, child3.IsShow))
+                                            }
+                                            @if (Model.ListItem.Count(x => x.ParentID == child3.ID) > 0)
+                                            {
+                                                <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child3.ID)</span>
+                                            }
+                                        </td>
+                                        <td>@child3.ModuleType</td>
+                                        <td>
+                                            @if (Model.ListModule.Any(x => x.Tag == "Product"))
+                                            {
+                                                <a href="/Adminadc/Product/Index#ModuleId=@child3.ID" class="color-info">Tới sản phẩm</a>
+                                            }
+                                            else
+                                            {
+                                                <span>Tới sản phẩm</span>
+                                            }
+                                        </td>
+                                        @*<td>
+            @if (Model.SystemActionAdmin.Edit == true)
+            {
+            <a class="edit color-info" href="#@child3.ID" data-tab="TabAttr">Đã chọn (@(child3.TotalAttributes.HasValue ? child3.TotalAttributes.Value : 0))</a>
+            }
+            else
+            {
+            <span>Đã chọn (@(child3.TotalAttributes.HasValue ? child3.TotalAttributes.Value : 0))</span>
+            }
+            </td>*@
+                                        <td>
+                                            @if (Model.SystemActionAdmin.Order)
+                                            {
+                                                <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child3.ID', this.value)" value="@child3.OrderDisplay" disabled />
+                                            }
+                                            else
+                                            {
+                                                @child3.OrderDisplay
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (Model.SystemActionAdmin.Active == true)
+                                            {
+                                                <a href="#@child3.ID" class="@(ConvertUtil.ToBool(child3.IsShow)==true?"hiddens":"show")" data-toggle="tooltip" data-placement="bottom" title="Nhấn click để @(ConvertUtil.ToBool(child3.IsShow)?" Ẩn "+child3.Name:" Hiển thị "+child3.Name) danh mục">@Html.Raw(StaticEnum.Show(child3.IsShow))</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(StaticEnum.Show(child3.IsShow))
+                                            }
+                                            @if (Model.SystemActionAdmin.Sitemap == true)
+                                            {
+                                                <a href="#@child3.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child3.IsSitemap))</a>
+                                            }
+                                        </td>
+                                        <td class="act_delete">
+                                            @if (Model.SystemActionAdmin.Add == true)
+                                            {
+                                                <a href="#@child3.ID" class="add btn" title="Thêm">
+                                                    <span class="lnr lnr-plus-circle"></span>
+                                                </a>
+                                            }
+                                            @if (!string.IsNullOrEmpty(child3.NameAscii) || !string.IsNullOrEmpty(child3.LinkUrl))
+                                            {
+                                                <a href="@(string.IsNullOrEmpty(child3.LinkUrl) ? Utility.Link(child3.NameAscii,string.Empty,child3.LinkUrl) : child3.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                                    <span class="lnr lnr-eye"></span>
+                                                </a>
+                                            }
+                                            @if (Model.SystemActionAdmin.Edit == true)
+                                            {
+                                                <a href="#@child3.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                    <span class="lnr lnr-pencil"></span>
+                                                </a>
+                                            }
+                                            @if (Model.SystemActionAdmin.Delete == true)
+                                            {
+                                                <a href="#@child3.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                                    <span class="lnr lnr-trash"></span>
+                                                </a>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="label-check">
+                                                <input type="checkbox" data-url="@child3.UrlPicture" id="Check@(child3.ID)" data-title="@child3.Name" class="minimal check" value="@child3.ID">
+                                                <label for="Check@(child3.ID)"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    foreach (var child4 in Model.ListItem.Where(x => x.ParentID == child3.ID).OrderBy(x => x.OrderDisplay))
+                                    {
+                                        <tr id="item_@(child4.ID)" class="child-@item.ID child-@child.ID child-@child2.ID child-@child3.ID level-4@(child4.IsShow != true ? " hid" : string.Empty) @(child4.ID==Model.WebsiteModule.ID?" active":string.Empty)" data-id="@child3.ID">
+                                            <td class="open-child" data-id="@child4.ID" data-level="5">
+                                                @if (Model.SystemActionAdmin.Edit == true)
+                                                {
+                                                    <a href="#@child4.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                        <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child4.Name, child4.IsShow))
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="lnr lnr-chevron-down"></span>
+
+                                                    @Html.Raw(Utility.DisplayShowName(child4.Name, child4.IsShow))
+                                                }
+                                                @if (Model.ListItem.Count(x => x.ParentID == child4.ID) > 0)
+                                                {
+                                                    <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child4.ID)</span>
+                                                }
+                                            </td>
+                                            <td>@child4.ModuleType</td>
+                                            <td>
+                                                @if (Model.ListModule.Any(x => x.Tag == "Product"))
+                                                {
+                                                    <a href="/Adminadc/Product/Index#ModuleId=@child4.ID" class="color-info">Tới sản phẩm</a>
+                                                }
+                                                else
+                                                {
+                                                    <span>Tới sản phẩm</span>
+                                                }
+                                            </td>
+                                            @*<td>
+            @if (Model.SystemActionAdmin.Edit == true)
+            {
+            <a class="edit color-info" href="#@child4.ID" data-tab="TabAttr">Đã chọn (@(child4.TotalAttributes.HasValue ? child4.TotalAttributes.Value : 0))</a>
+            }
+            else
+            {
+            <span>Đã chọn (@(child4.TotalAttributes.HasValue ? child4.TotalAttributes.Value : 0))</span>
+            }
+            </td>*@
+
+                                            <td>
+                                                @if (Model.SystemActionAdmin.Order)
+                                                {
+                                                    <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@child4.ID', this.value)" value="@child4.OrderDisplay" disabled />
+                                                }
+                                                else
+                                                {
+                                                    @child4.OrderDisplay
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (Model.SystemActionAdmin.Active == true)
+                                                {
+                                                    <a href="#@child4.ID" class="@(ConvertUtil.ToBool(child4.IsShow)==true?"hiddens":"show")" data-toggle="tooltip" data-placement="bottom" title="Nhấn click để @(ConvertUtil.ToBool(child4.IsShow)?" Ẩn "+child4.Name:" Hiển thị "+child4.Name) danh mục">@Html.Raw(StaticEnum.Show(child4.IsShow))</a>
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw(StaticEnum.Show(child4.IsShow))
+                                                }
+                                                @if (Model.SystemActionAdmin.Sitemap == true)
+                                                {
+                                                    <a href="#@child4.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(child4.IsSitemap))</a>
+                                                }
+                                            </td>
+                                            <td class="act_delete">
+                                                @if (Model.SystemActionAdmin.Add == true)
+                                                {
+                                                    <a href="#@child4.ID" class="add btn" title="Thêm">
+                                                        <span class="lnr lnr-plus-circle"></span>
+                                                    </a>
+                                                }
+                                                @if (!string.IsNullOrEmpty(child4.NameAscii) || !string.IsNullOrEmpty(child4.LinkUrl))
+                                                {
+                                                    <a href="@(string.IsNullOrEmpty(child4.LinkUrl) ? Utility.Link(child4.NameAscii,string.Empty,child4.LinkUrl) : child4.LinkUrl)" data-toggle="tooltip" data-placement="bottom" target="_blank" class="quickview" title="Đường dẫn xem danh mục">
+                                                        <span class="lnr lnr-eye"></span>
+                                                    </a>
+                                                }
+                                                @if (Model.SystemActionAdmin.Edit == true)
+                                                {
+                                                    <a href="#@child4.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Sửa">
+                                                        <span class="lnr lnr-pencil"></span>
+                                                    </a>
+                                                }
+                                                @if (Model.SystemActionAdmin.Delete == true)
+                                                {
+                                                    <a href="#@child4.ID" class="delete" data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                                        <span class="lnr lnr-trash"></span>
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="label-check">
+                                                    <input type="checkbox" data-url="@child4.UrlPicture" id="Check@(child4.ID)" data-title="@child4.Name" class="minimal check" value="@child4.ID">
+                                                    <label for="Check@(child4.ID)"></label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            registerGridView("#gridItems");
+            $('.open-child .lnr-chevron-down').click(function () {
+                let parent = $(this).parents('.open-child')
+                let id = parent.data('id');
+                if (parent.hasClass('active')) {
+                    $('.child-' + id).addClass('hide');
+                    $('.child-' + id + ' .open-child').removeClass('active');
+                    parent.removeClass('active');
+                }
+                else {
+                    let lvel = parent.data('level');
+                    $('.child-' + id + '.level-' + lvel).removeClass('hide');
+                    parent.addClass('active');
+                }
+            });
+            $('#ShowAll').click(function () {
+                $("tr[class^='child-']").removeClass('hide');
+                $('table tr td').addClass('active');
+            });
+            $('#HideAll').click(function () {
+                $("tr[class^='child-']").addClass('hide');
+                $('table tr td').removeClass('active');
+            });
+            $('.updateproducts').click(function (e) {
+                e.preventDefault();
+                $("#gridItems input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").each(function () {
+                    var thisurl = $(this).val();
+                    var url = "/Adminadc/WebsiteModule/UpdateTotalProducts?id=" + thisurl;
+                    $.ajax({
+                        url: encodeURI(url), cache: false, type: "Post",
+                        success: function (data) {
+                            var sc = $('#status-success').text();
+                            var total = $('#status-total').text();
+                            $('#status-success').text(parseInt(sc) + 1);
+                            $('#status-total').text(parseInt(total) + 1);
+                        },
+                        error: function (data) {
+                            var total = $('#status-total').text();
+                            $('#status-total').text(parseInt(total) + 1);
+                        }
+                    });
+                });
+                $(this).parents('.btn-group').removeClass('open');
+                return false;
+            });
+            $('.updateattrs').click(function (e) {
+                e.preventDefault();
+                $("#gridItems input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").each(function () {
+                    var thisurl = $(this).val();
+                    var url = "/Adminadc/WebsiteModule/UpdateTotalAttributes?id=" + thisurl;
+                    $.ajax({
+                        url: encodeURI(url), cache: false, type: "Post",
+                        success: function (data) {
+                            var sc = $('#status-success').text();
+                            var total = $('#status-total').text();
+                            $('#status-success').text(parseInt(sc) + 1);
+                            $('#status-total').text(parseInt(total) + 1);
+                        },
+                        error: function (data) {
+                            var total = $('#status-total').text();
+                            $('#status-total').text(parseInt(total) + 1);
+                        }
+                    });
+                });
+                $(this).parents('.btn-group').removeClass('open');
+                return false;
+            });
+        });
+    </script>
+    <style>
+        #gridItems tr td:first-child {
+            font-weight: 600;
+        }
+
+        .level-1 td:nth-child(1) {
+            padding-left: 20px;
+        }
+
+        .level-2 td:nth-child(1) {
+            padding-left: 40px;
+        }
+
+        .level-3 td:nth-child(1) {
+            padding-left: 50px;
+        }
+
+        .level-4 td:nth-child(1) {
+            padding-left: 60px;
+        }
+        .level-5 td:nth-child(1) {
+            padding-left: 70px;
+        }
+
+        #gridItems tr.level-1 td:first-child, #gridItems tr.level-2 td:first-child, #gridItems tr.level-3 td:first-child, #gridItems tr.level-4 td:first-child {
+            font-weight: 400
+        }
+
+        #gridItems tr td.active:first-child .badge {
+            display: none;
+        }
+
+        .lnr-chevron-down, .open-child {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    </style>
+    @if (Model.WebsiteModule.ID > 0)
+    {
+        <script>
+            $(function () {
+                var item = $('#item_@(Model.WebsiteModule.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+    <script>
+        $(function () {
+            $('table tbody tr.active').each(function () {
+                var id = $(this).data('id');
+                $('.child-' + id).removeClass('hide');
+                var parent = $('#item_' + id).data('id');
+                $('.child-' + parent).removeClass('hide');
+            });
+            $('#Show option[value="@Model.SearchModel.Show"]').attr('selected', 'selected');
+            $('input[name=Keyword]').val('@Html.Raw(Model.SearchModel.keyword)');
+        });
+    </script>
+}

@@ -1,0 +1,46 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Utils
+@using ADCOnline.Simple
+@{
+    Layout = null;
+}
+@if (Model.ListProductItemJson.Any())
+{
+    @foreach (var item in Model.ListProductItemJson)
+    {
+        <div class="item item-product">
+            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="item-img img-hover save-link-history">
+                <img src="@item.UrlPicture" alt="@item.Name" />
+            </a>
+
+            <h3 class="name">
+                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="save-link-history">
+                    @item.Name
+                    @if (!string.IsNullOrEmpty(item.ProductCode))
+                    {
+                        <b>@item.ProductCode</b>
+                    }
+                </a>
+            </h3>
+
+            <div class="product-see-detail">
+                @if (!string.IsNullOrEmpty(item.Wattage))
+                {
+                    <p>@ResourceData.Resource("CongSuat", ViewBag.Lang): @item.Wattage</p>
+                }
+                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="save-link-history">@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</a>
+            </div>
+        </div>
+    }
+    @if (Model.Total > Model.PageSize)
+    {
+        @Html.Raw(ViewBag.GridHtml)
+    }
+}
+else
+{
+    <div class="alert-no-product">
+        <p>@ResourceData.Resource("KhongTimThaySanPham", ViewBag.lang)</p>
+    </div>
+}
+

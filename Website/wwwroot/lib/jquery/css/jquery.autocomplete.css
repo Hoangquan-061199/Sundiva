@@ -1,0 +1,6 @@
+﻿
+.autocomplete-suggestions { background:url(../images/shadow.png) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:8px 0 0 6px; /* IE6 fix: */ _background:none; _margin:0; }
+.autocomplete-suggestions { border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:2px 0px 0px 0px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
+.autocomplete-suggestions .autocomplete-selected { background:#F0F0F0; }
+.autocomplete-suggestions div { padding:5px; white-space:nowrap; }
+.autocomplete-suggestion strong { font-weight:normal; color:#3399FF; }

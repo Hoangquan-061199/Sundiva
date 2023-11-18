@@ -1,0 +1,3 @@
+User-agent: * 
+Disallow: /wwwroot/upload/
+Sitemap: /sitemap.xml

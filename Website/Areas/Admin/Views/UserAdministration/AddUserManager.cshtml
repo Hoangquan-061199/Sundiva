@@ -1,0 +1,84 @@
+﻿@*@model Website.Areas.Admin.ViewModels.UserAdminViewModel
+    @{ ViewBag.Title = Model.SystemActionItem.ActionText + " Quản lý Roles";
+        Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+        var child = string.Join(", ", Model.ListChildItem.Select(c => c.UserName));
+    }
+    <div class="row">
+        <div class="col-sm-12 col-md-7" style="position: static">
+            <form id="AddEditForm">
+                <div class="box-body col-sm-12 col-md-12">
+                    <input type="hidden" name="do" id="do" value="@Model.SystemActionItem.Action" />
+                    <input type="hidden" name="ItemID" id="ItemID" value="@Model.RolesItem.RoleId" />
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <label>Tên đăng nhập</label>
+                            </div>
+                            <div class="col-sm-8">
+                                @Model.AspnetUsers.UserName
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <label>User quản lý</label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="hidden" name="UserIDs" id="ValuesID" value="@child" />
+                               
+<div id="TextView" class="checkBoxValues">@child</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<div class="box-footer">
+    <button id="submit" type="submit" class="btn btn-success">Cập nhật</button>
+    <button id="reset" type="reset" class="btn btn-warning">Nhập lại</button>
+    <button id="close" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+</div>
+        </form>
+    </div>
+<div class="col-sm-12 col-md-5">
+    @Html.Action("AjaxCheckbox", "User", new { type = 3, ValuesSelected = child })
+</div>
+</div>
+<script>
+    $(function () {
+        var urlPostAction = "@Url.Action("Actions","UserAdministration")";
+        $("#AddEditForm").validate({
+            rules: {
+                RoleName: {
+                    require:true
+                }
+            },
+            messages: {
+                RoleName: {
+                    require: "Mã quyền bắt buộc nhập"
+                }
+            },
+            submitHandler: function () {
+                $.post(urlPostAction, $("#AddEditForm").serialize(), function (data) {
+                    if (data.Erros)
+                        createMessage("Đã có lỗi xảy ra", data.Message);
+                    else {
+                        ModalADC.Close();
+                        createMessage("Thông báo", data.Message, data.ID);
+                    }
+                });
+                return false;
+            }
+        });
+        $('#SelectModule').on('click', function () {
+            ModalADC.Open({
+                title: "Chọn module",
+                urlLoad: '@Url.Action("AjaxTreeSelect", "Module")?type=1&ValuesSelected=' + $("#Value_ModuleValues").val(),
+                bottom: false
+            });
+        });
+    });
+</script>
+<style>
+    .content-modal {
+        display: -webkit-box;
+        display: block;
+    }
+</style>*@

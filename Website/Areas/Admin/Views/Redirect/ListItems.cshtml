@@ -1,0 +1,86 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.RedirectJsonViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd100">ID</th>
+                <th>Đường dẫn cũ</th>
+                <th>Đường dẫn mới</th>
+                <th>Loại</th>
+                <th class="act_roles text-center wd100">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><i class="fa  fa-check"></i><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><i class="fa fa-exclamation"></i><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><i class="fa fa-trash"></i><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="act_roles noexport text-center wd50">
+                    <label>
+                        <input type="checkbox" class="minimal checkAll" value="" />
+                    </label>
+                </th>
+
+            </tr>
+        </thead>
+        @if (Model.GetListItem != null && Model.GetListItem.Count > 0)
+        {
+            <tbody>
+                @foreach (var item in Model.GetListItem)
+                {
+                    <tr id="item_@item.ID" class="@(item.ID==Model.RedirectJsonAdmin.ID ? "active" : string.Empty)">
+                        <td>@item.ID</td>
+                        <td>@item.OldUrl</td>
+                        <td>@item.NewUrl</td>
+                        <td>@item.TypeRedirect</td>
+                        <td class="act_delete noexport">
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit" title="Sửa:@item.OldUrl">
+                                    <span class="lnr lnr-pencil"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.ID" class="delete-js" data-type="@ViewBag.Type" title="Xóa:@item.OldUrl">
+                                    <span class="lnr lnr-trash"></span>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center"><input type="checkbox" class="minimal check" value="@item.ID"></td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+    @if (!string.IsNullOrEmpty(Model.RedirectJsonAdmin.ID))
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.RedirectJsonAdmin.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

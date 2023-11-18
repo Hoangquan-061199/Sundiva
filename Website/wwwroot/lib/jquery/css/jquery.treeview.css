@@ -1,0 +1,46 @@
+﻿.treeview .hitarea { height: 16px; width: 16px; margin-left: -18px; margin-top: 2px; float: left; cursor: pointer; font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; position: absolute; top: 3px; left: 0; }
+    .treeview .hitarea.collapsable-hitarea:before { content: "\f147"; }
+    .treeview .hitarea.expandable-hitarea:before { content: "\f196"; }
+* html .hitarea { display: inline; float: none; }
+.treeview li { margin: 0; padding: 3px 0pt 3px 16px; }
+#treecontrol { margin: 1em 0; /* display: none; */ }
+.treeview .hover { color: red; cursor: pointer; }
+.treeview li { background: url(../images/treeview/treeview-default-line.gif) 0px 32px no-repeat; }
+    .treeview li ul li { background: url(../images/treeview/treeview-default-line.gif) 0px 4px no-repeat; }
+    .treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }
+.treeview .expandable-hitarea { background-position: -80px -3px; }
+.treeview li.last { background-position: 0 -1766px }
+.treeview li.lastCollapsable, .treeview li.lastExpandable { background-image: url(../images/treeview/treeview-default.gif); }
+.treeview li.lastCollapsable { background-position: 0 -111px }
+.treeview li.lastExpandable { background-position: -32px -67px }
+.treeview div.lastCollapsable-hitarea, .treeview div.lastExpandable-hitarea { background-position: 0; }
+.treeview-red li { background-image: url(../images/treeview/treeview-red-line.gif); }
+    .treeview-red .hitarea, .treeview-red li.lastCollapsable, .treeview-red li.lastExpandable { background-image: url(../images/treeview/treeview-red.gif); }
+.treeview-black li { background-image: url(../images/treeview/treeview-black-line.gif); }
+    .treeview-black .hitarea, .treeview-black li.lastCollapsable, .treeview-black li.lastExpandable { background-image: url(../images/treeview/treeview-black.gif); }
+.treeview-gray li { background-image: url(../images/treeview/treeview-gray-line.gif); }
+    .treeview-gray .hitarea, .treeview-gray li.lastCollapsable, .treeview-gray li.lastExpandable { background-image: url(../images/treeview/treeview-gray.gif); }
+.treeview-famfamfam li { background-image: url(../images/treeview/treeview-famfamfam-line.gif); }
+    .treeview-famfamfam .hitarea, .treeview-famfamfam li.lastCollapsable, .treeview-famfamfam li.lastExpandable { background-image: url(../images/treeview/treeview-famfamfam.gif); }
+.filetree li { padding: 0px 0 0px 18px; }
+    .filetree li span { width: 100%; }
+.filetree span.folder, .filetree span.file { padding: 0px 0 0px 18px; display: inline-block; clear: both; }
+.filetree span.folder { background: url(../images/treeview/folder.gif) 0 0 no-repeat; }
+.filetree li.expandable span.folder { background: url(../images/treeview/folder-closed.gif) 0 0 no-repeat; }
+.filetree span.file { background: url("../images/treeview/file.gif") no-repeat scroll 0 2px transparent; }
+li.select > span > div.quickTool { display: block; }
+li.select > span > a { background-color: #C6E8FF; }
+li.unselect > span > div.quickTool { display: none; }
+li span a { float: none; }
+.filetree li span a, .filetree li span a:link, .filetree li span a:visited { color: #23282c; display: block; float: left; }
+    .filetree li span a:hover { color: #23282c; text-decoration: none; }
+    .filetree li span a strike { color: silver; }
+.filetree li span i { float: left; margin: 0px 5px; }
+.treeTool { display: inline-block !important; clear: both; padding: 0; margin: 0px !important; }
+    .treeTool a, .treeTool a:link, .treeTool a:visited { display: block; float: left; padding: 0 10px 10px 0; color: #333; text-decoration: none; }
+        .treeTool a:hover { color: #000000; }
+        .treeTool a.expand i, .treeTool a.collapse i { margin-right: 5px }
+.quickTool a { display: block; float: left; padding: 0px 0px 0 15px; font-size: 15px; }
+.treeview li { padding: 3px 0pt 3px 0; position: relative; }
+    .treeview li .badge { margin-left: 5px; float: left; margin-top: 3px; }
+.treeview, .treeview ul { padding: 0; margin: 0; list-style: none; display: block; }

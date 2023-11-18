@@ -1,0 +1,105 @@
+﻿@model Website.Areas.Admin.ViewModels.AttributesViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Quản lý thuộc tính";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View == true)
+{
+    <div class="col-sm-12">
+        @if (Model.ListModule.Any())
+        {
+            @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+            {
+                <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+            }
+        }
+    </div>
+    <link href="/lib/select-bootstrap/bootstrap-select.css" rel="stylesheet" />
+    <script src="/lib/select-bootstrap/bootstrap-select.js"></script>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr form-inline">
+                    <input style="width: calc(100% - 101px); margin-bottom: 10px; vertical-align:top;" type="text" class="form-control title" id="Keyword" name="Keyword" placeholder="Nhập từ khóa cần tìm" value="@Html.Raw(Context.Request.Query["Keyword"])">
+                    <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                    @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                    {
+                        <select class="form-control change-search selectpicker" name="parentId" id="parentId" data-container="body" data-live-search="true" title="Thuộc tính" data-hide-disabled="true">
+                            <option value="">-- Tất cả --</option>
+                            <option value="0">-- Gốc</option>
+                            @foreach (var parent in Model.ListItem.Where(x => x.ParentID == 0).OrderBy(x => x.OrderDisplay))
+                            {
+                                <option value="@parent.ID">@parent.Name - (@(parent.Number))</option>
+                            }
+                        </select>
+                    }
+                    @if (Model.ListAttributeType != null && Model.ListAttributeType.Count > 0)
+                    {
+                        <select class="form-control change-search selecttype" name="type" id="type" data-container="body" data-live-search="true" title="Loại thuộc tính" data-hide-disabled="true">
+                            <option value="">-- Tất cả --</option>
+                            @foreach (var parent in Model.ListAttributeType.OrderBy(x => x.Name))
+                            {
+                                <option value="@parent.ID">@parent.Name</option>
+                            }
+                        </select>
+                    }
+                    <select class="form-control" name="sort" id="sort">
+                        <option value="">-- Sắp xếp</option>
+                        <option value="0">A-Z</option>
+                        <option value="1">Z-A</option>
+                        <option value="2">Thứ tự giảm dần</option>
+                        <option value="3">Thứ tự tăng dần</option>
+                    </select>
+                    <input type="text" class="form-control" style="width:100px !important;" name="page" value="" id="page" placeholder="Trang" />
+                </div>
+            </form>
+            <div class="ct_tabssc" style="padding:0;">
+                <div class="w_tablegr" id="loadGridView">
+                </div>
+            </div>
+        </div>
+        <!-- /.tab-pane -->
+        <div class="tab-pane fade" id="tab_add">
+        </div>
+        <!-- /.tab-pane -->
+    </div>
+    <script>
+        $(function() {
+            ValidInput();
+            $('.selectpicker').selectpicker();
+            $('.selecttype').selectpicker();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            urlList = '@Url.Action("ListItems")';
+            initAjaxLoad(urlList, "#loadGridView");
+            $("#btnAdd").click(function() {
+                loadAjax(urlForm, "#tab_add");
+            });
+            var form = $("#searchFrm");
+            $("#btnSearch").click(function(e) {
+                LoadSearch(form);
+            });
+            form.validate({
+                submitHandler: function() {
+                    LoadSearch(form);
+                }
+            });
+            $('#searchFrm select').change(function() {
+                LoadSearch(form);
+            });
+            function LoadSearch(t) {
+                window.location.href = '#' + getValueFormMutilSelect(t);
+                return false;
+            }
+        });
+    </script>
+}

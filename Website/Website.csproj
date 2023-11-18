@@ -1,0 +1,1316 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>WinExe</OutputType>
+    <StartupObject />
+    <UserSecretsId>6f297770-e1a1-4172-b17f-00d9f127e764</UserSecretsId>
+  </PropertyGroup>
+    
+  <ItemGroup>
+    <Compile Remove="Areas\Admin\Data\**" />
+    <Compile Remove="Logs\**" />
+    <Compile Remove="Views\Cart\**" />
+    <Compile Remove="Views\Comment\**" />
+    <Compile Remove="Views\Member\**" />
+    <Compile Remove="Views\Mobile\**" />
+    <Compile Remove="Views\News\Document\**" />
+    <Compile Remove="Views\PartialView\**" />
+    <Compile Remove="Views\Shared\Components\AdvisorFormComponent\**" />
+    <Compile Remove="Views\Shared\Components\FormPopupComponent\**" />
+    <Compile Remove="Views\Shared\Components\LeftComponent\**" />
+    <Compile Remove="Views\Shared\Components\MostComponent\**" />
+    <Compile Remove="Views\Shared\Components\RightComponent\**" />
+    <Compile Remove="Views\Shared\Components\TuVanComponent\**" />
+    <Compile Remove="Views\Shared\Components\ViewedProductComponent\**" />
+    <Compile Remove="Views\Stores\**" />
+    <Compile Remove="wwwroot\api\**" />
+    <Compile Remove="wwwroot\ckeditor\**" />
+    <Compile Remove="wwwroot\comment\**" />
+    <Compile Remove="wwwroot\html\catalog\**" />
+    <Compile Remove="wwwroot\html\oldstyle\**" />
+    <Compile Remove="wwwroot\html\style1\**" />
+    <Compile Remove="wwwroot\html\style2\**" />
+    <Compile Remove="wwwroot\html\style\image\**" />
+    <Compile Remove="wwwroot\html\style\NewFolder\**" />
+    <Compile Remove="wwwroot\html\style\webfonts\**" />
+    <Compile Remove="wwwroot\html\web-pdf-viewer\**" />
+    <Compile Remove="wwwroot\Logs\**" />
+    <Compile Remove="wwwroot\media\**" />
+    <Compile Remove="wwwroot\node_modules\**" />
+    <Compile Remove="wwwroot\resize\**" />
+    <Compile Remove="wwwroot\rss\**" />
+    <Compile Remove="wwwroot\uploads-landing-page\**" />
+    <Compile Remove="wwwroot\upload\**" />
+    <Content Remove="Areas\Admin\Data\**" />
+    <Content Remove="Logs\**" />
+    <Content Remove="Views\Cart\**" />
+    <Content Remove="Views\Comment\**" />
+    <Content Remove="Views\Member\**" />
+    <Content Remove="Views\Mobile\**" />
+    <Content Remove="Views\News\Document\**" />
+    <Content Remove="Views\PartialView\**" />
+    <Content Remove="Views\Shared\Components\AdvisorFormComponent\**" />
+    <Content Remove="Views\Shared\Components\LeftComponent\**" />
+    <Content Remove="Views\Shared\Components\MostComponent\**" />
+    <Content Remove="Views\Shared\Components\RightComponent\**" />
+    <Content Remove="Views\Shared\Components\TuVanComponent\**" />
+    <Content Remove="Views\Shared\Components\ViewedProductComponent\**" />
+    <Content Remove="Views\Stores\**" />
+    <Content Remove="wwwroot\api\**" />
+    <Content Remove="wwwroot\ckeditor\**" />
+    <Content Remove="wwwroot\comment\**" />
+    <Content Remove="wwwroot\html\catalog\**" />
+    <Content Remove="wwwroot\html\oldstyle\**" />
+    <Content Remove="wwwroot\html\style1\**" />
+    <Content Remove="wwwroot\html\style2\**" />
+    <Content Remove="wwwroot\html\style\image\**" />
+    <Content Remove="wwwroot\html\style\NewFolder\**" />
+    <Content Remove="wwwroot\html\style\webfonts\**" />
+    <Content Remove="wwwroot\html\web-pdf-viewer\**" />
+    <Content Remove="wwwroot\Logs\**" />
+    <Content Remove="wwwroot\media\**" />
+    <Content Remove="wwwroot\medium\**" />
+    <Content Remove="wwwroot\member\**" />
+    <Content Remove="wwwroot\microsite\**" />
+    <Content Remove="wwwroot\node_modules\**" />
+    <Content Remove="wwwroot\question-answer\**" />
+    <Content Remove="wwwroot\resize\**" />
+    <Content Remove="wwwroot\rss\**" />
+    <Content Remove="wwwroot\small\**" />
+    <Content Remove="wwwroot\thumb\**" />
+    <Content Remove="wwwroot\uploads-landing-page\**" />
+    <Content Remove="wwwroot\upload\**" />
+    <EmbeddedResource Remove="Areas\Admin\Data\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <EmbeddedResource Remove="Views\Cart\**" />
+    <EmbeddedResource Remove="Views\Comment\**" />
+    <EmbeddedResource Remove="Views\Member\**" />
+    <EmbeddedResource Remove="Views\Mobile\**" />
+    <EmbeddedResource Remove="Views\News\Document\**" />
+    <EmbeddedResource Remove="Views\PartialView\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\LeftComponent\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\MostComponent\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\RightComponent\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\TuVanComponent\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\ViewedProductComponent\**" />
+    <EmbeddedResource Remove="Views\Stores\**" />
+    <EmbeddedResource Remove="wwwroot\api\**" />
+    <EmbeddedResource Remove="wwwroot\ckeditor\**" />
+    <EmbeddedResource Remove="wwwroot\comment\**" />
+    <EmbeddedResource Remove="wwwroot\html\catalog\**" />
+    <EmbeddedResource Remove="wwwroot\html\oldstyle\**" />
+    <EmbeddedResource Remove="wwwroot\html\style1\**" />
+    <EmbeddedResource Remove="wwwroot\html\style2\**" />
+    <EmbeddedResource Remove="wwwroot\html\style\image\**" />
+    <EmbeddedResource Remove="wwwroot\html\style\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\html\style\webfonts\**" />
+    <EmbeddedResource Remove="wwwroot\html\web-pdf-viewer\**" />
+    <EmbeddedResource Remove="wwwroot\Logs\**" />
+    <EmbeddedResource Remove="wwwroot\media\**" />
+    <EmbeddedResource Remove="wwwroot\medium\**" />
+    <EmbeddedResource Remove="wwwroot\member\**" />
+    <EmbeddedResource Remove="wwwroot\microsite\**" />
+    <EmbeddedResource Remove="wwwroot\question-answer\**" />
+    <EmbeddedResource Remove="wwwroot\resize\**" />
+    <EmbeddedResource Remove="wwwroot\rss\**" />
+    <EmbeddedResource Remove="wwwroot\small\**" />
+    <EmbeddedResource Remove="wwwroot\thumb\**" />
+    <EmbeddedResource Remove="wwwroot\uploads-landing-page\**" />
+    <EmbeddedResource Remove="wwwroot\upload\**" />
+    <None Remove="Areas\Admin\Data\**" />
+    <None Remove="Logs\**" />
+    <None Remove="Views\Cart\**" />
+    <None Remove="Views\Comment\**" />
+    <None Remove="Views\Member\**" />
+    <None Remove="Views\Mobile\**" />
+    <None Remove="Views\News\Document\**" />
+    <None Remove="Views\PartialView\**" />
+    <None Remove="Views\Shared\Components\LeftComponent\**" />
+    <None Remove="Views\Shared\Components\MostComponent\**" />
+    <None Remove="Views\Shared\Components\RightComponent\**" />
+    <None Remove="Views\Shared\Components\TuVanComponent\**" />
+    <None Remove="Views\Shared\Components\ViewedProductComponent\**" />
+    <None Remove="Views\Stores\**" />
+    <None Remove="wwwroot\api\**" />
+    <None Remove="wwwroot\ckeditor\**" />
+    <None Remove="wwwroot\comment\**" />
+    <None Remove="wwwroot\html\catalog\**" />
+    <None Remove="wwwroot\html\oldstyle\**" />
+    <None Remove="wwwroot\html\style1\**" />
+    <None Remove="wwwroot\html\style2\**" />
+    <None Remove="wwwroot\html\style\image\**" />
+    <None Remove="wwwroot\html\style\NewFolder\**" />
+    <None Remove="wwwroot\html\style\webfonts\**" />
+    <None Remove="wwwroot\html\web-pdf-viewer\**" />
+    <None Remove="wwwroot\Logs\**" />
+    <None Remove="wwwroot\media\**" />
+    <None Remove="wwwroot\medium\**" />
+    <None Remove="wwwroot\member\**" />
+    <None Remove="wwwroot\microsite\**" />
+    <None Remove="wwwroot\node_modules\**" />
+    <None Remove="wwwroot\question-answer\**" />
+    <None Remove="wwwroot\resize\**" />
+    <None Remove="wwwroot\rss\**" />
+    <None Remove="wwwroot\small\**" />
+    <None Remove="wwwroot\thumb\**" />
+    <None Remove="wwwroot\uploads-landing-page\**" />
+    <None Remove="wwwroot\upload\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\GetDataController.cs" />
+    <Compile Remove="Controllers\StoresController.cs" />
+    <Compile Remove="ViewComponents\LeftComponent.cs" />
+    <Compile Remove="ViewComponents\MostComponent.cs" />
+    <Compile Remove="ViewComponents\RightComponent.cs" />
+    <Compile Remove="ViewComponents\TuVanComponent.cs" />
+    <Compile Remove="ViewComponents\ViewedProductComponent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Admin\Views\WebsiteContent\AjaxFormApplication.cshtml" />
+    <Content Remove="Areas\Admin\Views\WebsiteContent\AjaxFormCompany.cshtml" />
+    <Content Remove="Areas\Admin\Views\WebsiteContent\AjaxFormContactUs.cshtml" />
+    <Content Remove="Areas\Admin\Views\WebsiteContent\AjaxFormDoctorteam.cshtml" />
+    <Content Remove="Areas\Admin\Views\WebsiteContent\AjaxFormDocument.cshtml" />
+    <Content Remove="Areas\Admin\Views\WebsiteContent\AjaxFormSpecialist.cshtml" />
+    <Content Remove="Areas\Admin\Views\WebsiteContent\AjaxFormVideo.cshtml" />
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="Views\Content\Apply.cshtml" />
+    <Content Remove="Views\Content\Award.cshtml" />
+    <Content Remove="Views\Content\Catalog.cshtml" />
+    <Content Remove="Views\Content\Compare.cshtml" />
+    <Content Remove="Views\Content\ContentIntroduce.cshtml" />
+    <Content Remove="Views\Content\DistributionSystem.cshtml" />
+    <Content Remove="Views\Content\ListSearch.cshtml" />
+    <Content Remove="Views\Content\ListSearchNews.cshtml" />
+    <Content Remove="Views\Content\ProductByID.cshtml" />
+    <Content Remove="Views\Content\ProductByListIds.cshtml" />
+    <Content Remove="Views\Content\SearchDoctor.cshtml" />
+    <Content Remove="Views\Content\SearchNews.cshtml" />
+    <Content Remove="Views\Content\Services.cshtml" />
+    <Content Remove="Views\Content\TradeMark.cshtml" />
+    <Content Remove="Views\Content\VanHoaCongTy.cshtml" />
+    <Content Remove="Views\Detail\DetailApplication.cshtml" />
+    <Content Remove="Views\Detail\DetailBusinessAreas.cshtml" />
+    <Content Remove="Views\Detail\DetailDoctor.cshtml" />
+    <Content Remove="Views\Detail\DetailGallery.cshtml" />
+    <Content Remove="Views\Detail\DetailProject.cshtml" />
+    <Content Remove="Views\Detail\DetailRecuitment.cshtml" />
+    <Content Remove="Views\Detail\DetailServices.cshtml" />
+    <Content Remove="Views\Detail\DetailSpecialist.cshtml" />
+    <Content Remove="Views\Detail\DetailTechnicalAdvices.cshtml" />
+    <Content Remove="Views\Detail\DetailVideo.cshtml" />
+    <Content Remove="Views\Home\LoadMenu.cshtml" />
+    <Content Remove="Views\News\CompanyActivitiesList.cshtml" />
+    <Content Remove="Views\News\Gallery.cshtml" />
+    <Content Remove="Views\News\GroupNews.cshtml" />
+    <Content Remove="Views\News\GroupServices.cshtml" />
+    <Content Remove="Views\News\Landing.cshtml" />
+    <Content Remove="Views\News\LandingContent.cshtml" />
+    <Content Remove="Views\News\LandingModule.cshtml" />
+    <Content Remove="Views\News\ListApplication.cshtml" />
+    <Content Remove="Views\News\ListBusiness.cshtml" />
+    <Content Remove="Views\News\ListByTag.cshtml" />
+    <Content Remove="Views\News\ListDoctor.cshtml" />
+    <Content Remove="Views\News\ListGallery.cshtml" />
+    <Content Remove="Views\News\ListGroupBusiness.cshtml" />
+    <Content Remove="Views\News\ListGroupRecuitment.cshtml" />
+    <Content Remove="Views\News\ListGuide.cshtml" />
+    <Content Remove="Views\News\ListInforRecuitment.cshtml" />
+    <Content Remove="Views\News\ListPartner.cshtml" />
+    <Content Remove="Views\News\ListProject.cshtml" />
+    <Content Remove="Views\News\ListPromotionNews.cshtml" />
+    <Content Remove="Views\News\ListQA.cshtml" />
+    <Content Remove="Views\News\ListRecuitment.cshtml" />
+    <Content Remove="Views\News\ListServices.cshtml" />
+    <Content Remove="Views\News\ListSpecialist.cshtml" />
+    <Content Remove="Views\News\ListTechnicalAdvice.cshtml" />
+    <Content Remove="Views\News\ListVideo.cshtml" />
+    <Content Remove="Views\News\Recuiment.cshtml" />
+    <Content Remove="Views\PartialContent\PartialContent.cshtml" />
+    <Content Remove="Views\PartialContent\PartialSearchTour.cshtml" />
+    <Content Remove="Views\Product\DetailProductII.cshtml" />
+    <Content Remove="Views\Product\DetailProductIII.cshtml" />
+    <Content Remove="Views\Product\GroupModuleChild.cshtml" />
+    <Content Remove="Views\Product\GroupModuleProductI.cshtml" />
+    <Content Remove="Views\Product\GroupModuleProductII.cshtml" />
+    <Content Remove="Views\Product\GroupModules.cshtml" />
+    <Content Remove="Views\Product\ListGroupModule.cshtml" />
+    <Content Remove="Views\Product\ListManufacturer.cshtml" />
+    <Content Remove="Views\Product\ProductionProcess.cshtml" />
+    <Content Remove="Views\Shared\_CookieConsentPartial.cshtml" />
+    <Content Remove="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Remove="Views\Shared\_LoginPartial.cshtml" />
+    <Content Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <Content Remove="wwwroot\Common\font-awesome.min.css" />
+    <Content Remove="wwwroot\html\process\3d.js" />
+    <Content Remove="wwwroot\html\process\3d.min.js" />
+    <Content Remove="wwwroot\html\process\agency.js" />
+    <Content Remove="wwwroot\html\process\cart.js" />
+    <Content Remove="wwwroot\html\process\compare.js" />
+    <Content Remove="wwwroot\html\process\compare_detail.js" />
+    <Content Remove="wwwroot\html\process\confirm.js" />
+    <Content Remove="wwwroot\html\process\cookies.js" />
+    <Content Remove="wwwroot\html\process\DetailNews.js" />
+    <Content Remove="wwwroot\html\process\detail_news.js" />
+    <Content Remove="wwwroot\html\process\ExtentsibleLogin.js" />
+    <Content Remove="wwwroot\html\process\jquery.cookie.js" />
+    <Content Remove="wwwroot\html\process\news.js" />
+    <Content Remove="wwwroot\html\process\news_detail.js" />
+    <Content Remove="wwwroot\html\process\news_tag.js" />
+    <Content Remove="wwwroot\html\process\payment.js" />
+    <Content Remove="wwwroot\html\process\productdetail.js" />
+    <Content Remove="wwwroot\html\process\productold.js" />
+    <Content Remove="wwwroot\html\process\register.js" />
+    <Content Remove="wwwroot\html\process\sale.js" />
+    <Content Remove="wwwroot\html\process\search.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\gg52kwdz.jmd~" />
+    <None Remove="gulpfile.js" />
+    <None Remove="ScaffoldingReadMe.txt" />
+    <None Remove="ViewComponents\4u1qxqpc.g2i~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="gulpfile.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+<ItemGroup>
+	<ProjectReference Include="..\ADCOnline.Business\ADCOnline.Business.csproj" />
+	<ProjectReference Include="..\ADCOnline.DA.Dapper\ADCOnline.DA.Dapper.csproj" />
+	<ProjectReference Include="..\ADCOnline.Simple\ADCOnline.Simple.csproj" />
+	<ProjectReference Include="..\ADCOnline.Utils\ADCOnline.Utils.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="EPPlus" Version="4.5.2.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.4" />
+    <PackageReference Include="MailKit" Version="2.5.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="18.2.0.48" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.8" />
+    <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.7.0" />
+    <PackageReference Include="WebMarkupMin.Core" Version="2.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\AccountAdmin\Login.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Campaign\ListVorcherByIdCampain.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ContactUsBookTour\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ContactUsCarRental\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ContactUsBookHotel\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ContactUsOrder\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ContactUsPopup\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\CustomerCategory\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\CustomerCategory\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\CustomerCategory\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Customer\ListProductByTypeAndCustomerId.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Notification\ProductByIds.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Campaign\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Campaign\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Campaign\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ProductSub\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ProductSub\AjaxFormType.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ProductSub\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ProductSub\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Product\AjaxFormTypeI.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Promotion\ProductByIds.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContentQuestion\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContentQuestion\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Rate\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Rate\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Rate\IndexReply.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Rate\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Comment\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Comment\IndexReply.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Comment\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Comment\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ContactUs\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Customer\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Customer\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Customer\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Advertising\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\DistributionSystem\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\DistributionSystem\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\DistributionSystem\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Shared\Components\CountContentComponent\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Shared\Components\CountProductComponent\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SubItem\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SubItem\AjaxTreeSelect.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SubItem\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SubItem\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\OtherContent\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\OtherContent\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\OtherContent\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ModuleType\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ModuleType\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ModuleType\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Shared\Header.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AgencyType\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AgencyType\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AgencyType\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SystemTag\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SystemTag\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SystemTag\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SystemConfig\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SystemConfig\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\SystemConfig\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Agencies\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Agencies\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Agencies\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Agencies\Search.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContent\AjaxFormQA.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContent\AjaxFormSimple.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContent\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContent\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContent\ListItemsAjax.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteContent\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AreaAgency\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AreaAgency\AjaxTreeSelect.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AreaAgency\AjaxTreeSelectModuleContent.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AreaAgency\AjaxTreeSelectNotLang.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AreaAgency\AjaxTreeSelectProductNotLang.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AreaAgency\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\AreaAgency\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\TradeMark\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\TradeMark\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\TradeMark\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteModuleContent\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteModuleContent\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteModuleProduct\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteModuleProduct\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteModule\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteModule\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\WebsiteModule\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Order\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Order\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Order\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Product\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Product\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Product\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Department\AjaxForm.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Department\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Department\ListItems.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\ModulePosition\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Shared\Components\HeadTopAdmin\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Shared\_LayoutLogin.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\Shared\_Layout.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Shared\Components\Footer\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Shared\Components\HeadTop\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="wwwroot\favicon.ico">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas\Admin\Views\Attributes\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\Attributes\AjaxTreeSelect.cshtml" />
+    <None Include="Areas\Admin\Views\Attributes\AjaxTreeSelectModuleContent.cshtml" />
+    <None Include="Areas\Admin\Views\Attributes\AjaxTreeSelectNotLang.cshtml" />
+    <None Include="Areas\Admin\Views\Attributes\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Attributes\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\BlockIP\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\BlockIP\Index.cshtml" />
+    <None Include="Areas\Admin\Views\ContactUsApply\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\ContactUsApply\Index.cshtml" />
+    <None Include="Areas\Admin\Views\ContactUsApply\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\ContentDataJsonReceiverEmail\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\ContentDataJsonReceiverEmail\Index.cshtml" />
+    <None Include="Areas\Admin\Views\ContentDataJsonReceiverEmail\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\HomeAdmin\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Language\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\Language\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Language\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\MemberAdmin\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\MemberAdmin\Index.cshtml" />
+    <None Include="Areas\Admin\Views\MemberAdmin\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\Module\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\Module\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Module\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\Redirect\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\Redirect\ImportExcel.cshtml" />
+    <None Include="Areas\Admin\Views\Redirect\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Redirect\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\Roles\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\Roles\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Roles\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\Sitemap\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\Sitemap\Index.cshtml" />
+    <None Include="Areas\Admin\Views\Sitemap\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\AddModule.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\AddUserManager.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\AjaxActiveForm.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\AjaxModuleForm.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\AjaxTreeSelect.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\CreateUser.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\Index.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\ListItems.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\ModuleAdminRole.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\ModuleRole.cshtml" />
+    <None Include="Areas\Admin\Views\UserAdministration\Password.cshtml" />
+    <None Include="Areas\Admin\Views\User\AjaxCheckbox.cshtml" />
+    <None Include="Areas\Admin\Views\User\AjaxForm.cshtml" />
+    <None Include="Areas\Admin\Views\User\Index.cshtml" />
+    <None Include="Areas\Admin\Views\User\ListItems.cshtml" />
+    <None Include="bundleconfig.json" />
+    <None Include="Views\PartialContent\PartialSearchTour.cshtml" />
+    <None Include="Views\PartialContent\PartialProduct.cshtml" />
+    <None Include="Views\Shared\Components\SendInfomation\Default.cshtml" />
+    <None Include="Views\Shared\Components\TextHeadComponent\Default.cshtml" />
+    <None Include="Views\Sitemap\Rss.cshtml" />
+    <None Include="wwwroot\Admin\css\AdminLTE.css" />
+    <None Include="wwwroot\Admin\css\AdminLTE.min.css" />
+    <None Include="wwwroot\Admin\lib\chart\Chart.bundle.min.js" />
+    <None Include="wwwroot\Admin\lib\chart\Chart.min.js" />
+    <None Include="wwwroot\ckeditor4\adapters\jquery.js" />
+    <None Include="wwwroot\ckeditor4\build-config.js" />
+    <None Include="wwwroot\ckeditor4\CHANGES.md" />
+    <None Include="wwwroot\ckeditor4\ckeditor.js" />
+    <None Include="wwwroot\ckeditor4\config.js" />
+    <None Include="wwwroot\ckeditor4\lang\af.js" />
+    <None Include="wwwroot\ckeditor4\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\lang\az.js" />
+    <None Include="wwwroot\ckeditor4\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\lang\bn.js" />
+    <None Include="wwwroot\ckeditor4\lang\bs.js" />
+    <None Include="wwwroot\ckeditor4\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\lang\cy.js" />
+    <None Include="wwwroot\ckeditor4\lang\da.js" />
+    <None Include="wwwroot\ckeditor4\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor4\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor4\lang\en-ca.js" />
+    <None Include="wwwroot\ckeditor4\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor4\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\lang\eo.js" />
+    <None Include="wwwroot\ckeditor4\lang\es-mx.js" />
+    <None Include="wwwroot\ckeditor4\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\lang\fi.js" />
+    <None Include="wwwroot\ckeditor4\lang\fo.js" />
+    <None Include="wwwroot\ckeditor4\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor4\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\lang\gl.js" />
+    <None Include="wwwroot\ckeditor4\lang\gu.js" />
+    <None Include="wwwroot\ckeditor4\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\lang\hi.js" />
+    <None Include="wwwroot\ckeditor4\lang\hr.js" />
+    <None Include="wwwroot\ckeditor4\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\lang\id.js" />
+    <None Include="wwwroot\ckeditor4\lang\is.js" />
+    <None Include="wwwroot\ckeditor4\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\lang\ja.js" />
+    <None Include="wwwroot\ckeditor4\lang\ka.js" />
+    <None Include="wwwroot\ckeditor4\lang\km.js" />
+    <None Include="wwwroot\ckeditor4\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\lang\ku.js" />
+    <None Include="wwwroot\ckeditor4\lang\lt.js" />
+    <None Include="wwwroot\ckeditor4\lang\lv.js" />
+    <None Include="wwwroot\ckeditor4\lang\mk.js" />
+    <None Include="wwwroot\ckeditor4\lang\mn.js" />
+    <None Include="wwwroot\ckeditor4\lang\ms.js" />
+    <None Include="wwwroot\ckeditor4\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\lang\no.js" />
+    <None Include="wwwroot\ckeditor4\lang\oc.js" />
+    <None Include="wwwroot\ckeditor4\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\lang\ro.js" />
+    <None Include="wwwroot\ckeditor4\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\lang\si.js" />
+    <None Include="wwwroot\ckeditor4\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\lang\sl.js" />
+    <None Include="wwwroot\ckeditor4\lang\sq.js" />
+    <None Include="wwwroot\ckeditor4\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor4\lang\sr.js" />
+    <None Include="wwwroot\ckeditor4\lang\sv.js" />
+    <None Include="wwwroot\ckeditor4\lang\th.js" />
+    <None Include="wwwroot\ckeditor4\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\lang\tt.js" />
+    <None Include="wwwroot\ckeditor4\lang\ug.js" />
+    <None Include="wwwroot\ckeditor4\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\lang\vi.js" />
+    <None Include="wwwroot\ckeditor4\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\LICENSE.md" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\af.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\az.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\cy.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\da.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\eo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\es-mx.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\fi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\fo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\gl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\gu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\hi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\hr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\id.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ja.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\km.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ku.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\lt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\lv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\mk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\mn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\no.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\oc.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ro.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\si.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\sl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\sq.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\sr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\sv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\th.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\tt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\ug.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\vi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\a11yhelp\dialogs\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\plugins\about\dialogs\about.js" />
+    <None Include="wwwroot\ckeditor4\plugins\clipboard\dialogs\paste.js" />
+    <None Include="wwwroot\ckeditor4\plugins\colordialog\dialogs\colordialog.js" />
+    <None Include="wwwroot\ckeditor4\plugins\copyformatting\cursors\cursor-disabled.svg" />
+    <None Include="wwwroot\ckeditor4\plugins\copyformatting\cursors\cursor.svg" />
+    <None Include="wwwroot\ckeditor4\plugins\dialog\dialogDefinition.js" />
+    <None Include="wwwroot\ckeditor4\plugins\div\dialogs\div.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\dialogs\easyimagealt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\az.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\da.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\gl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\hr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\ku.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\lv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\no.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\ro.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\sq.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\sr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\sv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\tt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\plugins\easyimage\plugin.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\CHANGELOG.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\LICENSE.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\plugindefinition.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\README.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\authentication.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\exportpdf.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\configfilename.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\emptyeditor.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\integration.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\integrations\easyimage.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\notifications.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\notificationsasync.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\paperformat.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\readonly.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\stylesheets.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\tokenfetching.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\tokentwoeditorscorrect.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\tokentwoeditorswrong.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\tokenwithouturl.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\manual\wrongendpoint.md" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\notification.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\resourcespaths.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\statistics.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\stylesheets.js" />
+    <None Include="wwwroot\ckeditor4\plugins\exportpdf\tests\_helpers\tools.js" />
+    <None Include="wwwroot\ckeditor4\plugins\find\dialogs\find.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\button.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\checkbox.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\form.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\hiddenfield.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\radio.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\select.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\textarea.js" />
+    <None Include="wwwroot\ckeditor4\plugins\forms\dialogs\textfield.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\dialogs\html5audio.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\uz.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5audio\plugin.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\dialogs\html5video.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\uz.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\html5video\plugin.js" />
+    <None Include="wwwroot\ckeditor4\plugins\iframe\dialogs\iframe.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\dialogs\image2.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\af.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\az.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\bn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\bs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\cy.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\da.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\en-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\eo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\es-mx.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\fi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\fo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\gl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\gu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\hi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\hr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\id.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\is.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ja.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ka.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\km.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ku.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\lt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\lv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\mk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\mn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ms.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\no.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\oc.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ro.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\si.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\sl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\sq.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\sr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\sv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\th.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\tt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\ug.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\vi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image2\plugin.js" />
+    <None Include="wwwroot\ckeditor4\plugins\image\dialogs\image.js" />
+    <None Include="wwwroot\ckeditor4\plugins\link\dialogs\anchor.js" />
+    <None Include="wwwroot\ckeditor4\plugins\link\dialogs\link.js" />
+    <None Include="wwwroot\ckeditor4\plugins\liststyle\dialogs\liststyle.js" />
+    <None Include="wwwroot\ckeditor4\plugins\pastefromgdocs\filter\default.js" />
+    <None Include="wwwroot\ckeditor4\plugins\pastefromlibreoffice\filter\default.js" />
+    <None Include="wwwroot\ckeditor4\plugins\pastefromword\filter\default.js" />
+    <None Include="wwwroot\ckeditor4\plugins\pastetools\filter\common.js" />
+    <None Include="wwwroot\ckeditor4\plugins\pastetools\filter\image.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\af.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\az.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\bn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\bs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\cy.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\da.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\en-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\eo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\es-mx.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\fi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\fo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\gl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\gu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\hi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\hr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\id.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\is.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ja.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ka.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\km.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ku.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\lt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\lv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\mk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\mn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ms.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\no.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\oc.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ro.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\si.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\sl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\sq.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\sr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\sv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\th.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\tt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\ug.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\vi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\plugins\removeformat\plugin.js" />
+    <None Include="wwwroot\ckeditor4\plugins\scayt\CHANGELOG.md" />
+    <None Include="wwwroot\ckeditor4\plugins\scayt\dialogs\options.js" />
+    <None Include="wwwroot\ckeditor4\plugins\scayt\LICENSE.md" />
+    <None Include="wwwroot\ckeditor4\plugins\scayt\README.md" />
+    <None Include="wwwroot\ckeditor4\plugins\smiley\dialogs\smiley.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\af.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\az.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\cy.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\da.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\de-ch.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\en-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\eo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\es-mx.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\fi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\gl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\hr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\id.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ja.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\km.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ku.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\lt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\lv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\no.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\oc.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ro.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\si.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\sl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\sq.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\sr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\sv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\th.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\tt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\ug.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\vi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\plugins\specialchar\dialogs\specialchar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\tabletools\dialogs\tableCell.js" />
+    <None Include="wwwroot\ckeditor4\plugins\table\dialogs\table.js" />
+    <None Include="wwwroot\ckeditor4\plugins\templates\dialogs\templates.js" />
+    <None Include="wwwroot\ckeditor4\plugins\templates\templatedefinition.js" />
+    <None Include="wwwroot\ckeditor4\plugins\templates\templates\default.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\dialogs\wsc.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\dialogs\wsc_ie.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\af.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\bn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\bs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\cy.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\da.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\en-au.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\en-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\en-gb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\eo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\fa.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\fi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\fo.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\fr-ca.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\gl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\gu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\hi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\hr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\is.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ja.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ka.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\km.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ku.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\lt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\lv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\mk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\mn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ms.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\no.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ro.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\sl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\sr-latn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\sr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\sv.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\th.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\ug.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\vi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\zh-cn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\LICENSE.md" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\plugin.js" />
+    <None Include="wwwroot\ckeditor4\plugins\wsc\README.md" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\ar.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\bg.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\cs.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\de.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\el.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\en.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\es.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\et.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\eu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\fi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\fr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\he.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\hu.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\it.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\ja.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\ko.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\nb.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\nl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\nn.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\pl.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\pt-br.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\pt.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\ru.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\sk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\tr.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\uk.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\vi.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\lang\zh.js" />
+    <None Include="wwwroot\ckeditor4\plugins\youtube\plugin.js" />
+    <None Include="wwwroot\ckeditor4\README.md" />
+    <None Include="wwwroot\ckeditor4\samples\img\logo.svg" />
+    <None Include="wwwroot\ckeditor4\samples\js\sample.js" />
+    <None Include="wwwroot\ckeditor4\samples\js\sf.js" />
+    <None Include="wwwroot\ckeditor4\samples\old\assets\posteddata.php" />
+    <None Include="wwwroot\ckeditor4\samples\old\assets\uilanguages\languages.js" />
+    <None Include="wwwroot\ckeditor4\samples\old\dialog\assets\my_dialog.js" />
+    <None Include="wwwroot\ckeditor4\samples\old\sample.js" />
+    <None Include="wwwroot\ckeditor4\samples\old\sample_posteddata.php" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\font\fontello.svg" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\js\abstracttoolbarmodifier.js" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\js\fulltoolbareditor.js" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\js\toolbarmodifier.js" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\js\toolbartextmodifier.js" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\lib\codemirror\codemirror.js" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\lib\codemirror\javascript.js" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
+    <None Include="wwwroot\ckeditor4\samples\toolbarconfigurator\lib\codemirror\show-hint.js" />
+    <None Include="wwwroot\ckeditor4\SECURITY.md" />
+    <None Include="wwwroot\ckeditor4\skins\moono-lisa\readme.md" />
+    <None Include="wwwroot\ckeditor4\skins\office2013\skin.js" />
+    <None Include="wwwroot\ckeditor4\styles.js" />
+    <None Include="wwwroot\ckeditor4\vendor\promise.js" />
+    <None Include="wwwroot\Common\css\font-awesome.min.css" />
+    <None Include="wwwroot\Common\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\Common\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\Common\fonts\ionicons.svg" />
+    <None Include="wwwroot\Common\fonts\ionicons.woff2" />
+    <None Include="wwwroot\html\process\rate.js" />
+    <None Include="wwwroot\lib\growl\jquery.growl.js" />
+    <None Include="wwwroot\lib\particles\js\app.js" />
+    <None Include="wwwroot\lib\particles\js\lib\stats.js" />
+    <None Include="wwwroot\lib\tinymce\js\custom.js" />
+    <None Include="wwwroot\lib\tinymce\js\jquery-dateFormat.min.js" />
+    <None Include="wwwroot\lib\tinymce\js\main.js" />
+    <None Include="wwwroot\lib\tinymce\js\main.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\apply\" />
+  </ItemGroup>
+
+</Project>

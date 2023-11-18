@@ -1,0 +1,66 @@
+﻿@*@using ADCOnline.Utils
+@model ADCWebsite.Areas.Admin.Models.UserAdministration.ModuleRoleViewModel
+@{
+    ViewBag.Title = "Quản lý tài khoản quản trị";
+    //Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="box-body">
+<section class="content-header">
+    <h3 style="margin:0;">Phân quyền theo Module</h3>
+</section>
+<div id="treecontrol" class="treeTool">
+        <a title="Chọn tất cả" href="javascript:void(0);" class="collapse">Chọn tất cả</a>
+        <a title="Bỏ chọn tất cả" href="javascript:void(0);" class="expand">Bỏ chọn tất cả</a>
+</div>
+<form id="ContentForm" style="margin:0;">
+    <input type="hidden" name="id" value="@Request.QueryString["id"]" />
+    <div class="box-body" style="padding:0px 20px;">
+        <ul id="ModuleTreeView" class="filetree tree-module-role">
+            @Html.Raw(Model.StringBuilder.ToString())
+        </ul>
+    </div>
+    <div class="box-footer">
+        <button id="submit" type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="left" title="Cập nhật">Cập nhật</button>
+        <button id="close" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+    </div>
+</form>
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ModuleTreeView").treeview({
+            collapsed: false,
+            animated: "medium",
+            control: "#ModuleTreeView",
+            persist: "location"
+        });
+        $("a.collapse").click(function () {
+            $("#ModuleTreeView").find("input[type=checkbox]").prop("checked", true);
+        });
+        $("a.expand").click(function () {
+            $("#ModuleTreeView").find("input[type=checkbox]").prop("checked", false);
+        });
+
+        $("#ContentForm").validate({
+            rules: {
+            },
+            messages: {
+            },
+            submitHandler: function () {
+                $.post("/@WebConfig.AdminAlias/UserAdministration/ModuleRoleAction", $("#ContentForm").serialize(), function (data) {
+                    if (data.Erros)
+                        Example.show(data.Message);
+                    else {
+                        ModalADC.Close();
+                        createMessage("Thông báo", data.Message, data.ID);
+                    }
+                });
+                return false;
+            }
+        });
+    });
+</script>
+<style>
+    .tree-module-role label{ margin:0; font-weight:normal; padding:0px 0px 0px 0px; }
+    .tree-module-role input { margin:0px 6px 0px 0px; }
+    #ModuleTreeView { margin-top:0; }
+</style>*@

@@ -1,0 +1,52 @@
+﻿@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Dữ liệu Json";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="col-sm-12">
+        @if (Model.ListModule.Any())
+        {
+            @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+            {
+                <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+            }
+        }
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <div class="ct_tabssc">
+                <div class="w_tablegr" id="loadGridView">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add">
+        </div>
+    </div>
+    <script>
+        $(function() {
+            ValidInput();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            var form = $("#searchFrm");
+            $("#btnSearch").click(function() {
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+            urlForm = replaceUrlParam(urlForm, "TypeJson", "ReceiverMail");
+            urlForm = urlForm.replace("#", "?");
+            window.location.href = '#' + getValueFormMutilSelect(form);
+        });
+    </script>
+}

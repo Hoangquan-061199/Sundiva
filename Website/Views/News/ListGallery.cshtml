@@ -1,0 +1,239 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    ViewBag.Hidden = true;
+    string url = Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path;
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.LangModule = Model.ModuleItem.Lang;
+    List<WebsiteContentItem> Contents = new List<WebsiteContentItem>();
+    SizeImages image = new SizeImages();
+}
+@if (Model.ModuleItem != null)
+{
+    <div class="wrapper pt-block-content">
+        <div class="container">
+            <div class="title line uppercase center">
+                <h1 class="sub">@Model.ModuleParentItem.Name</h1>
+            </div>
+            @if (Model.WebsiteModulesItems.Any())
+            {
+                <div class="list-module-child gallery count-@Model.WebsiteModulesItems.Count() @(Model.WebsiteModulesItems.Count() > 5 ? "auto" : "")">
+                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.OrderBy(x => x.OrderDisplay))
+                    {
+                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name"
+                           class="item @(item.ID == Model.ModuleItem.ID ? "active": string.Empty)">@item.Name</a>
+                    }
+                </div>
+            }
+            @switch (Model.ModuleItem.TypeView)
+            {
+                case StaticEnum.Videos:
+                    {
+                        if (Model.ModuleItem.ListContentItem.Any())
+                        {
+                            if (Model.Total == 1)
+                            {
+                                @foreach (WebsiteContentItem item in Model.ModuleItem.ListContentItem)
+                                {
+                                    <div class="video mb-block-content">
+                                        @if (item.Video.ToLower().Contains("/upload"))
+                                        {
+                                            <video width="320" height="240" controls>
+                                                <source src="@item.Video" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        }
+                                        else
+                                        {
+                                            <iframe width="560" height="315" src="https://www.youtube.com/embed/@item.Video" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                        }
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="list-video mb-block-content">
+                                    @foreach (WebsiteContentItem item in Model.ModuleItem.ListContentItem.OrderBy(x => x.OrderDisplay))
+                                    {
+                                        image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                        <div class="item item-culture @(Model.ModuleItem.ListContentItem.Count() == 2 ? "count-2" : string.Empty)">
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                                <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                                     height="@image.Height" loading="lazy" />
+                                            </a>
+                                            <h3>
+                                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                                    @item.Name
+                                                </a>
+                                            </h3>
+                                        </div>
+                                    }
+                                </div>
+                                @if (Model.Total > Model.PageSize)
+                                {
+                                    @Html.Raw(ViewBag.GridHtml)
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <p class="update center">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
+                        }
+                        break;
+                    }
+                case StaticEnum.Picture:
+                    {
+                        if (Model.ModuleItem.ListContentItem.Any())
+                        {
+                            <div class="list-video mb-block-content">
+                                @foreach (WebsiteContentItem item in Model.ModuleItem.ListContentItem.OrderBy(x => x.OrderDisplay))
+                                {
+                                    image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                    <div class="item item-culture @(Model.ModuleItem.ListContentItem.Count() == 2 ? "count-2" : string.Empty)">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                            <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                                 height="@image.Height" loading="lazy" />
+                                        </a>
+                                        <h3>
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                                @item.Name
+                                            </a>
+                                        </h3>
+                                    </div>
+                                }
+                            </div>
+                            @if (Model.Total > Model.PageSize)
+                            {
+                                @Html.Raw(ViewBag.GridHtml)
+                            }
+                        }
+                        else
+                        {
+                            <p class="update center">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
+                        }
+                        break;
+                    }
+                case StaticEnum.HoatDongXaHoi:
+                case StaticEnum.HoatDongTapThe:
+                    {
+                        image = Utility.GetSizeImages(WebConfig.PathServer, Model.ModuleItem.UrlPicture);
+                        <div class="block-desc-gallery">
+                            <div class="left detail-content">
+                                @Html.Raw(Model.ModuleItem.Content)
+                            </div>
+                            <div class="right">
+                                <img src="@Utility.GetUrlPicture(WebConfig.PathServer, Model.ModuleItem.UrlPicture)" alt="@Model.ModuleItem.Name" width="@image.Width"
+                                     height="@image.Height" loading="lazy" />
+                            </div>
+                        </div>
+                        if (Model.ModuleItem.ListContentItem.Any())
+                        {
+                            <div class="list-video mb-block-content">
+                                @foreach (WebsiteContentItem item in Model.ModuleItem.ListContentItem.OrderBy(x => x.OrderDisplay))
+                                {
+                                    image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                    <div class="item item-culture @(Model.ModuleItem.ListContentItem.Count() == 2 ? "count-2" : string.Empty)">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                            <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                                 height="@image.Height" loading="lazy" />
+                                        </a>
+                                        <h3>
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                                @item.Name
+                                            </a>
+                                        </h3>
+                                    </div>
+                                }
+                            </div>
+                            @if (Model.Total > Model.PageSize)
+                            {
+                                @Html.Raw(ViewBag.GridHtml)
+                            }
+                        }
+                        else
+                        {
+                            <p class="update center">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
+                        }
+                        break;
+                    }
+                case StaticEnum.TaiLieuInox:
+                    {
+                        if (Model.ModuleItem.ListContentItem.Any())
+                        {
+                            <div class="list-video mb-block-content">
+                                @foreach (WebsiteContentItem item in Model.ModuleItem.ListContentItem.OrderBy(x => x.OrderDisplay))
+                                {
+                                    image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                    <div class="item item-culture @(Model.ModuleItem.ListContentItem.Count() == 2 ? "count-2" : string.Empty)">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                            <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                                 height="@image.Height" loading="lazy" />
+                                        </a>
+                                        <h3>
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                                @item.Name
+                                            </a>
+                                        </h3>
+                                    </div>
+                                }
+                            </div>
+                            @if (Model.Total > Model.PageSize)
+                            {
+                                @Html.Raw(ViewBag.GridHtml)
+                            }
+                        }
+                        else
+                        {
+                            <p class="update center">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        if (Model.ModuleItem.ListContentItem.Any())
+                        {
+                            <div class="list-video mb-block-content">
+                                @foreach (WebsiteContentItem item in Model.ModuleItem.ListContentItem.OrderBy(x => x.OrderDisplay))
+                                {
+                                    image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                    <div class="item item-culture @(Model.ModuleItem.ListContentItem.Count() == 2 ? "count-2" : string.Empty)">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                            <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                                 height="@image.Height" loading="lazy" />
+                                        </a>
+                                        <h3>
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                                @item.Name
+                                            </a>
+                                        </h3>
+                                    </div>
+                                }
+                            </div>
+                            @if (Model.Total > Model.PageSize)
+                            {
+                                @Html.Raw(ViewBag.GridHtml)
+                            }
+                        }
+                        else
+                        {
+                            <p class="update center">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
+                        }
+                        break;
+                    }
+            }
+        </div>
+    </div>
+}

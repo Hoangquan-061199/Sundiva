@@ -1,0 +1,35 @@
+﻿@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Quản lý thông tin chung";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="col-sm-12">
+    @if (Model.ListModule.Any())
+    {
+        @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+        {
+            <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+        }
+    }
+</div>
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="tab_add">
+    </div>
+</div>
+
+<script>
+    $(function () {
+        urlPostAction = "@Url.Action("Actions")";
+        loadAjax("@Url.Action("AjaxForm")?Do=Edit&ItemId=1", "#tab_add");
+    });
+</script>
+

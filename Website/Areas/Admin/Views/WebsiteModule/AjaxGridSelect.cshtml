@@ -1,0 +1,453 @@
+﻿@model Website.Areas.Admin.ViewModels.WebsiteModuleViewModel
+@using ADCOnline.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    @if (ViewBag.IsSearch == false)
+    {
+        <div class="w_searchgr form-inline">
+            <input type="text" class="form-control title" name="Keyword" id="Keyword@(Model.Code)" value="@Model.SearchModel.keyword" placeholder="Tìm kiếm @(Model.Code == "TradeMark" ? "Thương hiệu" : "Danh mục")" style="width:calc(100% - 165px);">
+            <select id="Category@(Model.Code)" class="form-control" style="width: 161px">
+                <option value="">-- Chọn</option>
+                <option value="1">@(Model.Code == "TradeMark" ? "Thương hiệu" : "Danh mục") đã chọn</option>
+                <option value="0">@(Model.Code == "TradeMark" ? "Thương hiệu" : "Danh mục") chưa chọn</option>
+            </select>
+        </div>
+        <div class="badge badge-info" style="margin-bottom:10px;cursor:pointer;" id="ShowAllM@(Model.Code)">Hiện tất cả</div>
+        <div class="badge badge-warning" style="margin-bottom:10px;cursor:pointer;" id="HideAllM@(Model.Code)">Ẩn tất cả</div>
+        <div class="badge badge-default" style="margin-bottom:10px;cursor:pointer;" id="RemoveAllM@(Model.Code)">Xóa đã chọn</div>
+        <table id="tblGridAjax@(Model.Code)" class="table table-hover tblGridAjax @(Model.Code)">
+            <thead>
+                <tr role="row">
+                    <th>Tên</th>
+                    <th class="text-center wd80">Trạng thái</th>
+                    <th class="text-center wd50">
+                        <input type="checkbox" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                {
+                    foreach (var item in Model.ListItem.Where(x => x.ParentID == 0))
+                    {
+                        <tr class="@(item.IsShow != true ? "hid" : string.Empty)">
+                            <td class="open-child open-child-@(Model.Code) active" data-id="@item.ID" data-level="1">
+                                <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+                                @if (Model.ListItem.Count(x => x.ParentID == item.ID) > 0)
+                                {
+                                    <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == item.ID)</span>
+                                }
+                            </td>
+                            <td class="text-center">@Html.Raw(StaticEnum.Show(item.IsShow))</td>
+                            <td class="text-center">
+                                <input type="checkbox" id="Check@(item.ID)" data-title="@item.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + item.ID + ",") ? "checked" : string.Empty) value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </td>
+                        </tr>
+                        foreach (var child in Model.ListItem.Where(x => x.ParentID == item.ID).OrderBy(x => x.OrderDisplay))
+                        {
+                            <tr class="child-@item.ID level-1@(child.IsShow != true ? "hid" : string.Empty)">
+                                <td class="open-child open-child-@(Model.Code) active" data-id="@child.ID" data-level="2">
+                                    <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+                                    @if (Model.ListItem.Count(x => x.ParentID == child.ID) > 0)
+                                    {
+                                        <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child.ID)</span>
+                                    }
+                                </td>
+                                <td class="text-center">@Html.Raw(StaticEnum.Show(child.IsShow))</td>
+                                <td class="text-center">
+                                    <input type="checkbox" id="Check@(child.ID)" data-title="@child.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child.ID + ",") ? "checked" : string.Empty) value="@child.ID">
+                                    <label for="Check@(child.ID)"></label>
+                                </td>
+                            </tr>
+                            foreach (var child2 in Model.ListItem.Where(x => x.ParentID == child.ID).OrderBy(x => x.OrderDisplay))
+                            {
+                                <tr class="child-@item.ID child-@child.ID level-2@(child2.IsShow != true ? " hid" : string.Empty)">
+                                    <td class="open-child open-child-@(Model.Code) active" data-id="@child2.ID" data-level="3">
+                                        <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+                                        @if (Model.ListItem.Count(x => x.ParentID == child2.ID) > 0)
+                                        {
+                                            <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child2.ID)</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">@Html.Raw(StaticEnum.Show(child2.IsShow))</td>
+                                    <td class="text-center">
+                                        <input type="checkbox" id="Check@(child2.ID)" data-title="@child2.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child2.ID + ",") ? "checked" : string.Empty) value="@child2.ID">
+                                        <label for="Check@(child2.ID)"></label>
+                                    </td>
+                                </tr>
+                                foreach (var child3 in Model.ListItem.Where(x => x.ParentID == child2.ID).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <tr class="child-@item.ID child-@child.ID child-@child2.ID level-3@(child3.IsShow != true ? " hid" : string.Empty)">
+                                        <td class="open-child open-child-@(Model.Code) active" data-id="@child3.ID" data-level="4">
+                                            <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child3.Name, child3.IsShow))
+                                            @if (Model.ListItem.Count(x => x.ParentID == child3.ID) > 0)
+                                            {
+                                                <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child3.ID)</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">@Html.Raw(StaticEnum.Show(child3.IsShow))</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" id="Check@(child3.ID)" data-title="@child3.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child3.ID + ",") ? "checked" : string.Empty) value="@child3.ID">
+                                            <label for="Check@(child3.ID)"></label>
+                                        </td>
+                                    </tr>
+                                    foreach (var child4 in Model.ListItem.Where(x => x.ParentID == child3.ID).OrderBy(x => x.OrderDisplay))
+                                    {
+                                        <tr class="child-@item.ID child-@child.ID child-@child2.ID child-@child3.ID level-4@(child4.IsShow != true ? " hid" : string.Empty)">
+                                            <td class="open-child open-child-@(Model.Code) active" data-id="@child4.ID" data-level="5">
+                                                <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child4.Name, child4.IsShow))
+                                                @if (Model.ListItem.Count(x => x.ParentID == child4.ID) > 0)
+                                                {
+                                                    <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child4.ID)</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">@Html.Raw(StaticEnum.Show(child4.IsShow))</td>
+                                            <td class="text-center">
+                                                <input type="checkbox" id="Check@(child4.ID)" data-title="@child4.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child4.ID + ",") ? "checked" : string.Empty) value="@child4.ID">
+                                                <label for="Check@(child4.ID)"></label>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <thead>
+            <tr role="row">
+                <th>Tên</th>
+                <th>Mã</th>
+                <th class="text-center wd80">Trạng thái</th>
+                <th class="text-center wd50">
+                    <input type="checkbox" class="minimal checkAll" value="">
+                    <label for="checkAll"></label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem.Where(x => x.ParentID == 0))
+                {
+                    <tr class="@(item.IsShow != true ? "hid" : string.Empty)">
+                        <td class="open-child open-child-@(Model.Code) active" data-id="@item.ID" data-level="1">
+                            <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow))
+                            @if (Model.ListItem.Count(x => x.ParentID == item.ID) > 0)
+                            {
+                                <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == item.ID)</span>
+                            }
+                        </td>
+                        <td>@item.ModuleTypeCode</td>
+                        <td class="text-center">@Html.Raw(StaticEnum.Show(item.IsShow))</td>
+                        <td class="text-center">
+                            <input type="checkbox" id="Check@(item.ID)" data-title="@item.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + item.ID + ",") ? "checked" : string.Empty) value="@item.ID">
+                            <label for="Check@(item.ID)"></label>
+                        </td>
+                    </tr>
+                    foreach (var child in Model.ListItem.Where(x => x.ParentID == item.ID).OrderBy(x => x.OrderDisplay))
+                    {
+                        <tr class="child-@item.ID level-1@(child.IsShow != true ? " hid" : string.Empty)">
+                            <td class="open-child open-child-@(Model.Code) active" data-id="@child.ID" data-level="2">
+                                <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child.Name, child.IsShow))
+                                @if (Model.ListItem.Count(x => x.ParentID == child.ID) > 0)
+                                {
+                                    <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child.ID)</span>
+                                }
+                            </td>
+                            <td>@child.ModuleTypeCode</td>
+                            <td class="text-center">@Html.Raw(StaticEnum.Show(child.IsShow))</td>
+                            <td class="text-center">
+                                <input type="checkbox" id="Check@(child.ID)" data-title="@child.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child.ID + ",") ? "checked" : string.Empty) value="@child.ID">
+                                <label for="Check@(child.ID)"></label>
+                            </td>
+                        </tr>
+                        foreach (var child2 in Model.ListItem.Where(x => x.ParentID == child.ID).OrderBy(x => x.OrderDisplay))
+                        {
+                            <tr class="child-@item.ID child-@child.ID level-2@(child2.IsShow != true ? " hid" : string.Empty)">
+                                <td class="open-child open-child-@(Model.Code) active" data-id="@child2.ID" data-level="3">
+                                    <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child2.Name, child2.IsShow))
+                                    @if (Model.ListItem.Count(x => x.ParentID == child2.ID) > 0)
+                                    {
+                                        <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child2.ID)</span>
+                                    }
+                                </td>
+                                <td>@child2.ModuleTypeCode</td>
+                                <td class="text-center">@Html.Raw(StaticEnum.Show(child2.IsShow))</td>
+                                <td class="text-center">
+                                    <input type="checkbox" id="Check@(child2.ID)" data-title="@child2.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child2.ID + ",") ? "checked" : string.Empty) value="@child2.ID">
+                                    <label for="Check@(child2.ID)"></label>
+                                </td>
+                            </tr>
+                            foreach (var child3 in Model.ListItem.Where(x => x.ParentID == child2.ID).OrderBy(x => x.OrderDisplay))
+                            {
+                                <tr class="child-@item.ID child-@child.ID child-@child2.ID level-3@(child3.IsShow != true ? " hid" : string.Empty)">
+                                    <td class="open-child open-child-@(Model.Code) active" data-id="@child3.ID" data-level="4">
+                                        <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child3.Name, child3.IsShow))
+                                        @if (Model.ListItem.Count(x => x.ParentID == child3.ID) > 0)
+                                        {
+                                            <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child3.ID)</span>
+                                        }
+                                    </td>
+                                    <td>@child3.ModuleTypeCode</td>
+                                    <td class="text-center">@Html.Raw(StaticEnum.Show(child3.IsShow))</td>
+                                    <td class="text-center">
+                                        <input type="checkbox" id="Check@(child3.ID)" data-title="@child3.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child3.ID + ",") ? "checked" : string.Empty) value="@child3.ID">
+                                        <label for="Check@(child3.ID)"></label>
+                                    </td>
+                                </tr>
+                                foreach (var child4 in Model.ListItem.Where(x => x.ParentID == child3.ID).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <tr class="child-@item.ID child-@child.ID child-@child2.ID child-@child3.ID level-4@(child4.IsShow != true ? " hid" : string.Empty)">
+                                        <td class="open-child open-child-@(Model.Code) active" data-id="@child4.ID" data-level="5">
+                                            <span class="lnr lnr-chevron-down"></span>@Html.Raw(Utility.DisplayShowName(child4.Name, child4.IsShow))
+                                            @if (Model.ListItem.Count(x => x.ParentID == child4.ID) > 0)
+                                            {
+                                                <span class="badge badge-danger" style="margin-left:5px;">@Model.ListItem.Count(x => x.ParentID == child4.ID)</span>
+                                            }
+                                        </td>
+                                        <td>@child4.ModuleTypeCode</td>
+                                        <td class="text-center">@Html.Raw(StaticEnum.Show(child4.IsShow))</td>
+                                        <td class="text-center">
+                                            <input type="checkbox" id="Check@(child4.ID)" data-title="@child4.Name" class="minimal check" @(("," + Model.ValuesSelected + ",").Contains("," + child4.ID + ",") ? "checked" : string.Empty) value="@child4.ID">
+                                            <label for="Check@(child4.ID)"></label>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        </tbody>
+
+    }
+    <script>
+        ValidInput();
+        $('#tblGridAjax@(Model.Code) .checkAll').click(function () {
+            var textContainer = "#Text_ModuleValues";
+            var hiddenContainer = "#Value_ModuleValues";
+            $('#tblGridAjax@(Model.Code) input.check[type=checkbox]').not(".checkAll").not("#checkAll").prop("checked", $(this).is(":checked"));
+            $('#tblGridAjax@(Model.Code) input[type=checkbox]').not(".checkAll").each(function () {
+                var text = $(textContainer).text();
+                var values = $(hiddenContainer).val();
+                var arrVal = values != '' ? values.split(',') : [];
+                var val = $(this).val();
+                var txt = $(this).data("title");
+                var v = $(this).is(":checked");
+                if (v == true) {
+                    if (containsObject(val, arrVal) == false) {
+                        arrVal.push(val);
+                        text += ',' + txt;
+                    }
+                }
+                else {
+                    if (containsObject(val, arrVal) == true) {
+                        removeElement(arrVal, val);
+                        text = (',' + text + ',').replace(',' + txt + ',', ',');
+                    }
+                }
+                if (arrVal != null) {
+                    if (text.startsWith(',')) {
+                        text = text.substring(1);
+                    }
+                    if (text.endsWith(',')) {
+                        text = text.substring(0, (text.length - 1));
+                    }
+                    $(textContainer).html(text);
+                    $(hiddenContainer).val(arrVal.toString());
+                }
+                else {
+                    $(textContainer).html('');
+                    $(hiddenContainer).val('');
+                }
+            });
+        });
+        $(function () {
+            var textContainer = "#Text_ModuleValues";
+            var hiddenContainer = "#Value_ModuleValues";
+            $('#tblGridAjax@(Model.Code) input[type=checkbox]').not(".checkAll").change(function () {
+                var text = $(textContainer).text();
+                var values = $(hiddenContainer).val();
+                var arrVal = values != '' ? values.split(',') : [];
+                var val = $(this).val();
+                var txt = $(this).data("title");
+                var v = $(this).is(":checked");
+                if (v == true) {
+                    if (containsObject(val, arrVal) == false) {
+                        arrVal.push(val);
+                        text += ',' + txt;
+                    }
+                }
+                else {
+                    if (containsObject(val, arrVal) == true) {
+                        removeElement(arrVal, val);
+                        text = (',' + text + ',').replace(',' + txt + ',', ',');
+                    }
+                }
+                if (arrVal != null) {
+                    if (text.startsWith(',')) {
+                        text = text.substring(1);
+                    }
+                    if (text.endsWith(',')) {
+                        text = text.substring(0, (text.length - 1));
+                    }
+                    $(textContainer).html(text);
+                    $(hiddenContainer).val(arrVal.toString());
+                }
+                else {
+                    $(textContainer).html('');
+                    $(hiddenContainer).val('');
+                }
+            });
+        });
+        $('#RemoveAllM@(Model.Code)').click(function () {
+            var textContainer = "#Text_ModuleValues";
+            var hiddenContainer = "#Value_ModuleValues";
+            $('#tblGridAjax@(Model.Code) input.check[type=checkbox]').prop("checked", false);
+            $('#tblGridAjax@(Model.Code) input[type=checkbox]').not(".checkAll").each(function () {
+                var text = $(textContainer).text();
+                var values = $(hiddenContainer).val();
+                var arrVal = values != '' ? values.split(',') : [];
+                var val = $(this).val();
+                var txt = $(this).data("title");
+                var v = $(this).is(":checked");
+                if (v == true) {
+                    if (containsObject(val, arrVal) == false) {
+                        arrVal.push(val);
+                        text += ',' + txt;
+                    }
+                }
+                else {
+                    if (containsObject(val, arrVal) == true) {
+                        removeElement(arrVal, val);
+                        text = (',' + text + ',').replace(',' + txt + ',', ',');
+                    }
+                }
+                if (arrVal != null) {
+                    if (text.startsWith(',')) {
+                        text = text.substring(1);
+                    }
+                    if (text.endsWith(',')) {
+                        text = text.substring(0, (text.length - 1));
+                    }
+                    $(textContainer).html(text);
+                    $(hiddenContainer).val(arrVal.toString());
+                }
+                else {
+
+                }
+            });
+        });
+    </script>
+    @if (ViewBag.IsSearch == false)
+    {
+        <script>
+            $(function () {
+                $('#Keyword@(Model.Code)').donetyping(function () {
+                    var url = '@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=@Model.ValuesSelected&module=@Model.Types&isSearch=true';
+                    var k = $('#Keyword@(Model.Code)').val();
+                    url += '&keyword=' + k;
+                    var selected = $('#Value_ModuleValues').val();
+                    var isSelected = $('#Category@(Model.Code)').val();
+                    if (selected != null && selected != undefined && isSelected == "1") {
+                        url += '&selected=' + selected;
+                    }
+                    else if (selected != null && selected != undefined && isSelected == "0") {
+                        url += '&unselected=' + selected;
+                    }
+                    loadAjax(url, '#tblGridAjax@(Model.Code)')
+                });
+                $('#Category@(Model.Code)').change(function () {
+                    var url = '@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=@Model.ValuesSelected&module=@Model.Types&isSearch=true';
+                    var k = $('#Keyword@(Model.Code)').val();
+                    url += '&keyword=' + k;
+                    var selected = $('#Value_ModuleValues').val();
+                    var isSelected = $(this).val();
+                    debugger
+                    if (selected != null && selected != undefined && isSelected == "1") {
+                        url += '&selected=' + selected;
+                    }
+                    else if (selected != null && selected != undefined && isSelected == "0") {
+                        url += '&unselected=' + selected;
+                    }
+                    loadAjax(url, '#tblGridAjax@(Model.Code)')
+                });
+                $('#ShowAllM@(Model.Code)').click(function () {
+                    $("#tblGridAjax@(Model.Code) tr[class^='child-']").removeClass('hide');
+                    $("#tblGridAjax@(Model.Code) tr td").addClass('active');
+                });
+                $('#HideAllM@(Model.Code)').click(function () {
+                    $("#tblGridAjax@(Model.Code) tr[class^='child-']").addClass('hide');
+                    $("#tblGridAjax@(Model.Code) tr td").removeClass('active');
+                });
+            });
+        </script>
+    }
+    <script>
+        $(function () {
+            $('.open-child-@(Model.Code)').click(function () {
+                var id = $(this).data('id');
+                if ($(this).hasClass('active')) {
+                    $('.child-' + id).addClass('hide');
+                    $('.child-' + id + ' .open-child-@(Model.Code)').removeClass('active');
+                    $(this).removeClass('active');
+                }
+                else {
+                    var lvel = $(this).data('level');
+                    $('.child-' + id + '.level-' + lvel).removeClass('hide');
+                    $(this).addClass('active');
+                }
+            });
+        });
+    </script>
+    <style>
+        .lnr-chevron-down {
+            margin-right: 5px;
+        }
+
+        .tblGridAjax tr td {
+            font-weight: 600;
+        }
+
+        .tblGridAjax .level-1 td, .tblGridAjax .level-2 td, .tblGridAjax .level-3 td, .tblGridAjax .level-4 td {
+            font-weight: 400;
+        }
+
+        .tblGridAjax tr td.active .badge {
+            display: none;
+        }
+
+        .tblGridAjax tr.level-1 td:nth-child(1) {
+            padding-left: 22px;
+        }
+
+        .tblGridAjax tr.level-2 td:nth-child(1) {
+            padding-left: 41px;
+        }
+
+        .tblGridAjax tr.level-3 td:nth-child(1) {
+            padding-left: 60px;
+        }
+
+        .tblGridAjax tr.level-4 td:nth-child(1) {
+            padding-left: 70px;
+        }
+
+        .tblGridAjax tr td label {
+            cursor: pointer;
+            display: block;
+        }
+
+        .open-child {
+            cursor: pointer;
+        }
+    </style>
+}

@@ -1,0 +1,64 @@
+﻿@model Website.Areas.Admin.ViewModels.UserAdminViewModel
+@{
+    ViewBag.Title = "ListItems";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        registerGridView('#gridItems');
+        regDataTbl('#tblContent');
+        $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+            checkboxClass: 'icheckbox_minimal-red',
+            radioClass: 'iradio_minimal-red'
+        });
+    });
+</script>
+<div class="box" id="gridItems">
+    <div class="box-body table-responsive">
+        <table id="tblContent" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Tên User</th>
+                    <th>quyền</th>
+                    <th class="act_show">
+                        <a href="#showAll" class="showAll" title="Hiển thị danh sách">
+                            <img src="/Content/Admin/images/gridview/show.gif" style="border: none" alt="Hiển thị danh sách" />
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @*@foreach (var item in Model.ListtAspnetUsers)
+                    {
+                        <tr title="@item.UserId @item.UserName">
+
+                            <td>@item.UserName</td>
+                            <td>
+                                @foreach (var role in item.aspnet_Roles)
+                                {
+                                    <span>@role.RoleName, </span>
+                                }
+                        </td>
+                        <td class="act_hide">item.UserId</td>
+                    </tr>
+                    }*@
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+@if (ViewBag.IsExport)
+{
+    <script src="~/Admin/js/export.js"></script>
+}
+else
+{
+    @Html.Raw(ViewBag.GridHtml)
+}
+

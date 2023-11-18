@@ -1,0 +1,36 @@
+﻿@model Website.Areas.Admin.ViewModels.ProductViewModel
+@using ADCOnline.Utils
+@using ADCOnline.Simple.Base
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="UpdateForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-success btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <button id="close" type="button" class="primaryAction btn btn-danger" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.ContentIds" />
+            <div class="form-group">
+                <div class="col-sm-1">
+                    <label>Url request</label>
+                </div>
+                <div class="col-sm-11">
+                    <input type="number" min="0" class="form-control" name="Amount" id="Amount" value="0" placeholder="Số lượng" />
+                </div>
+            </div>        
+        </div>
+    </form>
+    <script>
+        $("#UpdateForm").validate({
+            submitHandler: function () {       
+                Post(urlPostAction, "#UpdateForm");
+                ModalADC.Close();
+                return false;
+            }
+        });
+    </script>
+}

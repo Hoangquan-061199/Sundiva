@@ -1,0 +1,109 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering;
+@using ADCOnline.Utils
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--css_start-->
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet" />
+    <link href="~/Common/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="~/Common/css/ionicons.min.css">
+    <link href="~/Admin/css/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/lib/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/lib/growl/jquery.growl.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/jquery/css/jquery.datetimepicker.css" rel="stylesheet" />
+    <link href="~/lib/jquery/css/jquery.autocomplete.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/jquery/css/buttons.dataTables.min.css" />
+    <link href="~/Admin/css/AdminLTE.css?@DateTime.Now.Ticks" rel="stylesheet" />
+    <link href="~/Common/css/Common.css?@DateTime.Now.Ticks" rel="stylesheet" />
+    <link href="~/Admin/css/style.css?@DateTime.Now.Ticks" rel="stylesheet" />
+    <!--css_end-->
+    <!--js_start-->
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/lib/jquery/js/jquery.dataTables.js"></script>
+    <script src="~/lib/bootstrap/js/dataTables.bootstrap.js"></script>
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="~/lib/growl/jquery.growl.js" type="text/javascript"></script>
+    <script src="~/Admin/js/app.js"></script>
+    <script src="~/lib/jquery/js/jquery.address-1.6.js"></script>
+    <script src="~/lib/jquery/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/js/jszip.min.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/js/pdfmake.min.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/js/vfs_fonts.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="/lib/jquery/js/jquery.mask.js"></script>
+    <script src="https://cdn.linearicons.com/free/1.0.0/svgembedder.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    @*<script src="~/ckeditor/ckeditor.js?v2"></script>*@
+    <script src="~/ckeditor4/ckeditor.js?v2"></script>
+    <script src="~/Admin/js/CommonAdmin.js?@DateTime.Now.Ticks"></script>
+    <script src="~/Admin/js/GridView.js?@DateTime.Now.Ticks"></script>
+    <script src="~/Admin/js/tag.js?@DateTime.Now.Ticks"></script>
+    <script src="~/Admin/js/UpdateImageAdmin.js?@DateTime.Now.Ticks"></script>
+    <!--js_end-->
+</head>
+<body class="hold-transition skin-black sidebar-mini @(ViewBag.Home==true ? string.Empty : "sidebar-collapse")">
+    <div class="wrapper">
+        @await Component.InvokeAsync("HeadTopAdmin")
+        @await Component.InvokeAsync("MenuLeftAdmin")
+        <div class="content-wrapper" style="position:relative;">
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="nav-tabs-custom clearfix">
+                            @await Html.PartialAsync("Header.cshtml")
+                            @* @{Html.RenderPartial("~/Areas/Admin/Views/Shared/Header.cshtml");} *@
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="control-sidebar-bg"></div>
+            <link rel="stylesheet" type="text/css" href="/lib/loading/loading-bar.css" />
+            <script type="text/javascript" src="/lib/loading/loading-bar.js"></script>
+            <div class="processing-bar">
+                <div id="progressCounter" class="processing-ldbar" style="margin:auto;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="loading_admin">
+        <div class="main">
+            <img src="/Admin/images/loadingio.svg" />
+            <span>Đang xử lý...</span>
+        </div>
+    </div>
+    <script src="~/lib/jquery/js/jquery.datetimepicker.full.js"></script>
+    <script src="~/lib/jquery/js/jquery.autocomplete.js"></script>
+    <script>
+        $("#btnExport").click(function() {
+            var form = $("#searchFrm");
+            window.location.href = '#IsExcel=true&' + getValueFormMutilSelect(form);
+            return false;
+        });
+        $("#btnPdf").click(function() {
+            var form = $("#searchFrm");
+            window.location.href = '#IsPdf=true&' + getValueFormMutilSelect(form);
+            return false;
+        });
+        $("#btnCsv").click(function() {
+            var form = $("#searchFrm");
+            window.location.href = '#IsCsv=true&' + getValueFormMutilSelect(form);
+            return false;
+        });
+    </script>
+    <div id="status" style="position: fixed; bottom: 15px; right: 15px;display:none;z-index:10000;">
+        <span id="status-success" class="badge badge-success">0</span>/<span id="status-failed" class="badge badge-danger">0</span>/<span id="status-total" class="badge badge-info">0</span>
+    </div>
+    @await Html.PartialAsync("PopupViewInfo.cshtml")
+    @* <partial name="~/Areas/Admin/Views/Shared/PopupViewInfo.cshtml" /> *@
+    @* @{Html.RenderPartialAsync("~/Areas/Admin/Views/Shared/PopupViewInfo.cshtml");} *@
+</body>
+
+</html>

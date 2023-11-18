@@ -1,0 +1,36 @@
+﻿@model Website.Areas.Admin.ViewModels.ModuleViewModel
+@if (Model.SystemActionAdmin.View)
+{
+    <link href="~/lib/jquery/css/jquery.treeview.css" rel="stylesheet" />
+    <script src="~/lib/jquery/js/jquery.treeview.js"></script>
+    <div class="row" id="gridItems" style="padding:0 15px;">
+        <div id="treecontrol" class="treeTool col-xs-12">
+            <a title="Đóng tất cả các nhánh" href="#" class="collapse"><i class="fa fa-plus-square-o"></i>Đóng tất cả</a>
+            <a title="Mở tất cả các nhánh" href="#" class="expand"><i class="fa fa-minus-square-o"></i>Mở tất cả</a>
+        </div>
+        <ul id="TreeCategory" class="filetree gridView treeview" style="border:0;">
+            @Html.Raw(Model.StringBuilder)
+        </ul>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            registerGridView("#gridItems");
+            $("#TreeCategory").treeview({
+                collapsed: false,
+                animated: "medium",
+                control: "#treecontrol",
+                persist: "location"
+            });
+            $("a.tool").click(function() {
+                if ($(this).parent().parent().hasClass("unselect")) {
+                    $(".filetree li").addClass("unselect").removeClass("select");
+                    $(this).parent().parent().addClass("select").removeClass("unselect");
+                }
+                else {
+                    $(this).parent().parent().addClass("unselect").removeClass("select");
+                }
+                return false;
+            });
+        });
+    </script>
+}

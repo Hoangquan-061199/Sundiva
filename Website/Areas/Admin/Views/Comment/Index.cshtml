@@ -1,0 +1,71 @@
+﻿@model Website.Areas.Admin.ViewModels.CommentViewmodel
+@using Website.Utils
+@{
+    ViewBag.Title = "Quản lý bình luận";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr">
+                    <div class="form-group form-inline">
+                        <input type="text" class="form-control title" name="Keyword" placeholder="Nhập từ khóa cần tìm">
+                        @*<label>Loại</label>      *@                  
+                        <label>Ẩn/Hiện</label>
+                        <select class="form-control" name="Show" id="Show">
+                            <option value="">-- Chọn</option>
+                            <option value="1">Hiện</option>
+                            <option value="0">Ẩn</option>
+                        </select>
+                        <label>Duyệt</label>
+                        <select class="form-control" name="approal" id="approal">
+                            <option value="">-- Chưa/Duyệt --</option>
+                            <option value="1">Đã duyệt</option>
+                            <option value="0">Chưa duyệt</option>
+                        </select>
+                        <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                    </div>
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add">
+        </div>
+    </div>
+    <script>
+        $(function() {
+            ValidInput();
+            var contentId = '@Model.Comment.ContentID';
+            var productId = '@Model.Comment.ProductID';
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")?contentId=' + contentId + '&productId=' + productId;
+            urlList = '@Url.Action("ListItems")?contentId=' + contentId + '&productId=' + productId;
+            initAjaxLoad(urlList, "#loadGridView");
+            $("#btnSearch").click(function() {
+                var form = $("#searchFrm");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+            var form = $("#searchFrm");
+            form.validate({
+                submitHandler: function() {
+                    LoadSearch(form);
+                }
+            });
+            function LoadSearch(t) {
+                window.location.href = '#' + getValueFormMutilSelect(t);
+                return false;
+            }
+        });
+    </script>
+}

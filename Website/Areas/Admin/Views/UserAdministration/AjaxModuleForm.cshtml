@@ -1,0 +1,62 @@
+﻿@model Website.Areas.Admin.ViewModels.UserAdminViewModel
+<div class="row">
+    <div class="col-sm-12 col-md-7" style="position: static">
+        <form id="AddEditForm">
+            <div class="box-body col-sm-12 col-md-12">
+                <input type="hidden" name="do" id="do" value="@ViewBag.Action" />
+                <input type="hidden" name="ItemID" id="ItemID" value="@Model.MembershipAdmin.UserId" />
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <label>Tên đăng nhập</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <label>@Model.MembershipAdmin.UserName</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <label>Module</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="@Model.MembershipAdmin.ModuleIds" />
+                            <div id="Text_ModuleValues" class="checkBoxValues">@string.Join(", ", Model.ListModuleAdmin.Select(c => c.NameModule))</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button id="submit" type="submit" class="btn btn-success">Cập nhật</button>
+                <button id="reset" type="reset" class="btn btn-warning">Nhập lại</button>
+                <button id="close" type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+            </div>
+        </form>
+    </div>
+    <div class="col-sm-12 col-md-5" id="loadTree">
+    </div>
+</div>
+<script>
+    $(function () {
+        loadAjax("@Url.Action("AjaxTreeSelect", "Module")?type=2&ValuesSelected=@Model.MembershipAdmin.ModuleIds", "#loadTree");
+        var urlPostAction = "@Url.Action("Actions","UserAdministration")";
+        $("#AddEditForm").validate({
+            submitHandler: function () {
+                Post(urlPostAction, "#AddEditForm");
+                return false;
+            }
+        });
+        $('#SelectModule').on('click', function () {
+            ModalADC.Open({
+                title: "Chọn module",
+                urlLoad: '@Url.Action("AjaxTreeSelect", "Module")?type=1&ValuesSelected=' + $("#Value_ModuleValues").val(),
+                bottom: false
+            });
+        });
+    });
+</script>
+<style>
+    .content-modal {
+        display: -webkit-box;
+        display: block;
+    }
+</style>

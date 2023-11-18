@@ -1,0 +1,332 @@
+﻿@model Website.Areas.Admin.ViewModels.WebsiteContentViewModel
+@using ADCOnline.Utils
+@using Website.Utils
+@{
+    var inter = new List<string> { StaticEnum.News };
+    var notorder = new List<string> { StaticEnum.News, StaticEnum.Recuitment, StaticEnum.Document };
+    var notcontent = new List<string> { StaticEnum.Company };
+    var notsitemap = new List<string> { StaticEnum.Company };
+    var notview = new List<string> { StaticEnum.Company };
+
+    bool isHome = false;
+    bool isHot = false;
+    bool isTag = false;
+    bool subItem = false;
+    bool expired = false;
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd50">Ảnh</th>
+                <th>Tiêu đề</th>
+                <th class="wd200">Danh mục</th>
+                <th class="wd300">Cập nhật lần cuối</th>
+                @if (Model.SearchModel.type == StaticEnum.Recuitment && expired == true)
+                {
+                    <th class="wd250">Ngày hết hạn</th>
+                }
+                @if (!notorder.Contains(Model.SearchModel.type))
+                {
+                    <th class="text-center wd100">
+                        Thứ tự
+                        @if (Model.SystemActionAdmin.Order == true)
+                        {
+                            <a href="javascript:" class="EditOrderAll badge badge-primary"><span class="lnr lnr-pencil"></span></a> <a href="javascript:" class="SaveAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                        }
+                    </th>
+                }
+                <th class="act_roles text-center" style="width:150px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu dropdown-action dropdown-column" role="menu">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="javascritp:" class="showAll" title="Hiển thị chọn"><span class="lnr lnr-checkmark-circle"></span><span>Hiển thị</span></a></li>
+                                <li><a href="javascritp:" class="hideAll" title="Ẩn chọn"><span class="lnr lnr-warning"></span><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="javascritp:" class="deleteAll" title="Xóa chọn"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                if (isHot == true)
+                                {
+                                    <li><a href="javascript:" class="isHot"><i class="lnr lnr-checkmark-circle"></i><span>Nổi bật</span></a></li>
+                                    <li><a href="javascript:" class="notHot"><i class="lnr lnr-warning"></i><span>Bỏ nổi bật</span></a></li>
+                                }
+                                @if (isHome == true)
+                                {
+                                    <li><a href="javascript:" class="isHome"><i class="lnr lnr-checkmark-circle"></i><span>Trang chủ</span></a></li>
+                                    <li><a href="javascript:" class="notHome"><i class="lnr lnr-warning"></i><span>Bỏ trang chủ</span></a></li>
+                                }
+                            }
+                            @if (Model.SystemActionAdmin.Sitemap == true)
+                            {
+                                <li><a href="javascript:" class="issitemapall"><i class="lnr lnr-checkmark-circle"></i><span>Thêm sitemap</span></a></li>
+                                <li><a href="javascript:" class="notsitemapall"><i class="lnr lnr-warning"></i><span>Bỏ sitemap</span></a></li>
+                            }
+                            <li><a href="javascript:" class="resize"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr id="item_@item.ID" class="@(item.IsShow!=true ? " hid" : string.Empty) @(item.ID==Model.WebsiteContent.ID ? "active" : string.Empty)">
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a href="#@item.ID" class="edit" data-tab="">
+                                    @if (!string.IsNullOrEmpty(item.UrlPicture))
+                                    {
+                                        <img style="max-width:50px;max-height:50px;" src="@Common.ImageUrl(item.UrlPicture,Context,80,0)" />
+
+                                        <br />
+                                        <span class="badge badge-info">Sửa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning">Thêm</span>
+                                    }
+                                </a>
+                            }
+                            else
+                            {
+                                <img width="50" src="@(!string.IsNullOrEmpty(item.UrlPicture) ? Common.ImageUrl(item.UrlPicture,Context,80,0) :"/Admin/images/no-image-icon.png")" />
+                            }
+                        </td>
+                        <td>
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a class="edit" href="#@item.ID" data-tab="">
+                                    @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
+                                    @if (!notcontent.Contains(Model.SearchModel.type))
+                                    {
+                                        <br />
+                                        <span>Lượt xem: @Utility.FormatNumber(item.TotalViews)</span>
+                                    }
+
+                                    @if (("," + item.ViewHome + ",").Contains(",4,"))
+                                    {
+                                        <span class="badge badge-success">Mới nhất</span>
+                                    }
+                                    @if (("," + item.ViewHome + ",").Contains(",1,") && isHome == true)
+                                    {
+                                        <span class="badge badge-success">Trang chủ</span>
+                                    }
+                                    @if (("," + item.ViewHome + ",").Contains(",3,") && isHot == true)
+                                    {
+                                        <span class="badge badge-warning">Nổi bật</span>
+                                    }
+                                </a>
+                                <br />
+                                @if (!notsitemap.Contains(Model.SearchModel.type))
+                                {
+                                    @if (Model.SystemActionAdmin.Active == true)
+                                    {
+                                        <a href="#@item.ID" class="hiddens">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(StaticEnum.Show(item.IsShow))
+                                    }
+                                    if (Model.SystemActionAdmin.Sitemap == true)
+                                    {
+                                        <a href="#@item.ID" class="sitemaps">@Html.Raw(StaticEnum.Sitemap(item.IsSitemap))</a>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(StaticEnum.Sitemap(item.IsSitemap))
+                                    }
+                                }
+                                @if (Model.SearchModel.type == StaticEnum.News && isTag == true)
+                                {
+                                    var tags = ListHelper.GetValuesArray(item.Tags);
+                                    <a href="#@item.ID" class="edit color-info" data-tab="TabTag">Từ khóa (@(tags.Any() ? (tags.Count(x => !string.IsNullOrEmpty(x.ToString())) - 1) : 0))</a>
+                                }
+                            }
+                            else
+                            {
+                                @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
+                                @if (!notcontent.Contains(Model.SearchModel.type))
+                                {
+                                    <br />
+                                    <span>Lượt xem: @Utility.FormatNumber(item.TotalViews)</span>
+                                }
+                                @if (("," + item.ViewHome + ",").Contains(",1,") && isHome == true)
+                                {
+                                    <span class="badge badge-success">Trang chủ</span>
+                                }
+                                @if (("," + item.ViewHome + ",").Contains(",3,") && isHot == true)
+                                {
+                                    <span class="badge badge-warning">Nổi bật</span>
+                                }
+                                @if (!notsitemap.Contains(Model.SearchModel.type))
+                                {
+                                    @Html.Raw(StaticEnum.Sitemap(item.IsSitemap))
+                                }
+                                @if (Model.SearchModel.type == StaticEnum.News && isTag == true)
+                                {
+                                    var tags = ListHelper.GetValuesArray(item.Tags);
+                                    <span>Từ khóa (@(tags.Any() ? (tags.Count(x => !string.IsNullOrEmpty(x.ToString())) - 1) : 0))</span>
+                                }
+                            }
+                        </td>
+                        @if (Model.SystemActionAdmin.Edit == true)
+                        {
+                            <td>
+                                <a href="#@item.ID" class="edit badge badge-primary" data-tab="TabModule"><span class="lnr lnr-pencil"></span></a>
+                                <a href="#@item.ID" class="edit" data-tab="TabModule" data-toggle="tooltip" data-placement="bottom" title="@item.ModuleNames">@Utility.TrimLength(item.ModuleNames,50)</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@Utility.TrimLength(item.ModuleNames,50)</td>
+                        }
+                        @if (item.ModifiedDate != null)
+                        {
+                            <td>
+                                Lần cuối: @item.ModifiedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") <span class="color-warning" style="font-size:12px;">bởi @item.ModifiedName</span><br />
+                                Tạo: @item.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") <span class="color-info" style="font-size:12px;">bởi @item.CreatorName</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>Tạo: @item.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") <span class="color-info" style="font-size:12px;">bởi @item.CreatorName</span></td>
+                        }
+                        @if (Model.SearchModel.type == StaticEnum.Recuitment && expired == true)
+                        {
+                            <td class="wd200">@(item.EndDate.HasValue ? item.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                        }
+                        @if (!notorder.Contains(Model.SearchModel.type))
+                        {
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Order)
+                                {
+                                    <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                                }
+                                else
+                                {
+                                    @item.OrderDisplay
+                                }
+                            </td>
+                        }
+                        <td class="act_delete">
+                            @if (subItem == true)
+                            {
+                                <a href="/adminadc/SubItem/Index?type=Content&contentId=@item.ID" target="_blank" title="Thông tin">
+                                    <span class="lnr lnr-database"></span>
+                                </a>
+                            }
+                           @* @if (inter.Contains(Model.SearchModel.type) && Model.ListModule.Any(x => x.Tag == "Comment"))
+                            {
+                                <a href="/adminadc/Comment/Index?contentId=@item.ID" target="_blank" class="btn color-success" title="Bình luận: @item.Name" style="width:auto;">
+                                    <span class="lnr lnr-bubble"></span>(@item.TotalComment)
+                                </a>
+                            }*@
+                            @if (!string.IsNullOrEmpty(item._NameAscii) || !string.IsNullOrEmpty(item.LinkUrl))
+                            {
+                                <a href="@Utility.Link(item.ModuleNameAscii,item._NameAscii,item.LinkUrl)" target="_blank" class="quickview btn" title="Xem nhanh: @item.Name">
+                                    <span class="lnr lnr-eye"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a href="#@item.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @item.Name">
+                                    <span class="lnr lnr-pencil"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.Name">
+                                    <span class="lnr lnr-trash"></span>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <input type="hidden" name="ModuleId" id="ModuleId" value="@(Model.SearchModel.ModuleId.HasValue ? Model.SearchModel.ModuleId.Value : 0)" />
+    @Html.Raw(ViewBag.GridHtml)
+    @if (Model.SearchModel.type != StaticEnum.Document)
+    {
+        <script>
+            $(function () {
+                $('#from').hide();
+                $('#to').hide();
+            });
+        </script>
+    }
+    else
+    {
+        <script>
+            $(function () {
+                $('#from').show();
+                $('#to').show();
+            });
+        </script>
+    }
+    <script>
+        $(function () {
+            registerGridView("#tblContent");
+            $(".btn_searchContent").click(function (event) {
+                event.preventDefault();
+                var id = $(this).attr("href").substring(1);
+                ModalADC.Open({
+                    title: "Chọn Nội dung website",
+                    urlLoad: '@Url.Action("AjaxSearch", "WebsiteContent")?Do=Order&ItemId=' + id,
+                    bottom: false
+                });
+            });
+            $('#page').val('@Model.SearchModel.page');
+            $('#pagesize option[value="@Model.SearchModel.pagesize"]').attr('selected', 'selected');
+        });
+    </script>
+    @if (Model.SearchModel.page > 0)
+    {
+        <script>
+            $(function () {
+
+            });
+        </script>
+    }
+    @if (Model.SearchModel.ModuleId.HasValue && Model.SearchModel.ModuleId != 0)
+    {
+        <script>
+            urlForm = '@Url.Action("AjaxForm")?ModuleId=@Model.SearchModel.ModuleId';
+            $('.selectmodule').selectpicker('val', '@Model.SearchModel.ModuleId');
+        </script>
+    }
+    @if (Model.WebsiteContent.ID > 0)
+    {
+        <script>
+            $(function () {
+                var item = $('#item_@(Model.WebsiteContent.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

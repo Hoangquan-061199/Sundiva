@@ -1,0 +1,90 @@
+using System;
+
+namespace ADCOnline.Simple.Base
+{
+    public class Product
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public string NameAscii { get; set; }
+        public string LinkUrl { get; set; }
+        public string ShortDescription { get; set; }
+        public string Description { get; set; }
+        public string Content { get; set; }
+        public string Information { get; set; }
+        public string Video { get; set; }
+        public string ProductCode { get; set; }
+        public string Model { get; set; }
+        public string UrlPicture { get; set; }
+        public string AlbumPictureJson { get; set; }
+        public string Shipping { get; set; }
+        public string LinkDownload { get; set; }
+        public string ViewHome { get; set; }
+        public string SeoDescription { get; set; }
+        public string SeoKeyword { get; set; }
+        public string SEOTitle { get; set; }
+        public decimal? Price { get; set; }
+        public int? TotalViews { get; set; }
+        public Guid? CreatorID { get; set; }
+        public string CreatorName { get; set; }
+        public string Times { get; set; }
+        public int Quantity { get; set; }
+        public string ModuleIds { get; set; }
+        public string ProductGroupCode { get; set; }
+        public int? OrderDisplay { get; set; }
+        public int? OrderDisplayHome { get; set; }
+        public bool? IsDeleted { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string DataJson { get; set; }
+        public string Tags { get; set; }
+        public string ModuleNameAscii { get; set; }
+        public bool? IsShow { get; set; }
+        public int? Status { get; set; }
+        public string Lang { get; set; }
+        public bool? IsApproved { get; set; }
+        public bool? IsBestSell { get; set; }
+        public decimal? PriceOld { get; set; }
+        public bool? IsShowPrice { get; set; }
+        public bool? IsVAT { get; set; }
+        public int? TotalOrder { get; set; }
+        public string LinkFile { get; set; }
+        public string ContentIds { get; set; }
+        public string DocumentIds { get; set; }
+        public string AttributeProductIds { get; set; }
+        public int? TotalRate { get; set; }
+        public int? TotalStar { get; set; }
+        public int? TotalLike { get; set; }
+        public int? TypeSale { get; set; }
+        public double? TypeSaleValue { get; set; }
+        public decimal? DiscountAmount { get; set; }
+        public decimal? DiscountCombo { get; set; }
+        public DateTime? PublishDate { get; set; }
+        public int? Amount { get; set; }
+        public string IndexGoogle { get; set; }
+        public int? BrandId { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public string ModifiedName { get; set; }
+        public int? Satisfied { get; set; }
+        public int? UnSatisfied { get; set; }
+        public string AttachedProductIds { get; set; }
+        public string GiftIds { get; set; }
+        public string ReplaceIds { get; set; }
+        public string RelatedIds { get; set; }
+        public string Canonical { get; set; }
+        public bool? IsSitemap { get; set; }
+        public string TagValue { get; set; }
+        public DateTime? TimeStart { get; set; }
+        public string Document { get; set; }
+        public string SubContent { get; set; }
+        public int ParentID { get; set; }
+        public string TypeView { get; set; }
+        public string TypeViewSub { get; set; }
+        public string Layout { get; set; }
+        public string Address { get; set; }
+        public string AddressId { get; set; }
+        public string Star { get; set; }
+        public string CompanyCar { get; set; }
+        public double TotalStars { get; set; }
+    }
+}

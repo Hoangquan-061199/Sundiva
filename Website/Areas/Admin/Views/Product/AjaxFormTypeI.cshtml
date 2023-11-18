@@ -1,0 +1,484 @@
+﻿@using ADCOnline.Utils
+@using ADCOnline.Simple.Base
+@using Website.Utils
+@model Website.Areas.Admin.ViewModels.ProductViewModel
+@{
+    bool isGia = true;
+    bool isGiaSoc = false;
+    bool isBanChay = false;
+    bool isMoi = false;
+    bool isNoiBat = true;
+    bool isHome = true;
+    bool isVat = false;
+    bool isStatus = false;
+    bool isSale = false;
+    bool isFrame = false;
+    bool isProductCode = false;
+    bool isBrand = false;
+    bool isThuocTinh = false;
+    bool isKhuyenMai = false;
+    bool isContentIds = false;
+    bool isProductIds = true;
+    bool isLinkFile = true;
+    bool isVideo = true;
+}
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-success btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.Product.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab =="TabGenaral" ? "active" : string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab =="TabModule" ? "active" : string.Empty)"><a href="#TabModule" aria-controls="TabModule" role="tab" data-toggle="tab">Danh mục</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab =="TabGenaral" ? "active" : string.Empty)" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Tên</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.Product.Name" placeholder="@Model.Product.Name " />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @if (isGia == true)
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Hiệu xe</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control notvalid" name="CompanyCar" id="CompanyCar" value="@Model.Product.CompanyCar" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>Đời xe</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="number" class="form-control notvalid" name="Quantity" id="Quantity" value="@Model.Product.Quantity" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>kiểu xe</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control notvalid" name="Title" id="Title" value="@Model.Product.Title" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>Giá thuê</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control maskPrice" name="Price" id="PriceView" value="@(Model.Product.Price.HasValue ? Model.Product.Price.Value : 0)" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ngày tạo</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" id="CreatedDate" value="@Utility.ConvertDateVi(Model.Product.CreatedDate??DateTime.Now)" class="form-control @(ViewBag.Action.Equals("Edit") ? string.Empty : "dateddmmyyy")" @*@(ViewBag.Action.Equals("Edit") ? "disabled" : string.Empty)*@>
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Ngày xuất bản</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" id="PublishDate" value="@Utility.ConvertDateVi(Model.Product.PublishDate??DateTime.Now)" class="form-control @(ViewBag.Action.Equals("Edit") ? string.Empty : "dateddmmyyy")" @*@(ViewBag.Action.Equals("Edit") ? "disabled" : string.Empty)*@>
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.Product.OrderDisplay" />
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label for="IsShow">
+                                            Hiển thị
+                                            <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.Product.IsShow != false) ? "checked" : "") />
+                                            <input type="hidden" name="IsShow" value="false" @((Model.Product.IsShow != false) ? "" : "checked") />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ảnh đại diện</label>
+                                </div>
+                                <div class="col-sm-11 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <input type="text" id="Avatar" placeholder="Link ảnh" class="changeUrlTinyMce link form-control" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="@Model.Product.UrlPicture" />
+                                        <span class="input-group-addon" style="background:transparent;padding-right:10px;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm btn-bnl"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                    </div>
+                                    <div id="AddAvatar">
+                                        <table class="removeParent">
+                                            <tr>
+                                                <td>
+                                                    <img style="max-width:80px;max-height:80px;" src="@Model.Product.UrlPicture">
+                                                    <input type="hidden" name="UrlPicture" value="@Model.Product.UrlPicture">
+                                                    <a href="javascript:void(0);" class="removeObject">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab =="TabModule" ? "active" : string.Empty)" id="TabModule">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label> Module chính</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select name="ModuleNameAscii" id="ModuleNameAsciiIds" class="form-control category-main" data-container="body" data-live-search="true" title="-- Danh mục chính --" data-hide-disabled="true">
+                                        <option value="">-- Chọn</option>
+                                        @if (Model.ListWebsiteModule.Any())
+                                        {
+                                            foreach (var parent in Model.ListWebsiteModule.Where(x => x.ParentID == 0 && x.ModuleTypeCode == StaticEnum.Product).OrderBy(x => x.OrderDisplay))
+                                            {
+                                                <option data-id="@parent.ID" value="@parent.NameAscii" @(!string.IsNullOrEmpty(parent.NameAscii) && string.IsNullOrEmpty(parent.LinkUrl) && Model.Product.ModuleNameAscii == parent.NameAscii ? "selected" : string.Empty)>@parent.Name - @parent.ModuleTypeCode</option>
+                                                foreach (var child in Model.ListWebsiteModule.Where(x => x.ParentID == parent.ID && x.ModuleTypeCode == StaticEnum.Product).OrderBy(x => x.OrderDisplay))
+                                                {
+                                                    <option data-id="@child.ID" value="@child.NameAscii" @(!string.IsNullOrEmpty(child.NameAscii) && string.IsNullOrEmpty(child.LinkUrl) && Model.Product.ModuleNameAscii == child.NameAscii ? "selected" : string.Empty)>- @child.Name - @child.ModuleTypeCode</option>
+                                                    foreach (var module in Model.ListWebsiteModule.Where(x => x.ParentID == child.ID && x.ModuleTypeCode == StaticEnum.Product).OrderBy(x => x.OrderDisplay))
+                                                    {
+                                                        <option data-id="@module.ID" value="@module.NameAscii" @(!string.IsNullOrEmpty(module.NameAscii) && string.IsNullOrEmpty(module.LinkUrl) && Model.Product.ModuleNameAscii == module.NameAscii ? "selected" : string.Empty)>-- @module.Name - @module.ModuleTypeCode</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                @if (isBrand == true)
+                                {
+                                    <div class="col-sm-2">
+                                        <label>Thương hiệu</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select name="BrandId" class="form-control brandajaxpicker" data-container="body" data-live-search="true" title="-- Thương hiệu --" data-hide-disabled="true">
+                                            <option value="0">-- Chọn --</option>
+                                            @if (Model.ListWebsiteModule.Any(x => x.ModuleTypeCode == StaticEnum.Trademark))
+                                            {
+                                                @foreach (var item in Model.ListWebsiteModule.Where(x => x.ParentID == 0 && x.ModuleTypeCode == StaticEnum.Trademark).OrderBy(x => x.Name))
+                                                {
+                                                    <option value="@item.ID" @((item.ID == Model.Product.BrandId) ? " selected" : string.Empty)>@item.Name</option>
+                                                    foreach (var child in Model.ListWebsiteModule.Where(x => x.ParentID == item.ID && x.ModuleTypeCode == StaticEnum.Trademark).OrderBy(x => x.Name))
+                                                    {
+                                                        <option value="@child.ID" @((child.ID == Model.Product.BrandId) ? " selected" : string.Empty)>@child.Name</option>
+
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group" style="display: none">
+                                <div class="col-sm-1">
+                                    <label>Danh mục đã chọn</label>
+                                </div>
+                                <div class="col-sm-10">
+                                    <input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="@Model.Product.ModuleIds" />
+                                    <div id="Text_ModuleValues" class="checkBoxValues" style="font-weight:600;">@string.Join(",", Model.ListWebsiteModuleAdmin.Select(c => c.Name))</div>
+                                    <input type="hidden" name="ModuleNameAsciiNew" id="Value_ModuleNameAscii" value="@Model.Product.ModuleNameAscii" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <div id="LoadGridModule"></div>
+                                </div>
+                                @*<div class="col-sm-6">
+                            <div id="LoadGridTradeMark"></div>
+                            </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <link href="/lib/jquery/css/sumoselect.css" rel="stylesheet" />
+    <script src="/lib/jquery/js/jquery.sumoselect.min.js"></script>
+    <style>
+        .list-inline {
+            margin-bottom: 10px;
+        }
+
+            .list-inline .badge {
+                cursor: pointer;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            ValidInput();
+            $('.back-grid-view').click(function () {
+                debugger
+                var productId = '@Model.Product.ID';
+                if (productId != '0') {
+                    var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&productId=" + productId;
+                    loadAjax(listItems, "#loadGridView");
+                }
+                $('a[href="#tab_search"]').click();
+            });
+            $('.IsAvatar').change(function () {
+                var src = $(this).data('url');
+                $('#Avatar').val(src);
+                $('#AddAvatar').find('input').val(src);
+                $('#AddAvatar').find('img').attr('src', src);
+            });
+            $('#EditLink').click(function () {
+                $('#NameAscci').removeAttr('readonly');
+            });
+            $('.brandajaxpicker').selectpicker('val', '@Model.Product.BrandId');
+            $('.category-main').selectpicker('val', '@Model.Product.ModuleNameAscii');
+            initAutoComplete("Related", "@Url.Action("AutoComplete", "WebsiteContent")", "ContentIds", "listRelatedAttachRemove");
+            window.testSelAll = $('.ViewHome').SumoSelect({ search: true, searchText: 'Chọn', csvDispCount: 3, okCancelInMulti: false, selectAll: true });
+            removeObject();
+            Count();
+            formatPriceChange();
+            DateVi("#CreatedDate");
+            $("#AddEditForm").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    },
+                    ModuleIds: { required: true }
+                },
+                messages: {
+                    Name: "Tiêu đề bắt buộc nhập.",
+                    ModuleIds: "Chưa nhập module."
+                },
+                submitHandler: function () { //onSubmit
+                    updateEditor();
+                    updateDateDDMMYYYY();
+                    $(".maskPrice").each(function () {
+                        $(this).val($(this).val().replace(/\./g, ''));
+                    });
+                    $(".negative-price").each(function () {
+                        $(this).val($(this).val().replace(/\./g, ''));
+                    });
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+            let ModuleNameAsciiId = '';
+            let moduleSelectedAll = '';
+            let listmodule = replaceCommaFirstEnd($("#Value_ModuleValues").val());
+            $('#ModuleNameAsciiIds').on('change', function (e) {
+                ModuleNameAsciiId = $(this).find("option:selected").attr('data-id');
+                if (!(',' + listmodule + ',').includes(',' + ModuleNameAsciiId + ',')) {
+                    if (listmodule == null || listmodule == "" || listmodule == undefined) {
+                        moduleSelectedAll = listmodule + ModuleNameAsciiId;
+                        $("#Value_ModuleValues").val(listmodule + ModuleNameAsciiId);
+                    } else {
+                        moduleSelectedAll = listmodule + "," + ModuleNameAsciiId;
+                        $("#Value_ModuleValues").val(listmodule + "," + ModuleNameAsciiId);
+                    }
+                } else {
+                    moduleSelectedAll = listmodule;
+                }
+                loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + moduleSelectedAll + '&module=Product,Sale,Manufacturer,ProductLine', "#LoadGridModule")
+                loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + moduleSelectedAll + '&module=TradeMark', "#LoadGridTradeMark")
+            });
+            loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + listmodule + '&module=Product,Sale,Manufacturer,ProductLine', "#LoadGridModule")
+            loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + listmodule + '&module=TradeMark', "#LoadGridTradeMark");
+            $('select[name=Status]').change(function () {
+                var v = $(this).val();
+                if (v == "2") {
+                    $('#ProductReplace').removeClass('hidden');
+                }
+            });
+            $(".child-attr").change(function () {
+                var parrentE = $(this).parents(".parent-ittr-select");
+                var id = $(this).val();
+                if ($(this).is(':checked')) {
+                    parrentE.find(".parr-attr").prop('checked', true);
+                    $('input[name=AttributePrice_' + id + ']').removeAttr('disabled');
+                } else {
+                    var checked = 0;
+                    parrentE.find(".child-attr").each(function () {
+                        if ($(this).is(':checked')) {
+                            checked = 1;
+                            return;
+                        }
+                    })
+                    if (checked == 0) {
+                        parrentE.find(".parr-attr").prop('checked', false);
+                    } else {
+                        parrentE.find(".parr-attr").prop('checked', true);
+                    }
+                    $('input[name=AttributePrice_' + id + ']').attr('disabled', 'disabled');
+                }
+            })
+            $('.autoPermalinkP').on('keyup', function (e) {
+                e.preventDefault();
+                $('#NameAscci').val(RemoveUnicode($(this).val()));
+            });
+            if ($('#ItemId').length > 0) {
+                var fixscroll = function () {
+                    if (91 < $(window).scrollTop()) {
+                        $('#myTab,.box-footer').addClass('fixed');
+                    } else {
+                        $('#myTab,.box-footer').removeClass('fixed');
+                    }
+                };
+                fixscroll();
+                $(window).on("scroll", function () { fixscroll(); });
+            }
+        });
+        @*$('.parent-ittr-select .fa-long-arrow-right').click(function () {
+        $(this).parents('.parent-ittr-select').children('.col-sm-10').slideToggle();
+        });*@
+            $('#FramesID').change(function () {
+                var url = $('#FramesID option:selected').data('url');
+                if (url != undefined) {
+                    $('#AddFrame').html(`<img style="max-width:80px;max-height:80px;" src="` + url + `">`);
+                }
+                else {
+                    $('#AddFrame').html(``);
+                }
+            });
+        $(".maskPrice").mask('000.000.000.000.000', { reverse: true });
+        $(".maskNumber").mask('000', { reverse: true });
+        $(".maskFloat").mask('000.0', { reverse: true });
+        $('.add-attr-quick').on('click', function () {
+            var parent = $(this).data("parent");
+            ModalADC.Open({
+                title: "Thêm thuộc tính nhanh",
+                urlLoad: '@Url.Action("QuickAdd", "Attributes")?parent=' + parent + '&moduleIds=' + '@Model.Product.ModuleIds',
+                bottom: false
+            });
+        });
+        $("#Price").keyup(function () {
+            SetCalPrice();
+        });
+        $('#PercentPrice').keyup(function () {
+            if ($(this).val() < 0) {
+                $(this).val(0)
+            }
+            if ($(this).val() > 100) {
+                $(this).val(100)
+            }
+            SetCalPrice();
+        });
+        $("#DiscountAmount").keyup(function () {
+            if ($('#CalPromotionMethod').val() == 2) {
+                var price = $("#Price").val().replace(/\./g, '');
+                var discountAmount = $(this).val().replace(/\./g, '');
+                $("#PriceView").val(addCommas(price - discountAmount));
+            }
+        });
+        $('#CalPromotionMethod').change(function () {
+            var val = $(this).val();
+            if (val == 0) {
+                $('#PercentPrice').val(0);
+                $('#DiscountAmount').val(0);
+                $('#ColPercentPrice').hide();
+                $('#ColDiscountAmount').hide();
+            }
+            if (val == 1) {
+                $('#ColPercentPrice').show();
+                $('#ColDiscountAmount').hide();
+            }
+            if (val == 2) {
+                $('#PercentPrice').val(0);
+                $('#ColDiscountAmount').show();
+                $('#ColPercentPrice').hide();
+            }
+            SetCalPrice();
+        });
+        function SetCalPrice() {
+            var method = $("#CalPromotionMethod").length > 0 ? $("#CalPromotionMethod").val() : "0";
+            var price = $("#Price").val().replace(/\./g, '');
+            var percent = $("#PercentPrice").length > 0 ? $("#PercentPrice").val().replace(",", ".") : 0;
+            var amount = 0;
+            switch (method) {
+                case "1":
+                    if (percent != "") {
+                        amount = price * (parseFloat(percent) / 100);
+                    }
+                    if ($("#DiscountAmount").length > 0) {
+                        $("#DiscountAmount").val(addCommas(Math.round(amount)));
+                    }
+                    $("#PriceView").val(addCommas(price - amount));
+                    break;
+                case "2":
+                    amount = percent;
+                    if ($("#DiscountAmount").length > 0) {
+                        $("#DiscountAmount").val(addCommas(amount));
+                    }
+                    $("#PriceView").val(addCommas(price - amount));
+                    break;
+                case "0":
+                    $("#PriceView").val(price);
+                    break;
+            }
+
+        }
+        $('.removeFile').click(function () {
+            $(this).parents('.item-file').remove();
+        });
+        $('.removeAllFile').click(function () {
+            $('#AddDownload').html('');
+        });
+        $('#DiscountCombo').change(function () {
+            var price = $('#PriceView').val().replace(/\./g, '');
+            var priceold = $('#Price').val().replace(/\./g, '');
+            if (price != '' && parseInt(price) > 0) {
+                if ($(this).val() > parseInt(price)) {
+                    $(this).val(price);
+                }
+            }
+            else if (priceold != '' && parseInt(priceold) > 0) {
+                if ($(this).val() > parseInt(priceold)) {
+                    $(this).val(priceold);
+                }
+            }
+            else {
+                $(this).val(0);
+            }
+        });
+        function addCommas(nStr) {
+            nStr += ''; x = nStr.split(','); x1 = x[0]; x2 = ""; x2 = x.length > 1 ? ',' + x[1] : ''; var rgx = /(\d+)(\d{3})/; while (rgx.test(x1)) { x1 = x1.replace(rgx, '$1' + '.' + '$2'); } return x1 + x2;
+        }
+        $('#IsIndexGG').click(function () {
+            if ($(this).is(":checked")) {
+                $('#IndexGoogle').val('noodp,index,follow');
+            }
+            else {
+                $('#IndexGoogle').val('noodp,noindex,nofollow');
+            }
+        });
+    </script>
+}

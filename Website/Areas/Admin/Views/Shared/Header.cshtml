@@ -1,0 +1,59 @@
+﻿@using ADCOnline.Utils
+<div class="title-content clearfix tlt_bd_bottom">
+    <div class="pull-right left15">
+        <h3 class="title-view"><i class="fa fa-list-ul"></i>@ViewBag.Title</h3>
+    </div>
+    <ul class="nav nav-tabs nav-tabs-ed pull-left">
+        @if (ViewBag.RolesView == true)
+        {
+            <li class="list_tabsct active">
+                <a href="#tab_search" class="btn-action" data-toggle="tab" aria-expanded="true" title="Danh sách"><span class="lnr lnr-list"></span> Danh sách</a>
+            </li>
+        }
+        @if (ViewBag.RolesSearch == true)
+        {
+            <li class="list_tabsct">
+                <a href="#tab_filter" class="btn-action" data-toggle="collapse" title="Tìm kiếm"><i class="lnr lnr-magnifier" aria-hidden="true"></i> Tìm kiếm</a>
+            </li>
+        }
+        @if (ViewBag.RolesAdd == true)
+        {
+            <li class="list_tabsct">
+                <a href="#tab_add" class="btn-action" data-toggle="tab" aria-expanded="true" id="btnAdd" title="Thêm mới"><span class="lnr lnr-plus-circle"></span> Thêm mới</a>
+            </li>
+        }
+        @if (ViewBag.RolesEdit == true)
+        {
+            <li class="list_tabsct hidden">
+                <a href="#tab_add" class="btn-action" data-toggle="tab" aria-expanded="true" id="btnEdit" title="Sửa"><span class="lnr lnr-plus-circle"></span> Sửa</a>
+            </li>
+        }
+        @if (ViewBag.RolesAdd == true && ViewBag.ContentProduct == true)
+        {
+            @*<li class="list_tabsct list-import" style="display:none;">
+                <a href="#tab_add" class="btn-action" data-toggle="tab" aria-expanded="true" id="btnImport" title="Import"><span class="lnr lnr-upload"></span> Import excel</a>
+            </li>*@
+            @*<li class="list_tabsct">
+                <a href="#tab_add_warehouse" class="btn-action" data-toggle="tab" aria-expanded="true" id="btnImportWarehouse" title="Import"><span class="lnr lnr-upload"></span> Đồng bộ kho hàng</a>
+            </li>*@
+        }
+        @if (ViewBag.RolesExcel == true)
+        {
+            <li class="list_tabsct">
+                <a href="javascript:" id="btnExports" class="btn-action" title="Export"><span class="lnr lnr-download"></span> Xuất excel</a>
+            </li>
+        }
+        @if (ViewBag.RolesPrint == true)
+        {
+            <li class="list_tabsct">
+                <a href="#" title="Xuất file PDF" id="btnPdf"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+            </li>
+        }
+        @if (ViewBag.RolesCreateFile == true)
+        {
+            <li class="list_tabsct">
+                <a href="" title="Xuất file CSV" id="btnCsv"><i class="fa fa-file-code-o" aria-hidden="true"></i></a>
+            </li>
+        }
+    </ul>
+</div>

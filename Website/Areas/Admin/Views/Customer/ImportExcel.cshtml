@@ -1,0 +1,111 @@
+﻿@model Website.Areas.Admin.ViewModels.ProductViewModel
+@if (Model.SystemActionAdmin.Add)
+{
+    <script src="/lib/jquery/js/jquery.form.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var bar = new ldBar(".processing-ldbar", {
+                "stroke": '#43b6d7',
+                "stroke-width": 5,
+                "preset": "line",
+                "value": 0
+            });
+            $frm_post = $("#AddEditForm");
+            $("#AddEditForm").validate({
+                rules: {
+                    File: { required: true },
+                    Email: { email: true }
+                },
+                messages: {
+                    File: { required: "Chưa nhập file import." },
+                },
+                submitHandler: function() {
+                    $frm_post.ajaxSubmit(options);
+                },
+            });
+            var options = {
+                dataType: 'json',
+                uploadProgress: function(event, position, total, percentComplete) {
+                    $('.processing-bar').fadeIn();
+                    bar.set(percentComplete, false);
+                },
+                success: showResponse
+            };
+            function showResponse(data, statusText, xhr, $form) {
+                $('.processing-bar').fadeOut();
+                bar.set(0, false);
+                if (data.errors) { swal({ title: "Thông báo", text: data.message, type: "error", showConfirmButton: true, animation: false }); }
+                else { swal({ title: "Thông báo", text: data.message, type: "success", showConfirmButton: true, animation: false, timer: 2000 }, function() { if (data.url != null) { window.location.href = data.url; } else { window.location.reload(); } }); }
+            }
+        });
+    </script>
+    <form id="AddEditForm" class="form-horizontal" method="post" enctype="multipart/form-data" action="/Adminadc/Customer/ImportExcelAction">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-success btn-sm">Import</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+            </div>
+        </div>
+        <div class="box-body">
+
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div class="collapse-title active">
+                    <p class="radio-box"><input type="radio" value="2" id="Type2" name="Type" checked><label for="Type2">Import file</label></p>
+                </div>
+            </div>
+            <div class="collapse-content" style="display: block;">
+
+                <div class="form-group">
+                    <label class="col-sm-1">File</label>
+                    <div class="col-sm-11">
+                        <div class="input-group">
+                            <input type="file" class="form-control" name="File" id="File" value="" style="border:none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="grid-action grid-history">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Ngày import</th>
+                    <th>Tên file</th>
+                    <th class="text-center">Tải về</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ImportHistoryJsons != null)
+                {
+                    foreach (var item in Model.ImportHistoryJsons.OrderByDescending(x => x.CreatedDate))
+                    {
+                        <tr>
+                            <td>@item.CreatedDate.Value.ToString("dd/MM/yyyy HH:ss:mm")</td>
+                            <td>@item.Filename</td>
+                            <td class="text-center"><a href="/@item.Url"><span class="lnr lnr-download"></span></a></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <style>
+        .grid-history:before { content: 'Lịch sử import' !important; width: 105px !important; }
+        .customer-service-panel { border-bottom: 5px solid #ccc; margin-bottom: 20px; }
+        .del { margin-bottom: 10px }
+        .collapse-title { border: 1px solid #ececec; border-radius: 5px; padding: 0; background: #fbfbfb; overflow: hidden; margin-top: 10px; }
+            .collapse-title:first-child { margin-top: 0; }
+            .collapse-title p { margin-bottom: 0; }
+        .collapse-content { padding: 10px; border: 1px solid #ececec; border-top: none; width: calc(100% - 10px); margin-left: 5px; margin-bottom: 10px; }
+        .form-horizontal .form-group:last-child { margin-bottom: 0; }
+        .radio-box [type="radio"]:not(:checked), .radio-box [type="radio"]:checked { position: absolute; left: -9999px; }
+        .radio-box label { float: left; margin: 0; line-height: 23px; border-radius: 18px; width: 100%; padding: 5px; }
+        .radio-box [type="radio"]:not(:checked) + label, .radio-box [type="radio"]:checked + label { position: relative; padding-left: 35px; cursor: pointer; }
+            .radio-box [type="radio"]:not(:checked) + label:before, .radio-box [type="radio"]:checked + label:before { content: ''; position: absolute; left: 6px; top: 8px; width: 18px; height: 18px; border: 1px solid #ccc; background: #fff; border-radius: 10px; box-shadow: inset 0 1px 3px rgba(0,0,0,.1); }
+            .radio-box [type="radio"]:not(:checked) + label:after { opacity: 0; transform: scale(0); }
+            .radio-box [type="radio"]:not(:checked) + label:after, .radio-box [type="radio"]:checked + label:after { content: ''; position: absolute; top: 11px; left: 9px; width: 12px; height: 12px; border-radius: 14px; background: #03A9F4; transition: all .2s; }
+        .collapse-content { display: none; }
+            .collapse-content.active { display: block; }
+    </style>
+}

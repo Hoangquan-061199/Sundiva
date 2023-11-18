@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ADCOnline.Simple.Admin
+{
+   public class AdvertisingAdmin : BaseSimple
+    {
+        public string Name { get; set; }
+        public string UrlPicture { get; set; }
+        public string UrlPictureMobile { get; set; }
+        public string AlbumPictureJson { get; set; }
+        public string LinkUrl { get; set; }
+        public string Video { get; set; }
+        public string AlbumVideo { get; set; }
+        public string Description { get; set; }
+        public string Content { get; set; }
+        public string OrderDisplay { get; set; }
+        public int? ParentID { get; set; }
+        public bool? IsShow { get; set; }
+        public bool? IsDeleted { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string PositionCode { get; set; }
+        public string DataJson { get; set; }
+        public string ContentIds { get; set; }
+        public int? Type { get; set; }
+        public string ContentHtml { get; set; }
+        public string PositionName { get; set; }
+        public string Lang { get; set; }
+        public string ModuleIds { get; set; }
+    }
+}

@@ -1,0 +1,45 @@
+﻿@model Website.Areas.Admin.ViewModels.SubItemViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@using ADCOnline.Simple.Admin
+@{
+    ViewBag.Title = "Nội dung thêm: " + Model.WebsiteContent.Name + Model.Product.Name + Model.WebsiteModule.Name;
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr form-inline">
+                    <input type="text" class="form-control title" name="Keyword" placeholder="Nhập từ khóa cần tìm">
+                    <button type="button" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add">
+        </div>
+    </div>
+    <script>
+        $(function() {
+            ValidInput();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Html.Raw(@Url.Action("AjaxForm", new { productId = Model.Product.ID, contentId = Model.WebsiteContent.ID, moduleId = Model.WebsiteModule.ID, type=Model.Type }))';
+            initAjaxLoad("@Html.Raw(@Url.Action("ListItems", new { productId = Model.Product.ID, contentId = Model.WebsiteContent.ID, moduleId = Model.WebsiteModule.ID, type=Model.Type }))", "#loadGridView");
+            $("#btnSearch").click(function() {
+                var form = $("#searchFrm");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+        });
+    </script>
+}

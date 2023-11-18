@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/owl.carousel.min.css">
+    <link rel="stylesheet" href="./css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="./css/all.min.css">
+    <link rel="stylesheet" href="./scss/style.css" />
+</head>
+
+<body>
+    <header>
+        <div class="container container-2">
+            <a href="" class="logo"><img src="./images/logo.webp" alt=""></a>
+            <div class="right">
+                <div class="top">
+                    <div class="menu-top">
+                        <a href="" class="item">Liên hệ</a>
+                        <a href="" class="item">E-Catalog</a>
+                    </div>
+                    <div class="lang">
+                        <div class="item">EN</div>
+                        <div class="item">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px"
+                                    fill="currentColor" class="bi bi-globe" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z" />
+                                </svg></div>
+                            <div class="">VN</div>
+                        </div>
+                    </div>
+                    <div class="search">
+                        <div class="icon btn-down active"><svg xmlns="http://www.w3.org/2000/svg" height="17px"
+                                viewBox="0 0 512 512">
+                                <path
+                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                            </svg></div>
+                        <div class="icon btn-close"><svg xmlns="http://www.w3.org/2000/svg" height="17px"
+                                viewBox="0 0 384 512">
+                                <path
+                                    d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z" />
+                            </svg></div>
+                        <form action="">
+                            <input type="text" placeholder="Tìm kiếm">
+                            <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" height="17px"
+                                    viewBox="0 0 512 512">
+                                    <path
+                                        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                </svg></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="menu">
+                    <ul>
+                        <li><a href="">Giới thiệu</a></li>
+                        <li><a href="">Danh mục sản phẩm</a>
+                            <div class="icon btn-down"><svg xmlns="http://www.w3.org/2000/svg" height="16"
+                                    viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                    <path
+                                        d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
+                                </svg></div>
+                            <div class="sub-menu">
+                                <ul>
+                                    <li><a href="">Rèm sáo gỗ</a></li>
+                                    <li><a href="">Rèm cầu vồng</a></li>
+                                    <li><a href="">Rèm cuốn trơn</a></li>
+                                    <li><a href="">Rèm cuốn tranh</a></li>
+                                    <li><a href="">Rèm roman</a></li>
+                                    <li><a href="">Rèm lá dọc</a></li>
+                                    <li><a href="">Phụ kiện rèm</a></li>
+                                    <li><a href="">Phụ kiện giàn phơi</a></li>
+                                    <li><a href="">Sản phẩm khác</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="">Bộ sưu tập rèm</a></li>
+                        <li><a href="">Báo giá</a></li>
+                        <li><a href="">Tuyển dụng</a>
+                            <div class="icon btn-down"><svg xmlns="http://www.w3.org/2000/svg" height="16"
+                                viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                <path
+                                    d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
+                            </svg></div>
+                            <div class="sub-menu">
+                                <ul>
+                                    <li><a href="">Nhà phân phối/Đại lý</a></li>
+                                    <li><a href="">Nhân sự cho công ty Sundiva</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="">Tin tức</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="menu-icon">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+        </div>
+    </header>
+    <div class="banner">
+        <div class="img-banner"><img src="./images/img-banner-main.webp" alt=""></div>
+    </div>
+    <div class="path">
+        <div class="container">
+            <a href="">Trang chủ</a>
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="8" viewBox="0 0 320 512">
+                    <path
+                        d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                </svg></div>
+            <a href="">Tin tức</a>
+        </div>
+    </div>
+    <div class="news">
+        <div class="container">
+            <h2 class="big-title center before">Tin tức nổi bật</h2>
+            <div class="slide-news owl-carousel owl-theme">
+                <div class="item item-news-index flex">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <div class="paragraph fs17 detail">
+                            <p>Lựa chọn rèm phù hợp với màu sơn tường đối với những người không chuyên thì đây là một
+                                công việc hết sức khó khăn. Chọn cùng tông màu hay màu tương phản?</p>
+                        </div>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+                <div class="item item-news-index flex">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <div class="paragraph fs17 detail">
+                            <p>Lựa chọn rèm phù hợp với màu sơn tường đối với những người không chuyên thì đây là một
+                                công việc hết sức khó khăn. Chọn cùng tông màu hay màu tương phản?</p>
+                        </div>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+                <div class="item item-news-index flex">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <div class="paragraph fs17 detail">
+                            <p>Lựa chọn rèm phù hợp với màu sơn tường đối với những người không chuyên thì đây là một
+                                công việc hết sức khó khăn. Chọn cùng tông màu hay màu tương phản?</p>
+                        </div>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list-news">
+        <div class="container">
+            <h2 class="big-title center before">Danh sách tin tức</h2>
+            <div class="list">
+                <div class="item item-news-index">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+                <div class="item item-news-index">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+                <div class="item item-news-index">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+                <div class="item item-news-index">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+                <div class="item item-news-index">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+                <div class="item item-news-index">
+                    <a href="" class="img"><img src="./images/img-news-index.webp" alt=""></a>
+                    <div class="text">
+                        <div class="date">
+                            <p><strong>28</strong></p>
+                            <p>10/2023</p>
+                        </div>
+                        <h3><a href="">Bật mí cách chọn rèm cửa theo
+                                màu sơn tường</a></h3>
+                        <a href="" class="more">Xem thêm <div class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                </svg></div></a>
+                    </div>
+                </div>
+            </div>
+            <div class="page1">
+                <div class="item">
+                    <p>1</p>
+                </div>
+                <div class="item">
+                    <p>2</p>
+                </div>
+                <div class="item">
+                    <p>3</p>
+                </div>
+                <div class="item"><svg xmlns="http://www.w3.org/2000/svg" height="8" viewBox="0 0 320 512">
+                        <path
+                            d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
+                    </svg></div>
+                <div class="item"><svg xmlns="http://www.w3.org/2000/svg" height="8" viewBox="0 0 512 512">
+                        <path
+                            d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
+                    </svg></div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="top">
+                <div class="logo"><img src="./images/logo-ft.webp" alt=""></div>
+                <div class="right">
+                    <div class="menu">
+                        <ul>
+                            <li><a href="">Giới thiệu</a></li>
+                            <li><a href="">Danh mục sản phẩm</a></li>
+                            <li><a href="">Bộ sưu tập rèm</a></li>
+                            <li><a href="">Báo giá</a></li>
+                            <li><a href="">Tuyển dụng</a></li>
+                            <li><a href="">Tin tức</a></li>
+                        </ul>
+                    </div>
+                    <div class="social">
+                        <a href="" class="item"><svg xmlns="http://www.w3.org/2000/svg" height="20px"
+                                viewBox="0 0 320 512">
+                                <path
+                                    d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
+                            </svg></a>
+                        <a href="" class="item"><svg xmlns="http://www.w3.org/2000/svg" height="17px"
+                                viewBox="0 0 512 512">
+                                <path
+                                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
+                            </svg></a>
+                        <a href="" class="item"><svg xmlns="http://www.w3.org/2000/svg" height="13px"
+                                viewBox="0 0 576 512">
+                                <path
+                                    d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" />
+                            </svg></a>
+                    </div>
+                </div>
+            </div>
+            <div class="bot">
+                <div class="left">
+                    <div class="title">
+                        <p>Công ty cổ phần Transimex Việt Nam</p>
+                    </div>
+                    <div class="info">
+                        <div class="item">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="16px"
+                                    viewBox="0 0 384 512">
+                                    <path
+                                        d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" />
+                                </svg></div>
+                            <p>Tòa Housinco Premium, 288 Nguyễn Xiển, Hà Nội, Việt Nam</p>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <div class="item">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                                    <path
+                                        d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                </svg></div>
+                            <a href="" rel="nofollow">0972.430.819</a>
+                        </div>
+                        <div class="item">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="16px"
+                                    viewBox="0 0 512 512">
+                                    <path
+                                        d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z" />
+                                </svg></div>
+                            <a href="" rel="nofollow">info@sundiva.vn</a>
+                        </div>
+                        <div class="item">
+                            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+                                    fill="currentColor" class="bi bi-globe" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z" />
+                                </svg></div>
+                            <a href="" rel="nofollow">sundiva.vn</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <a href="" class="more border square">Liên hệ với chúng tôi <div class="icon"><svg
+                                xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 320 512">
+                                <path
+                                    d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                            </svg></div></a>
+                    <div class="paragraph detail-content fs17">
+                        <p>© SUNDIVA. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./js/owl.carousel.min.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+
+</html>

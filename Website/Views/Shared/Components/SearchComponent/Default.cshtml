@@ -1,0 +1,143 @@
+﻿@model SearchViewModel
+
+@if (ADCOnline.Utils.Utility.IsMobile(Context.Request.Headers["User-Agent"]))
+{
+    <div class="filter">
+        <div class="container">
+            <form action="/tim-kiem-tour" method="post">
+                <div class="form-input">
+                    <div class="fill">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z" /></svg>
+                    </div>
+                    <input type="text" name="q" placeholder="@ResourceData.Resource("NhapTuKhoa", ViewBag.Lang)">
+                    <button type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                            <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="fill-content">
+                    <div class="form-select">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                            <path d="M48 24C48 10.7 37.3 0 24 0S0 10.7 0 24V64 350.5 400v88c0 13.3 10.7 24 24 24s24-10.7 24-24V388l80.3-20.1c41.1-10.3 84.6-5.5 122.5 13.4c44.2 22.1 95.5 24.8 141.7 7.4l34.7-13c12.5-4.7 20.8-16.6 20.8-30V66.1c0-23-24.2-38-44.8-27.7l-9.6 4.8c-46.3 23.2-100.8 23.2-147.1 0c-35.1-17.6-75.4-22-113.5-12.5L48 52V24zm0 77.5l96.6-24.2c27-6.7 55.5-3.6 80.4 8.8c54.9 27.4 118.7 29.7 175 6.8V334.7l-24.4 9.1c-33.7 12.6-71.2 10.7-103.4-5.4c-48.2-24.1-103.3-30.1-155.6-17.1L48 338.5v-237z" />
+                        </svg>
+                        <select name="TourType">
+                            <option value="0">@ResourceData.Resource("LoaiTour", ViewBag.Lang)</option>
+                            @if (Model.ListModulesItem != null)
+                            {
+                                foreach (var item in Model.ListModulesItem.Where(x => x.ParentID != 0))
+                                {
+                                    <option value="@item.ID">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-select">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-pin-map" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8l3-4z" />
+                            <path fill-rule="evenodd"
+                                  d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
+                        </svg>
+                        <select name="AddressStart">
+                            <option value="0">@ResourceData.Resource("NoiKhoiHanh", ViewBag.Lang)</option>
+                            @if (Model.ListAddressStart != null)
+                            {
+                                foreach (var item in Model.ListAddressStart.OrderBy(x => x.OrderDisplay))
+                                {
+                                    <option value="@item.ID">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-select">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                            <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                        </svg>
+                        <select name="Times">
+                            <option value="0">@ResourceData.Resource("ChonThoiGian", ViewBag.Lang)</option>
+                            @if (Model.ListTimes != null)
+                            {
+                                foreach (var item in Model.ListTimes.OrderBy(x => x.OrderDisplay))
+                                {
+                                    <option value="@item.ID">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="filter @(ViewBag.Banner != true ? "no-banner" : string.Empty)">
+        <div class="container">
+            <form action="/tim-kiem-tour" method="post">
+                <div class="form-input">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
+                    </svg>
+                    <input type="text" required name="q" placeholder="@ResourceData.Resource("NhapTuKhoa", ViewBag.Lang)">
+                </div>
+                <div class="form-select">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                        <path d="M48 24C48 10.7 37.3 0 24 0S0 10.7 0 24V64 350.5 400v88c0 13.3 10.7 24 24 24s24-10.7 24-24V388l80.3-20.1c41.1-10.3 84.6-5.5 122.5 13.4c44.2 22.1 95.5 24.8 141.7 7.4l34.7-13c12.5-4.7 20.8-16.6 20.8-30V66.1c0-23-24.2-38-44.8-27.7l-9.6 4.8c-46.3 23.2-100.8 23.2-147.1 0c-35.1-17.6-75.4-22-113.5-12.5L48 52V24zm0 77.5l96.6-24.2c27-6.7 55.5-3.6 80.4 8.8c54.9 27.4 118.7 29.7 175 6.8V334.7l-24.4 9.1c-33.7 12.6-71.2 10.7-103.4-5.4c-48.2-24.1-103.3-30.1-155.6-17.1L48 338.5v-237z" />
+                    </svg>
+                    <select name="TourType">
+                        <option value="0">@ResourceData.Resource("LoaiTour", ViewBag.Lang)</option>
+                        @if (Model.ListModulesItem != null)
+                        {
+                            foreach (var item in Model.ListModulesItem.Where(x => x.ParentID != 0))
+                            {
+                                <option value="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl).Replace("/", "")">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-select">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-pin-map" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8l3-4z" />
+                        <path fill-rule="evenodd"
+                              d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
+                    </svg>
+                    <select name="AddressStart">
+                        <option value="0">@ResourceData.Resource("NoiKhoiHanh", ViewBag.Lang)</option>
+                        @if (Model.ListAddressStart != null)
+                        {
+                            foreach (var item in Model.ListAddressStart.OrderBy(x => x.OrderDisplay))
+                            {
+                                <option value="@item.ID">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-select">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                        <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                    </svg>
+                    <select name="Times">
+                        <option value="0">@ResourceData.Resource("ChonThoiGian", ViewBag.Lang)</option>
+                        @if (Model.ListTimes != null)
+                        {
+                            foreach (var item in Model.ListTimes.OrderBy(x => x.OrderDisplay))
+                            {
+                                <option value="@item.ID">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <button type="submit">
+                    <p>@ResourceData.Resource("TimKiem", ViewBag.Lang)</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+}

@@ -1,0 +1,137 @@
+﻿@model Website.Areas.Admin.ViewModels.CustomerViewModel
+@using ADCOnline.Utils
+@using Website.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd50">ID</th>
+                <th>Thông tin</th>
+                @*<th>Địa chỉ</th>*@
+                @*<th>Đơn hàng</th>*@
+                <th class="wd200">Ngày tạo</th>
+                <th class="wd100">Trạng thái</th>
+                <th class="act_roles wd80 text-center">
+                    Hành động
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr id="item_@item.ID" class="@(item.ID == Model.Customer.ID ? "active" : string.Empty)">
+                        <td>@item.ID</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.FullName))
+                            {
+                                <span>Họ và tên: @item.FullName</span><br />
+                            }
+                            @if (!string.IsNullOrEmpty(item.Email))
+                            {
+                                <span>Email: @item.Email</span><br />
+                            }
+                            @*@if (item.Gender != null)
+                            {
+                                <span>Giới tính: @Temp.Gender(item.Gender)</span><br />
+                            }
+                            @if (item.Birthday != null)
+                            {
+                                <span>Ngày sinh: @item.Birthday.Value.ToString("dd/MM/yyyy")</span> <br />
+                            }*@
+                            @if (!string.IsNullOrEmpty(item.Mobile))
+                            {
+                                <span>Số điện thoại: @item.Mobile</span>
+                            }
+                        </td>
+                        @*<td>@item.Address</td>*@
+                        @*<td>
+                            @if (Model.ListModule.Any(x => x.Tag == "Order"))
+                            {
+                                <a href="/Adminadc/Order/Index#customerId=@item.ID">Số đơn xử lý: <b>@item.TotalOrderPending</b></a>
+                                <br /><a href="/Adminadc/Order/Index#customerId=@item.ID">Số đơn thành công: <b>@item.TotalOrder</b></a><br />
+                            }
+                            else
+                            {
+                                <span>Số đơn xử lý: <b>@item.TotalOrderPending</b></span><br />
+                                <span>Số đơn thành công: <b>@item.TotalOrder</b></span><br />
+                            }
+                            Tổng tiền: <b>@Utility.GetFormatPriceType(item.TotalMoney.HasValue ? item.TotalMoney : 0, 1, "0đ")</b>
+                        </td>              *@        
+                        <td>@item.CreatedOnUtc</td>
+                        <td>
+                            @if (item.IsActivated == false)
+                            {
+                                <span class="badge badge-warning">Chưa kích hoạt</span>
+                            }
+                            else
+                            {
+                                if (item.IsLocked == true)
+                                {
+                                    <span class="badge badge-danger">Đang khóa</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-success">Đang hoạt động</span>
+                                }
+                            }
+                        </td>
+                        <td class="act_delete" style="width:200px;">
+                           @* @if (Model.ListModule.Any(x => x.Tag == "Order"))
+                            {
+                                <a href="/Adminadc/Order/Index?customerId=@item.ID" target="_blank" title="Danh sách đơn hàng của @item.FullName"><span class="lnr lnr-license"></span></a>
+                            }*@
+                            @*<a href="#Detail-order" class="viewtype" data-toggle="modal" rel="3" data-cus="@item.ID" title="Sản phẩm trong giỏ hàng của @item.FullName"><span class="lnr lnr-cart"></span></a>*@
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @item.UserName"><i class="lnr lnr-pencil"></i></a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.UserName"><i class="lnr lnr-trash"></i></a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+            $(".viewtype").click(function() {
+                var val = $(this).attr("rel");
+                var cus = $(this).data("cus");
+                loadAjax("/Adminadc/Customer/ListProductByTypeAndCustomerId?type=" + val + "&customerid=" + cus, "#GridOrderDetailId");
+                //type=1=>yeu thich
+                //type=2=>mua sau
+                //type=3=>gio hang
+            });
+            $('#page').val(@Model.SearchModel.page);
+        });
+    </script>
+    <div id="Detail-order" class="modal fade login-dialog in" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal"></button>
+                <div class="detail-order" id="GridOrderDetailId">
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.Customer.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.Customer.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

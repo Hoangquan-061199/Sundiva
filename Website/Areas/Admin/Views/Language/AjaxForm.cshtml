@@ -1,0 +1,111 @@
+﻿@using ADCOnline.Simple.Base
+@model Website.Areas.Admin.ViewModels.LanguageViewModel
+
+<form id="ModulePositionContent" class="form-horizontal">
+    <div class="box-footer">
+        <div class="btncss">
+            <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+            <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+            <div class="btn btn-info back-grid-view">Quay lại</div>
+        </div>
+    </div>
+    <div class="box-body">
+        <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+        <input type="hidden" name="ItemId" id="ItemId" value="@Model.ObjBase.ID" />
+        <div class="content-panel" id="Show-Destination" style="display: block">
+            <div role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist" id="myTab">
+                    <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? " active" : string.Empty)" id="TabGenaral">
+                        <div class="form-group">
+                            <label class="col-sm-1">Tên</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control title @(ViewBag.Action.Equals("Add") ? " autoPermalink" : "" )" name="Name" id="Name" value="@Model.ObjBase.Name">
+                            </div>
+                            <label class="col-sm-1">Mã</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control title" name="Code" id="Code" value="@Model.ObjBase.Code">
+                                <div>Mỗi mã tương ứng mới một ngôn ngữ.<a class="text-primary" href="https://developers.google.com/admin-sdk/directory/v1/languages" target="_blank" rel="nofollow" title="xem mã ngôn ngữ">Xem tại đây</a></div>
+                            </div>
+                            <div class="col-sm-1">
+                                <label>Thứ tự</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <input class="form-control text-box single-line maskNumber text-center" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.ObjBase.OrderDisplay" />
+                            </div>
+                            <div class="col-sm-1">
+                                <label>
+                                    <span>Hiển thị</span>
+                                    <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.ObjBase.IsShow == false) ? "" : "checked") />
+                                    <input type="hidden" name="IsShow" value="false" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-1">
+                                <label>icon</label>
+                            </div>
+                            <div class="col-sm-5 changeUrlTinyMceParent">
+                                <div class="input-group">
+                                    <input type="text" class="changeUrlTinyMce link form-control" id="Avatar" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="@Model.ObjBase.UrlPicture" />
+                                    <span class="input-group-addon" style="background:transparent;padding-right:10px;">
+                                        <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm btn-bnl"><span class="lnr lnr-upload" style="margin-right:5px;"></span>Chọn ảnh</button>
+                                    </span>
+                                </div>
+                                <div id="AddAvatar">
+                                    <table class="removeParent text-center">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <img style="max-width:100px;max-height:100px;" src="@(!string.IsNullOrEmpty(Model.ObjBase.UrlPicture) ? Model.ObjBase.UrlPicture : string.Empty)">
+                                                    <input type="hidden" name="UrlPicture" value="@Model.ObjBase.UrlPicture">
+                                                    <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(function () {
+        ValidInput();
+        $('.back-grid-view').click(function () {
+            var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=@(Model.ObjBase.ID)";
+            loadAjax(listItems, "#loadGridView");
+            $('a[href="#tab_search"]').click();
+        });
+        $("#ModulePositionContent").validate({
+            rules: {
+                Name:
+                {
+                    required: true,
+                    maxlength: 255
+                }
+            },
+            messages: {
+                Name: "Tên bắt buộc nhập.",
+            },
+            submitHandler: function () { //onSubmit
+                var tab = $('#Show-Destination ul li.active a').attr('href');
+                tab = tab.substring(1, tab.length);
+                var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                PostWithAlert(urlPostAction, newurlForm, "#ModulePositionContent");
+                return false;
+            }
+        });
+        $('.autoPermalink').on('keyup', function (e) {
+            e.preventDefault();
+            $('#NameAscci').val(RemoveUnicode($(this).val()).toLowerCase());
+        });
+    });
+</script>

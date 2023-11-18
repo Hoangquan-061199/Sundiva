@@ -1,0 +1,152 @@
+﻿@model Website.Areas.Admin.ViewModels.ModuleViewModel
+@{
+    ViewBag.Title = ViewBag.ActionText + " Module";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <style>
+        .row { margin-right: 0px; margin-left: 0px; }
+    </style>
+    <link href="~/lib/jquery/css/jquery.treeview.css" rel="stylesheet" />
+    <script src="~/lib/jquery/js/jquery.treeview.js"></script>
+    @if (Model.Type == 2)
+    {
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#SelectTreeCategory").treeview({
+                    collapsed: true,
+                    animated: "medium",
+                    control: "#SelectTreeControl",
+                    persist: "location"
+                });
+                $('input[type=checkbox]').click(function() {
+                    var val = $(this).val();
+                    if (this.checked) {
+                        $('#' + val).find('input[type=checkbox]').prop('checked', true);
+                    } else {
+                        $('#' + val).find('input[type=checkbox]').prop('checked', false);
+                    }
+                    var values = '';
+                    var text = '';
+                    $("#SelectTreeCategory input[type=checkbox]:checked").each(function() {
+                        values += "," + $(this).val();
+                        text += ", " + $(this).attr("title");
+                    });
+                    if (values != '') {
+                        $("#Text_ModuleValues").html(text.substring(1));
+                        $("#Value_ModuleValues").val(values.substring(1));
+                    } else {
+                        $("#Text_ModuleValues").html('');
+                        $("#Value_ModuleValues").val('');
+                    }
+                });
+            });
+        </script>
+
+        <form id="CategoryTreeSelectForm">
+            <fieldset class="forms">
+                <table id="tblContent" class="table table-bordered table-striped">
+                    <tr>
+                        <td class="submit">
+                            <button id="TreeSelectreset" type="reset" class="btn btn-success">Chọn lại</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="SelectTreeControl" class="treeTool">
+                                <a title="Đóng tất cả các nhánh" href="#" class="collapse">Đóng tất cả</a>
+                                <a title="Mở tất cả các nhánh" href="#" class="expand">Mở tất cả</a>
+                            </div>
+                            <ul id="SelectTreeCategory" class="filetree" style="border: 0;">
+                                @Html.Raw(Model.StringBuilder.ToString())
+                            </ul>
+                        </td>
+                    </tr>
+
+                </table>
+            </fieldset>
+        </form>
+    }
+    else
+    {
+        <script type="text/javascript">
+            $(document).ready(function() {
+                if ('@Model.SelectMutil.ToString().ToLower()' == 'False') {
+                    $("#SelectTreeCategory input[type=checkbox]").click(function() {
+                        var lastCheck = $(this).is(':checked');
+                        $("#SelectTreeCategory input[type=checkbox]").attr('checked', false);
+                        $(this).attr('checked', lastCheck);
+                    });
+                }
+                $("#SelectTreeCategory").treeview({
+                    collapsed: true,
+                    animated: "medium",
+                    control: "#SelectTreeControl",
+                    persist: "location"
+                });
+                $("#CategoryTreeSelectForm").validate({
+                    rules: {
+                        FAQTitle:
+                        {
+                            required: true,
+                            minlength: 3,
+                            maxlength: 100
+                        },
+                        FAQDescription:
+                        {
+                            minlength: 15,
+                            maxlength: 2000
+                        }
+                    },
+                    submitHandler: function() { //onSubmit
+                        var values = '';
+                        var text = '';
+                        $("#SelectTreeCategory input[type=checkbox]:checked").each(function() {
+                            values += "," + $(this).val();
+                            text += ", " + $(this).attr("title");
+                        });
+
+                        if (values != '') {
+                            $("#Text_ModuleValues").html(text.substring(1));
+                            $("#Value_ModuleValues").val(values.substring(1));
+                            // $("#dialog-form-2").dialog('close');
+                        } else {
+                            $("#Text_ModuleValues").html('');
+                            $("#Value_ModuleValues").val('');
+                        }
+                    }
+                });
+                $("#TreeSelectreset").click(function() {
+                    $(".moduleTree").attr("checked", false);
+                });
+            });
+        </script>
+
+        <form id="CategoryTreeSelectForm">
+            <fieldset class="forms">
+                <table id="tblContent" class="table table-bordered table-striped">
+                    <tr>
+                        <td class="submit">
+                            <button id="TreeSelectsubmit" type="submit" class="btn btn-success">Chọn</button>
+                            <button id="TreeSelectreset" type="reset" class="btn btn-success">Chọn lại</button>
+                            <button id="close" type="button" class="btn btn-success">Đóng lại</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="SelectTreeControl" class="treeTool">
+                                <a title="Đóng tất cả các nhánh" href="#" class="collapse">Đóng tất cả</a>
+                                <a title="Mở tất cả các nhánh" href="#" class="expand">Mở tất cả</a>
+                            </div>
+                            <ul id="SelectTreeCategory" class="filetree" style="border: 0;">
+                                @Html.Raw(Model.StringBuilder.ToString())
+                            </ul>
+                        </td>
+                    </tr>
+
+                </table>
+            </fieldset>
+        </form>
+    }
+}

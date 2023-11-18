@@ -1,0 +1,194 @@
+﻿@{
+    Layout = null;
+    var lang = Context.Request.Cookies["lang"] != null ? Context.Request.Cookies["lang"] : StaticEnum.DefaultLanguage;
+}
+<!DOCTYPE html>
+<html lang="@lang">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0">
+    <title>Website đang cập nhật</title>
+    <meta name="description" content="Website đang cập nhật" />
+    <meta name="keywords" content="Website đang cập nhật" />
+    <meta name="robots" content="noodp,noindex,nofollow" />
+    <meta name="revisit-after" content="1 days" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/html/style/js/jquery.min.js"></script>
+    <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto',sans-serif;
+            background: url(/Admin/images/backgrounds.png);
+            background-position: top left;
+            background-color: #343b41;
+        }
+
+        .form-login {
+            background: #ffffff;
+            max-width: 450px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 30px 15px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 20px -9px #333333;
+            color: #333333;
+        }
+
+            .form-login input {
+                width: calc(100% - 15px);
+                height: 30px;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 1.5;
+                color: #495057;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid #ced4da;
+                padding: 5px;
+                transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+                display: block;
+                border-radius: 4px;
+            }
+
+                .form-login input:focus {
+                    outline: none;
+                }
+
+            .form-login h1 {
+                margin-bottom: 15px;
+            }
+
+            .form-login p {
+                font-size: 15px;
+                margin-bottom: 10px;
+            }
+
+        .alrt-login {
+            clear: both;
+            text-align: center;
+            color: red;
+            margin-bottom: 10px;
+            display: none
+        }
+
+        .language {
+            display: flex;
+            align-items:center;justify-content:center;
+            margin-top:15px;
+        }
+
+            .language div {
+                width: 25px;
+                height: 17px;
+                margin: 0 7.5px;
+            }
+
+                .language div img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    overflow: hidden;
+                }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="wrapper">
+        <div class="form-login">
+            <form id="Login" method="post">
+                <h1>THÔNG BÁO</h1>
+                <p>Website đang bảo trì vui lòng quý khách quay lại sau ít phút!</p>
+                <p>Nhập mật khẩu để xem</p>
+                <input type="password" name="password" placeholder="Nhập mật khẩu để xem">
+            </form>
+            <div class="alrt-login"></div>
+            <div class="language">
+                <div data-lang="vi" class="change_lang@(lang=="vi" ? " active" : string.Empty)"><img src="/Admin/images/flag-vn.png" alt="@Html.Raw(ResourceData.Resource("Vietnamese",lang))" /></div>
+                <div data-lang="en" class="change_lang@(lang=="en" ? " active" : string.Empty)"><img src="/Admin/images/flag-en.png" alt="@Html.Raw(ResourceData.Resource("English",lang))" /></div>
+                @*<div data-lang="ko" class="change_lang@(lang=="ko" ? " active" : string.Empty)"><img src="/Admin/images/kr-flag.webp" alt="@Html.Raw(ResourceData.Resource("Korea",lang))" /></div>*@
+            </div>
+        </div>
+        
+        <script>
+            $(function () {
+                var lang = Cookies.get('lang');
+                $('.change_lang').click(function (e) {
+                    e.preventDefault();
+                    var current = $(this).data('lang');
+                    if (current === lang) return;
+                    else {
+                        Cookies.set('lang', current, { expires: 1 });
+                        window.location.href = "/";
+                    }
+                });
+                var formLogin = $("#Login");
+                formLogin.validate({
+                    rules: {
+                        password: { required: true, }
+                    },
+                    messages: {
+                        pass: { required: "Vui lòng nhập mật khẩu.", }
+                    },
+                    submitHandler: function () {
+                        $.post("/Ajax/Maintenance/Login", formLogin.serialize(), function (data) {
+                            if (data.errors) {
+                                $('.alrt-login').html(data.message).slideDown();
+                                setInterval(function () { $('.alrt-login').slideUp(); }, 3000);
+                            } else {
+                                window.location.href = "/";
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+    </div>
+    <link rel="stylesheet" media="screen" href="/lib/particles/css/style.css">
+    <!-- count particles -->
+ @*   <div class="count-particles">
+        <span class="js-count-particles">--</span> particles
+    </div>*@
+
+    <!-- particles.js container -->
+    <div id="particles-js"></div>
+
+    <!-- scripts -->
+    <script src="/lib/particles/js/particles.js"></script>
+    <script src="/lib/particles/js/app.js"></script>
+
+    <!-- stats.js -->
+    <script src="/lib/particles/js/lib/stats.js"></script>
+    <script>
+        var count_particles, stats, update;
+        stats = new Stats;
+        stats.setMode(0);
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        //document.body.appendChild(stats.domElement);
+        count_particles = document.querySelector('.js-count-particles');
+        update = function() {
+          stats.begin();
+          stats.end();
+          if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+            count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+          }
+          requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+    </script>
+</body>
+</html>

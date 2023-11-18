@@ -1,0 +1,30 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.ProductViewModel
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    string attr = !string.IsNullOrEmpty(Model.Product.AttributeProductIds) ? Model.Product.AttributeProductIds : "";
+    foreach (var item in Model.AttributesAdmins.Where(c => c.ParentID == 0).OrderBy(c => c.OrderDisplay))
+    {
+        <div class="form-group parent-ittr-select" style="border-bottom: 1px solid #ccc;">
+            <div class="col-sm-1">
+                <label style="font-weight:bold">
+                    <input type="checkbox" class="parr-attr" name="AttributeProductIds" value="@item.ID" @(attr.Contains("," + item.ID + ",") ? "checked" : string.Empty) />
+                    @item.Name:
+                </label>
+            </div>
+            <div class="col-sm-10">
+                <div class="form-group">
+                    @foreach (var itemC in Model.AttributesAdmins.Where(c => c.ParentID == item.ID).OrderBy(c => c.OrderDisplay))
+                    {
+                        <div class="col-sm-2">
+                            <label>
+                                <input type="checkbox" class="child-attr" name="AttributeProductIds" style="margin-right:5px;" value="@itemC.ID" @(attr.Contains("," + itemC.ID + ",") ? "checked" : string.Empty) />
+                                @itemC.Name
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

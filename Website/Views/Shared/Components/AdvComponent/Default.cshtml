@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ADCOnline.Simple.Item.AdvertisingItem>
+@if (Model.Any())
+{
+    <div class="adv-banner @Utility.ConvertRewrite(ViewBag.CodeAdv)">
+        @if(Model.Count()>1)
+        {
+            <div class="slide-adv cS-hidden">
+                @foreach (var item in Model.OrderBy(c => c.OrderDisplay))
+                {
+                    if (!string.IsNullOrEmpty(item.LinkUrl))
+                    {
+                        <a href="@item.LinkUrl" target="_blank" class="item" title="@item.Name">
+                            @if (Utility.IsMobile(Context.Request.Headers["User-Agent"]))
+                            {
+                                <img src="@(!string.IsNullOrEmpty(item.UrlPictureMobile) ? item.UrlPictureMobile : item.UrlPicture)" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <img src="@item.UrlPicture" alt="@item.Name" />
+                            }
+                        </a>
+                    }
+                    else
+                    {
+                        @if (Utility.IsMobile(Context.Request.Headers["User-Agent"]))
+                        {
+                            <img src="@(!string.IsNullOrEmpty(item.UrlPictureMobile) ? item.UrlPictureMobile : item.UrlPicture)" alt="@item.Name" />
+                        }
+                        else
+                        {
+                            <img src="@item.UrlPicture" alt="@item.Name" />
+                        }
+                    }
+                }
+            </div>
+        }
+        else{
+            @foreach (var item in Model.OrderBy(c => c.OrderDisplay))
+            {
+                if (!string.IsNullOrEmpty(item.LinkUrl))
+                {
+                    <a href="@item.LinkUrl" target="_blank" class="item" title="@item.Name">
+                        @if (Utility.IsMobile(Context.Request.Headers["User-Agent"]))
+                        {
+                            <img src="@(!string.IsNullOrEmpty(item.UrlPictureMobile) ? item.UrlPictureMobile : item.UrlPicture)" alt="@item.Name" />
+                        }
+                        else
+                        {
+                            <img src="@item.UrlPicture" alt="@item.Name" />
+                        }
+                    </a>
+                }
+                else
+                {
+                    @if (Utility.IsMobile(Context.Request.Headers["User-Agent"]))
+                    {
+                        <img src="@(!string.IsNullOrEmpty(item.UrlPictureMobile) ? item.UrlPictureMobile : item.UrlPicture)" alt="@item.Name" />
+                    }
+                    else
+                    {
+                        <img src="@item.UrlPicture" alt="@item.Name" />
+                    }
+                }
+            }
+        }
+        <div class="close-banner"><i class="fa fa-times"></i></div>
+    </div>
+}

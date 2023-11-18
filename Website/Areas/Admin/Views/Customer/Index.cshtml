@@ -1,0 +1,101 @@
+﻿@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Quản lý khách hàng";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = Model.SystemActionAdmin.View;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="col-sm-12">
+        @if (Model.ListModule.Any())
+        {
+            @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+            {
+                <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+            }
+        }
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr form-inline">
+                    <input type="text" class="form-control title" name="Keyword" placeholder="Nhập từ khóa cần tìm" style="width: calc(100% - 105px); margin-bottom: 10px; vertical-align: top;">
+                    <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                    @*<select id="dateb" name="dateb" class="form-control">
+                        <option value="">Ngày sinh</option>
+                        @for (int i = 1; i <= 31; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <select id="monthb" name="monthb" class="form-control">
+                        <option value="">Tháng sinh</option>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <select id="yearb" name="yearb" class="form-control">
+                        <option value="">Năm sinh</option>
+                    </select>*@
+                    <select id="Status" name="Status" class="form-control">
+                        <option value="">- Trạng thái</option>
+                        <option value="1">Chưa kích hoạt</option>
+                        <option value="2">Đang khóa</option>
+                        <option value="3">Đang hoạt động</option>
+                    </select>
+                    <input type="text" class="form-control" style="width:100px !important;" name="page" value="" id="page" placeholder="Trang" />
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add">
+        </div>
+    </div>
+    <script>
+        $(function() { 
+            ValidInput();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            var form = $("#searchFrm");
+            $("#btnSearch").click(function(e) {
+                LoadSearch(form);
+            });
+            form.validate({
+                submitHandler: function() {
+                    LoadSearch(form);
+                }
+            });
+            $('#searchFrm select').change(function() {
+                LoadSearch(form);
+            });
+            function LoadSearch(t) {
+                window.location.href = '#' + getValueFormMutilSelect(t);
+                return false;
+            }
+            var urlXuatExcel = '@Url.Action("ProcessExportFile")';
+            $('#btnExports').click(function() {
+                var frm = $("#searchFrm");
+                var hastag = getValueFormMutilSelect(frm);
+                window.location.href = urlXuatExcel + '?' + hastag;
+                return false;
+            });
+            $('#btnImport').show();
+            var urlImport = '@Url.Action("ImportExcel")';
+            $("#btnImport").click(function() {
+                loadAjax(urlImport, "#tab_add");
+            });
+            $('.list-import').show();
+        });
+    </script>
+}

@@ -1,0 +1,44 @@
+﻿@using Website.Utils
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <li class="treeview">
+                <a href="/@WebConfig.AdminAlias/HomeAdmin/Index">
+                    <i class="fa fa-area-chart"></i> <span>Dashboard</span>
+                </a>
+            </li>
+            @if (Model.ListModule != null && Model.ListModule.Count > 0)
+            {
+                var listParent = Model.ListModule.Where(c => c.ParentID == 1).OrderBy(c => c.Ord).ToList();
+                foreach (var item in listParent)
+                {
+                    var listChild = Model.ListModule.Where(c => c.ParentID == item.ID).OrderBy(c => c.Ord).ToList();
+                    <li class="treeview">
+                        <a href="@(item.Tag != null?Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect):"#")">
+                            @Html.Raw(item.ClassCss) <span>@item.NameModule</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        @if (listChild != null && listChild.Count > 0)
+                        {
+                            <ul class="treeview-menu">
+                                @foreach (var child in listChild)
+                                {
+                                    <li><a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+child.Tag,"Index",child.Redirect)"><i class="fa fa-minus-square-o"></i>@child.NameModule</a></li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            }
+
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

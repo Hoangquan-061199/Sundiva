@@ -1,0 +1,47 @@
+﻿@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Quản lý chức năng User với Module";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function() {
+        urlLists = '@Url.Action("ListItems", "User")';
+        urlForm = '@Url.Action("AjaxForm", "User")';
+        urlPostAction = '@Url.Action("Actions","User")';
+        urlFormRole = '@Url.Action("ViewRole", "User")';
+        urlEditPoint = '@Url.Action("AjaxForm", "User")';
+        formWidth = 960;
+        formHeight = $(window).height() - 24;
+        viewWidth = 960;
+        viewHeight = $(window).height() - 24;
+
+        initAjaxLoad(urlLists, "#User_ModuleActiveGriditems");
+
+        $("#gridSearch").submit(function() {
+            var form = $("#gridSearch");
+            window.location.href = '#' + getValueFormMutilSelect(form);
+            return false;
+        });
+
+        $("select.mutil").multiSelect({ oneOrMoreSelected: '*', selectAllText: '<b>Tất cả</b>', optGroupSelectable: true });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        urlForm = '@Url.Action("AjaxForm", "User")';
+
+        $("#User_ModuleActiveGriditems").load(encodeURI("@Url.Action("ListItems")"));
+        $("#gridSearch").submit(function() {
+            var form = $("#gridSearch");
+            window.location.href = '#' + getValueFormMutilSelect(form);
+            return false;
+        });
+    });
+</script>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12" id="User_ModuleActiveGriditems"></div>
+    </div>
+</section>

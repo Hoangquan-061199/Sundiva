@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style>
+        * { margin: 0; padding: 0; }
+
+        .body { background-position: center; background-repeat: no-repeat; background-size: auto 100%; color: #2a2a2a; }
+
+        p { font-size: 13px; }
+
+        p, h1 { font-family: Arial; margin-bottom: 10px; }
+
+        a { color: #044041; text-decoration: none; font-family: Arial; font-size: 13px; }
+
+        .main { background: rgba(255, 255, 255, 0.9); padding: 0; overflow: hidden; position: relative; }
+
+        table tr td, table tr th { font-size: 13px; padding-left: 0; text-align: left; padding: 5px 10px 5px 0; font-family: Arial; }
+
+            table tr td:first-child { width: 200px; font-weight: 600; text-align: center; }
+
+        .head { padding: 11px 0; }
+
+            .head > p { margin: 0; }
+
+                .head > p > * { display: inline-block; }
+
+        .content { padding: 0; }
+
+        .box { margin-bottom: 0; border-top: 1px solid #981b1e; padding: 0 15px; }
+
+        .box1 { padding: 10px 0; font-family: 'Arial',sans-serif; }
+
+        .tit-top { text-align: center; font-size: 15px; line-height: 34px; color: #fff; margin-bottom: 0; }
+
+        .titH10 { background: #3eaa3e; text-transform: uppercase; font-weight: bold; color: #ffffff; line-height: 36px; padding: 0 20px; margin: 0; }
+
+        .login-page-002 { padding: 20px 0 40px; }
+
+            .login-page-002 .tit-meb { text-align: center; text-transform: uppercase; font-weight: 400; font-size: 20px; color: #333; line-height: 30px; position: relative; margin: 0; }
+
+                .login-page-002 .tit-meb:before { content: "--"; position: absolute; color: #0063ae; bottom: 8px; height: 3px; width: 100%; text-align: center; left: 0; font-size: 20px; font-weight: 700; }
+
+            .login-page-002 .box { overflow: hidden; display: block; width: 500px; margin: 30px auto 0; padding: 15px 30px 20px; background: #da2032; max-width: 100%; }
+
+                .login-page-002 .box > p { margin: 0 0 20px; line-height: 24px; font-size: 14px; color: #333; font-weight: 700; text-transform: uppercase; }
+
+                .login-page-002 .box form { margin: 0 -5px }
+
+                    .login-page-002 .box form p { font-weight: 700; color: #333; margin-left: 5px; }
+
+        .cus-inp2 { overflow: hidden; margin: 0 5px; margin-bottom: 14px; float: left; width: calc(100% - 10px); }
+
+        .inp-hafl { width: calc(50% - 10px); margin-left: 5px; float: left; margin-right: 5px; }
+
+        .cus-inp2 .icon { width: 37px; height: 37px; display: block; float: left; background: #eee; text-align: center; line-height: 35px; border-radius: 5px 0 0 5px; color: #555; border: 1px solid #ccc; border-right: 0; }
+
+        .cus-inp2 input { width: calc(100% - 37px); float: left; line-height: 35px; border: 1px solid #ccc; background: #fff; border-radius: 0 5px 5px 0; padding: 0 15px; }
+
+            .cus-inp2 input.error { border: 1px solid red; }
+
+        .cus-inp2 label { margin-top: 10px; margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="body">
+        <div class="main" style="background:#ffffff; background-size: 100%;background-repeat: no-repeat;background-position: top;">
+            <div class="content">
+                <div class="head" style="">
+                    <table style="width:500px;margin:auto;">
+                        <tr>
+                            <td style="vertical-align:middle; width: 85px;text-align:center"><img src="http://doji2020.adctopweb.com/Upload/logo/logo-t.png" /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="_main" style="padding: 0 15px;margin: 0px 15px 15px 15px;">
+                    <div style="min-height: .01%; overflow-x: auto; box-sizing: border-box; ">
+                        <div class="container">
+                            <div class="login-page-002">
+                                <div class="view-title">
+                                    <h2 class="tit-meb">Đơn hàng mới lúc [DateTime]<br/><b>#[OrderCode]</b></h2>
+                                </div>
+                                <p><b>1. Thông tin sản phẩm</b></p>
+
+                                <table border="1" cellpadding="4" cellspacing="0" style="width:100%;border-collapse:collapse;border-color: rgba(255, 255, 255, 0.4);    margin-bottom: 2px;">
+                                    <tbody>
+                                        <tr>
+                                            <th style="font-weight:bold;text-align:left;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Sản phẩm</th>
+                                            <th style="font-weight:bold;text-align:right;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Đơn giá / Tiền công</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Số lượng</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;"> Trọng lượng vàng</th>
+                                            <th style="font-weight:bold;text-align:right;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Tỉ giá vàng</th>
+                                            <th style="font-weight:bold;text-align:right;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Tạm tính</th>
+                                            <th style="font-weight:bold;text-align:right;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Giảm giá</th>
+                                            <th style="font-weight:bold;text-align:right;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Thành tiền</th>
+                                        </tr>
+                                        [InforProduct]
+                                        <tr>
+                                            <td colspan="7" style="text-align:right"><strong>Tạm tính:</strong></td>
+                                            <td style="text-align:right"><strong>[TotalMoney]</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" style="text-align:right"><strong>Giảm giá:</strong></td>
+                                            <td style="text-align:right"><strong>[DiscountModule]</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" style="text-align:right"><strong>Voucher:</strong></td>
+                                            <td style="text-align:right"><strong>[VoucherCode]</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" style="text-align:right"><strong>Giảm giá voucher:</strong></td>
+                                            <td style="text-align:right"><strong>[DiscountVoucher]</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" style="text-align:right"><strong>Tổng cộng:</strong></td>
+                                            <td style="text-align:right"><strong>[TotalAfterSale]</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <p><b>2. Thông tin cá nhân</b></p>
+                                <table style="width:100%;text-align:left;border:1px solid #cccccc;border-collapse:collapse; margin-bottom: 15px;">
+                                    <tbody>
+                                        <tr>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Họ và tên</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Ngày sinh</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Số điện thoại</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Email</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Địa chỉ</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[FullName]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[DateOfBirth]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[Mobile]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[Email]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[Address]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p><b>3. Thông tin nhận hàng</b></p>
+                                <table style="width:100%;text-align:left;border:1px solid #cccccc;border-collapse:collapse; margin-bottom: 15px;">
+                                    <tbody>
+                                        <tr>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Hình thức nhận hàng</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Hình thức thanh toán</th>
+
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Ghi chú</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[Paymentreceive]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[PaymentType]</td>
+
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[Note]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p><b>4. Thông tin xuất hóa đơn</b></p>
+                                <table style="width:100%;text-align:left;border:1px solid #cccccc;border-collapse:collapse; margin-bottom: 15px;">
+                                    <tbody>
+                                        <tr>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Xuất hóa đơn</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Mã số thuế</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Tên công ty</th>
+                                            <th style="font-weight:bold;text-align:center;border:1px solid #cccccc;padding:5px 15px;background: #da2032;color: #fff;text-transform: uppercase;">Địa chỉ</th>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[Xuat]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[MST]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[TCT]</td>
+                                            <td style="border:1px solid #cccccc;padding:5px;text-align:center">[DCCT]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,324 @@
+﻿@model IndexViewModel
+@using ADCOnline.Simple.Json
+@using ADCOnline.Simple.Item
+@{
+    var Logo = Model.ListPositionItem.Any(x => x.Code == StaticEnum.Logo) ? Model.ListPositionItem.FirstOrDefault(x => x.Code == StaticEnum.Logo).AdvertisingItems : new List<AdvertisingItem>();
+    var Menu = Model.ListPositionItem.Any(x => x.Code == StaticEnum.MainMenu) ? Model.ListPositionItem.FirstOrDefault(x => x.Code == StaticEnum.MainMenu).WebsiteModulesItems : new List<WebsiteModulesJson>();
+    var ListProducts = Model.ListPositionItem.Any(x => x.Code == StaticEnum.MainMenu) ? Model.ListPositionItem.FirstOrDefault(x => x.Code == StaticEnum.MainMenu).ProductItems : new List<ProductItem>();
+    var Menu2 = Model.ListPositionItem.Any(x => x.Code == StaticEnum.Menu2) ? Model.ListPositionItem.FirstOrDefault(x => x.Code == StaticEnum.Menu2).WebsiteModulesItems : new List<WebsiteModulesJson>();
+    var hotline = !string.IsNullOrEmpty(Model.SystemConfigItem.Hotline) ? Model.SystemConfigItem.Hotline.Replace(" ", "").Split(',') : null;
+    SizeImages image = new SizeImages();
+}
+@if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]) && !Utility.IsTablet(Context.Request.Headers["User-Agent"]))
+{
+    <header class="@(ViewBag.Index == true ? "header-index" : "header-content")">
+        <div class="top">
+            <div class="container">
+                @if (!string.IsNullOrEmpty(Model.SystemConfigItem.Email2))
+                {
+                    <a href="@Model.SystemConfigItem.Email2" title="Email" target="_blank" rel="nofollow" class="item">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+                                 class="bi bi-envelope" viewBox="0 0 16 16">
+                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
+                            </svg>
+                        </div>
+                        <p>@ResourceData.Resource("LienHeVoiChungToi", ViewBag.Lang)</p>
+                    </a>
+                }
+                @if (hotline.Any())
+                {
+                    <div class="item">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 512 512">
+                                <path d="M280 0C408.1 0 512 103.9 512 232c0 13.3-10.7 24-24 24s-24-10.7-24-24c0-101.6-82.4-184-184-184c-13.3 0-24-10.7-24-24s10.7-24 24-24zm8 192a32 32 0 1 1 0 64 32 32 0 1 1 0-64zm-32-72c0-13.3 10.7-24 24-24c75.1 0 136 60.9 136 136c0 13.3-10.7 24-24 24s-24-10.7-24-24c0-48.6-39.4-88-88-88c-13.3 0-24-10.7-24-24zM117.5 1.4c19.4-5.3 39.7 4.6 47.4 23.2l40 96c6.8 16.3 2.1 35.2-11.6 46.3L144 207.3c33.3 70.4 90.3 127.4 160.7 160.7L345 318.7c11.2-13.7 30-18.4 46.3-11.6l96 40c18.6 7.7 28.5 28 23.2 47.4l-24 88C481.8 499.9 466 512 448 512C200.6 512 0 311.4 0 64C0 46 12.1 30.2 29.5 25.4l88-24z" />
+                            </svg>
+                        </div>
+                        <p>@ResourceData.Resource("Hotline", ViewBag.Lang): <strong><a href="tel:@Utility.FormatPhone(hotline.FirstOrDefault())" title="@ResourceData.Resource("Hotline", ViewBag.Lang)" target="_blank" rel="nofollow">@hotline.FirstOrDefault()</a></strong></p>
+                        <div class="icon btn-down">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="11px" viewBox="0 0 512 512">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
+                            </svg>
+                        </div>
+                        <div class="list-phone">
+                            <ul>
+                                @foreach (string item in hotline.Skip(1))
+                                {
+                                    <li>
+                                        <p>@ResourceData.Resource("Hotline", ViewBag.Lang): <strong><a href="tel:@Utility.FormatPhone(item)" title="@ResourceData.Resource("Hotline", ViewBag.Lang)" target="_blank" rel="nofollow">@item</a></strong></p>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="bot">
+            <div class="container">
+                @if (Logo.Any())
+                {
+                    @foreach (AdvertisingItem item in Logo.Take(1))
+                    {
+                        image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                        if (!string.IsNullOrEmpty(item.LinkUrl))
+                        {
+                            <a href="@item.LinkUrl" title="@item.Name" class="logo">
+                                <img src="@item.UrlPicture" alt="icon" width="@image.Width" height="@image.Height" loading="lazy">
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="logo">
+                                <img src="@item.UrlPicture" alt="icon" width="@image.Width" height="@image.Height" loading="lazy">
+                            </div>
+                        }
+                    }
+                }
+
+                <div class="right">
+                    @if (Menu.Any(x => x.ParentID == 0))
+                    {
+                        <nav class="menu">
+                            <ul>
+                                @foreach (WebsiteModulesJson moduleParent in Menu.Where(x => x.ParentID == 0))
+                                {
+                                    <li>
+                                        <a href="@Utility.Link(moduleParent.NameAscii, string.Empty, moduleParent.LinkUrl)" title="@moduleParent.Name">@moduleParent.Name</a>
+                                        @if (Menu.Any(x => x.ParentID == moduleParent.ID))
+                                        {
+                                            if (moduleParent.TypeView == StaticEnum.TypeProduct)
+                                            {
+                                                int i = 1, j = 1;
+                                                <div class="icon btn-down">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16px"
+                                                         height="11" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd"
+                                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                                    </svg>
+                                                </div>
+
+                                                <div class="menu-child click-menu-load-data">
+                                                    <div class="container">
+                                                        <div class="left-child">
+                                                            @foreach (WebsiteModulesJson module in Menu.Where(x => x.ParentID == moduleParent.ID))
+                                                            {
+                                                                <div class="item @(i == 1 ? "active" : string.Empty)" data-name="@module.Name" data-href="@Utility.Link(module.NameAscii, string.Empty, module.LinkUrl)" data-id="@module.ID">
+                                                                    <p>@module.Name</p>
+                                                                    <div class="icon">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="8"
+                                                                             height="8" fill="currentColor" class="bi bi-chevron-right"
+                                                                             viewBox="0 0 16 16">
+                                                                            <path fill-rule="evenodd"
+                                                                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                                                                        </svg>
+                                                                    </div>
+                                                                </div>
+                                                                i++;
+                                                            }
+                                                        </div>
+
+                                                        @foreach (WebsiteModulesJson module in Menu.Where(x => x.ParentID == moduleParent.ID))
+                                                        {
+                                                            if (module.TypeViewMenu == StaticEnum.MenuI || module.TypeViewMenu == StaticEnum.MenuII)
+                                                            {
+                                                                <div class="right-child domestic @(j == 1 ? "active" : string.Empty)" data="@module.TypeViewMenu" data-id="@module.ID">
+                                                                    @foreach (WebsiteModulesJson modulechild in Menu.Where(x => x.ParentID == module.ID))
+                                                                    {
+                                                                        <div class="item">
+                                                                            <div class="title">
+                                                                                <p><a href="@Utility.Link(modulechild.NameAscii, string.Empty, modulechild.LinkUrl)" title="@modulechild.Name">@modulechild.Name</a></p>
+                                                                            </div>
+                                                                            <ul>
+                                                                                @foreach (WebsiteModulesJson item in Menu.Where(x => x.ParentID == modulechild.ID))
+                                                                                {
+                                                                                    <li><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></li>
+                                                                                }
+                                                                            </ul>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                            if (module.TypeViewMenu == StaticEnum.MenuIII)
+                                                            {
+                                                                <div class="right-child visitors @(j == 1 ? "active" : string.Empty)" data="@module.TypeViewMenu" data-id="@module.ID">
+                                                                    @foreach (WebsiteModulesJson modulechild in Menu.Where(x => x.ParentID == module.ID))
+                                                                    {
+                                                                        var icon = !string.IsNullOrEmpty(modulechild.AlbumPictureJson) ? JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(modulechild.AlbumPictureJson) : new List<AlbumGalleryItem>();
+                                                                        <div class="item">
+                                                                            <div class="icon">
+                                                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, icon.FirstOrDefault(x=> x.AlbumType == 1).AlbumUrl, modulechild.Name))
+                                                                            </div>
+                                                                            <a href="@Utility.Link(modulechild.NameAscii, string.Empty, modulechild.LinkUrl)" title="@modulechild.Name">@modulechild.Name</a>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                            j++;
+                                                        }
+                                                    </div>
+                                                    <a href="@Utility.Link(Menu.FirstOrDefault(x => x.ParentID == moduleParent.ID).NameAscii, string.Empty, Menu.FirstOrDefault(x => x.ParentID == moduleParent.ID).LinkUrl)" title="@Menu.FirstOrDefault(x => x.ParentID == moduleParent.ID).Name" class="more other padding bold center main-menu-child">
+                                                        <p>@ResourceData.Resource("TatCaTour", ViewBag.Lang) <span class="name-menu-child">@Menu.FirstOrDefault(x => x.ParentID == moduleParent.ID).Name</span></p>
+                                                        <div class="icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"
+                                                                 fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd"
+                                                                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                                                            </svg>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    }
+                    <div class="search">
+                        <form action="/tim-kiem" method="POST">
+                            <input type="text" name="q" required placeholder="@ResourceData.Resource("TimKiem",ViewBag.Lang)">
+                            <button type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                </svg>
+                            </button>
+                        </form>
+                        <div class="icon btn-search">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                            </svg>
+                        </div>
+                        <div class="icon1 btn-search">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z" /></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="language">
+                    @if (ViewBag.LangGoogle == "/vi/en")
+                    {
+                        <div class="lang" onclick="changeLang($(this))" data-lang="/vi/vi">
+                            <img src="/Admin//images/flag-vn.png" width="30" height="30" alt="Icon">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="lang" onclick="changeLang($(this))" data-lang="/vi/en">
+                            <img src="/Admin//images/flag-en.png" width="30" height="30" alt="Icon">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </header>
+}
+else
+{
+    <header>
+        <div class="container">
+            @if (Logo.Any())
+            {
+                @foreach (AdvertisingItem item in Logo.Take(1))
+                {
+                    image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                    if (!string.IsNullOrEmpty(item.LinkUrl))
+                    {
+                        <a href="@item.LinkUrl" title="@item.Name" class="logo">
+                            <img src="@item.UrlPicture" alt="icon" width="@image.Width" height="@image.Height" loading="lazy">
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="logo">
+                            <img src="@item.UrlPicture" alt="icon" width="@image.Width" height="@image.Height" loading="lazy">
+                        </div>
+                    }
+                }
+            }
+            @if (Menu.Any(x => x.ParentID == 0))
+            {
+                <nav class="menu">
+                    <ul>
+                        @foreach (WebsiteModulesJson moduleParent in Menu.Where(x => x.ParentID == 0))
+                        {
+                            <li>
+                                <a href="@Utility.Link(moduleParent.NameAscii, string.Empty, moduleParent.LinkUrl)" title="@moduleParent.Name">@moduleParent.Name</a>
+                                @if (Menu.Any(x => x.ParentID == moduleParent.ID))
+                                {
+                                    <div class="icon-sub icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" /></svg>
+                                    </div>
+                                    <ul class="sub-menu">
+                                        @foreach (WebsiteModulesJson module in Menu.Where(x => x.ParentID == moduleParent.ID))
+                                        {
+                                            <li>
+                                                <a href="@Utility.Link(module.NameAscii, string.Empty, module.LinkUrl)" title="@module.Name">@module.Name</a>
+                                                @if (Menu.Any(x => x.ParentID == module.ID))
+                                                {
+                                                    <div class="icon-sub2 icon">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" /></svg>
+                                                    </div>
+                                                    <ul class="sub-menu2">
+                                                        @foreach (WebsiteModulesJson item in Menu.Where(x => x.ParentID == module.ID))
+                                                        {
+                                                            <li>
+                                                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a>
+                                                                @if (Menu.Any(x => x.ParentID == item.ID))
+                                                                {
+                                                                    <div class="icon-sub3 icon">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" /></svg>
+                                                                    </div>
+                                                                    <ul class="sub-menu3">
+                                                                        @foreach (WebsiteModulesJson itemc in Menu.Where(x => x.ParentID == item.ID))
+                                                                        {
+                                                                            <li>
+                                                                                <a href="@Utility.Link(itemc.NameAscii, string.Empty, itemc.LinkUrl)" title="@itemc.Name">@itemc.Name</a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                }
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                        <li>
+                            <form action="/Search" method="POST`">
+                                <input type="text" name="q" required placeholder="@ResourceData.Resource("TimKiem",ViewBag.Lang)">
+                                <button type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            <div class="language">
+                @if (ViewBag.LangGoogle == "/vi/en")
+                {
+                    <div class="lang" onclick="changeLang($(this))" data-lang="/vi/vi">
+                        <img src="/Admin//images/flag-vn.png" width="30" height="30" alt="Icon">
+                    </div>
+                }
+                else
+                {
+                    <div class="lang" onclick="changeLang($(this))" data-lang="/vi/en">
+                        <img src="/Admin//images/flag-en.png" width="30" height="30" alt="Icon">
+                    </div>
+                }
+            </div>
+            <div class="menu-icon" onclick="myFunction(this)">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+        </div>
+    </header>
+}

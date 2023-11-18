@@ -1,0 +1,80 @@
+﻿@model Website.Areas.Admin.ViewModels.ModulePositionViewModel
+@if (Model.SystemActionAdmin.View)
+{
+    <link href="~/lib/jquery/css/jquery.treeview.css" rel="stylesheet" />
+    <script src="~/lib/jquery/js/jquery.treeview.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var textContainer = "#TextModulePosition";
+            var hiddenContainer = "#ValueModulePosition";
+            $("#SelectTreeCategory").treeview({
+                collapsed: true,
+                animated: "medium",
+                control: "#SelectTreeControl",
+                persist: "location"
+            });
+            $("#CategoryTreeSelectForm").validate({
+                rules: {
+                    FAQTitle:
+                    {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 100
+                    },
+                    FAQDescription:
+                    {
+                        minlength: 15,
+                        maxlength: 2000
+                    }
+                },
+                submitHandler: function() { //onSubmit
+                    var values = '';
+                    var text = '';
+                    $("#SelectTreeCategory input[type=checkbox]:checked").each(function() {
+                        values += "," + $(this).val();
+                        text += ", " + $(this).attr("title");
+                    });
+                    if (values != '') {
+                        $(textContainer).html(text.substring(1));
+                        $(hiddenContainer).val(values.substring(1));
+                    }
+                    else {
+                        $(textContainer).html('');
+                        $(hiddenContainer).val('');
+                    }
+                    ModalADC.Close();
+                }
+            });
+
+        });
+    </script>
+
+    <form id="CategoryTreeSelectForm">
+        <fieldset class="forms">
+            <table id="tblContent" class="table table-bordered table-striped">
+                <tr>
+                    <td class="submit">
+                        <button id="TreeSelectsubmit" type="submit" class="btn btn-info btn-sm">Chọn</button>
+                        <button id="TreeSelectreset" type="reset" class="btn btn-default btn-sm">Chọn lại</button>
+                        <button id="close" type="button" class="btn btn-danger btn-sm">Đóng lại</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="SelectTreeControl" class="treeTool">
+                            <a title="Đóng tất cả các nhánh" href="#" class="collapse"><i class="fa fa-plus-square-o"></i>Đóng tất cả</a>
+                            <a title="Mở tất cả các nhánh" href="#" class="expand"><i class="fa fa-minus-square-o"></i>Mở tất cả</a>
+                        </div>
+                        <ul id="SelectTreeCategory" class="filetree gridView treeview" style="border: 0;">
+                            @Html.Raw(Model.StringBuilder)
+                        </ul>
+                    </td>
+                </tr>
+
+            </table>
+        </fieldset>
+    </form>
+    <style>
+        #SelectTreeCategory.treeview, .treeview ul { padding: 0px 19px; margin: 0; list-style: none; }
+    </style>
+}

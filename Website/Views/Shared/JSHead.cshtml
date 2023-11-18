@@ -1,0 +1,11 @@
+﻿@using System.Text;
+@using Website.Utils;
+@{
+    StringBuilder css = new StringBuilder();
+    css.Append(Common.ReadFile("jquery.min.js", "lib/jquery/"));
+    css.Append(Common.ReadFile("jquery.validate.min.js", "lib/jquery-validation/dist/"));
+    css.Append(Common.ReadFile("js.cookie.min.js", "lib/cookies/"));
+}
+<script>
+    @Html.Raw(css)
+</script>

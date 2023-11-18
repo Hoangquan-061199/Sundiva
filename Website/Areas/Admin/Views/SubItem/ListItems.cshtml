@@ -1,0 +1,95 @@
+﻿@model Website.Areas.Admin.ViewModels.SubItemViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@using ADCOnline.Simple.Admin
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd50">ID</th>
+                <th>Tiêu đề</th>
+                <th class="text-center wd100">
+                    Thứ tự
+                    @if (Model.SystemActionAdmin.Order == true)
+                    {
+                        <a href="javascript:" class="EditOrderAll badge badge-primary"><i class="lnr lnr-pencil"></i></a> <a href="javascript:" class="SaveAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                    }
+                </th>
+                <th class="text-center wd80">Trạng thái</th>
+                <th class="act_roles wd100">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><i class="lnr lnr-checkmark-circle"></i><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><i class="lnr lnr-warning"></i><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr class="@(item.IsShow!=true ? "hid" : string.Empty)">
+                        <td>@item.ID</td>
+                        <td>@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))</td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Order)
+                            {
+                                <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                            }
+                            else
+                            {
+                                @item.OrderDisplay
+                            }
+                        </td>
+                        <td class="text-center">@Html.Raw(StaticEnum.Show(item.IsShow))</td>
+                        <td class="act_delete">
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit btn" title="Chỉnh sửa: @item.Name">
+                                    <i class="lnr lnr-pencil"></i>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.Name">
+                                    <i class="lnr lnr-trash"></i>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+}

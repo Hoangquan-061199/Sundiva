@@ -1,0 +1,225 @@
+﻿@model Website.Areas.Admin.ViewModels.OrderViewModel
+@using ADCOnline.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd150">Mã đơn hàng</th>
+                <th class="wd250">Thông tin người mua</th>
+                <th>Ghi chú</th>
+                @*<th>Vận chuyển</th>*@
+                <th>Thanh toán</th>
+                <th>Admin xử lý</th>
+                <th class="wd120">Tổng tiền</th>
+                <th class="wd80 text-center">Trạng thái</th>
+                <th class="act_roles text-center wd100">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Hành động <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="javascript:" title="Xóa chọn" class="deleteAll"><i class="fa fa-trash"></i><span>Hủy</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr id="item_@item.ID" class="@Temp.OrderStatusTrCss(item.Status)@(item.Status==6 ? " hid" : string.Empty)@(item.ID==Model.OrderAdmin.ID? " active" : string.Empty)">
+                        <td>
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit" data-tab=""><strong>@item.OrderCode</strong></a>
+                            }
+                            else
+                            {
+                                <strong>@item.OrderCode</strong>
+                            }
+                            <br />
+                            Ngày đặt: <br /><i class="fa fa-clock-o color-red"></i> @Utility.ConvertDateTimeVi(item.CreatedDate)<br />
+                            <br />
+                            <span class="badge badge-default view_list_product" data-id="@item.ID" style="cursor:pointer">Xem danh sách sản phẩm (@Model.ListOrderDetail.Count(c => c.OrderID == item.ID))</span>
+                        </td>
+                        <td>
+                            - Họ tên: @item.FullName <br />
+                            - Điện thoại: <a href="/Adminadc/Order/Index#keyword=@item.Mobile">@item.Mobile</a><br />
+                            @if (item.Paymentreceive == "GHTN")
+                            {
+                                <p title="@item.Address">
+                                    - P/X: @item.WardName - Q/H: @item.DistrictName - T/T: @item.CityName<br />
+                                    - Địa chỉ: @Utility.TrimLength(item.Address, 50)
+                                </p>
+                            }
+                        </td>
+                        <td>
+                            <strong>Người đặt:</strong> @item.FullName<br />
+                            <strong>Admin:</strong> @Utility.RemoveHTMLTag(item.NoteAdmin)
+                            <strong>Ghi chú:</strong> @item.Note
+                        </td>
+                        @*<td>@item.Paymentreceive</td>*@
+                        <td>@Temp.PaymentTypeText(item.PaymentType)</td>
+                        <td>@item.EditorName</td>
+                        @*<td>
+                            @{
+                                int i = 1;
+                            }
+                            @foreach (var itemD in Model.ListOrderDetail.Where(c => c.OrderID == item.ID))
+                            {
+                                var id = itemD.ProductID.HasValue;c.ID == itemD.ProductID).Any()) ? Model.ProductAdmins.Where(c => c.ID == itemD.ProductID).First() : new ADCOnline.Simple.Admin.ProductAdmin();
+                                @if (i > 1)
+                                var product = (itemD.ProductID.HasValue && Model.ProductAdmins.Any() && Model.ProductAdmins.Where(c => 
+                                {
+                                    <span>,</span>
+
+                                    <br />
+                                }
+                                <a href="@Utility.Link(string.Empty,product._NameAscii,product.LinkUrl)" title="@product.Name" target="_blank">@product.Name</a>
+                                i++;
+                            }
+                        </td>*@
+                        <td style="text-align:right">@Utility.GetFormatPriceType(item.TotalAfterSale, 1, "Liên hệ")</td>
+                        <td class="text-center">
+                            <span class="badge @Temp.OrderStatusCss(item.Status)" style="height: initial !important;">@Html.Raw(Temp.OrderStatus(item.Status))</span>
+                            <span class="badge @(item.IsPayment ==true ? "badge-success" : "badge-default")">@(item.IsPayment == true ? "Đã thanh toán" : "Chưa thanh toán")</span>
+                        </td>
+                        <td class="act_delete noexport">
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit" data-tab="" title="Chỉnh sửa: @item.OrderCode"><i class="lnr lnr-pencil"></i></a>
+                            }
+                            <a href="#Detail-order" title="Chi tiết" data-toggle="modal" class="viewDetail viewDetail" rel="@item.ID"> <span class="lnr lnr-eye"></span></a>
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.ID" class="delete" title="Hủy: @item.OrderCode"><span class="lnr lnr-trash"></span></a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                    @foreach (var itemD in Model.ListOrderDetail.Where(c => c.OrderID == item.ID))
+                    {
+                        var id = itemD.ProductID.HasValue;
+                        var product = (itemD.ProductID.HasValue && Model.ProductAdmins.Any() && Model.ProductAdmins.Where(c => c.ID == itemD.ProductID).Any()) ? Model.ProductAdmins.Where(c => c.ID == itemD.ProductID).First() : new ADCOnline.Simple.Admin.ProductAdmin();
+                        <tr class="order_ order_@item.ID">
+                            <td colspan="10">
+                                <a class="item_p" href="@Utility.Link(string.Empty,product._NameAscii,product.LinkUrl)" title="@product.Name" target="_blank">
+                                    <img src="@product.UrlPicture" width="80" />
+                                    <div class="infỏ">
+                                        <p>@product.Name</p>
+                                        <p>Giá: <b class="color-red">@Utility.GetFormatPriceType(itemD.Price, 1, "Liên hệ", true)</b></p>
+                                        <p>Số Lượng: @itemD.Quantity</p>
+                                    </div>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    <div style="clear:both"></div>
+    <style>
+        .ove-x {
+            overflow-x: auto
+        }
+
+        #tblContent tbody tr.badge-success td {
+            color: #ffffff;
+        }
+
+        .item_p {
+            display: flex;
+            align-items: center;
+        }
+
+            .item_p img {
+                margin-right: 10px;
+            }
+
+        .order_ {
+            display: none;
+        }
+
+        .table-bordered > thead > tr > th:nth-of-type(2),
+        .table-bordered > thead > tr > td:nth-of-type(2) {
+            min-width: 400px;
+            max-width: 500px;
+        }
+
+        @@media (max-width:1366px) {
+            .table-bordered > thead > tr > th:first-child, .table-bordered > tbody > tr > td:first-child {
+                min-width: 150px;
+            }
+
+            .table-bordered > thead > tr > th:nth-of-type(2),
+            .table-bordered > thead > tr > td:nth-of-type(2) {
+                min-width: 250px;
+                max-width: 300px;
+            }
+
+            .table-bordered > thead > tr > th:nth-of-type(3),
+            .table-bordered > thead > tr > th:nth-of-type(4) {
+                min-width: 150px;
+            }
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $(".nav-tabs-custom").addClass("ove-x");
+            $('.view_list_product').click(function () {
+                id = $(this).data('id');
+                $('.order_' + id).slideToggle();
+            });
+        })
+    </script>
+    @Html.Raw(ViewBag.GridHtml)
+    <div id="Detail-order" class="modal fade login-dialog in" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal"></button>
+                <div class="detail-order" id="GridOrderDetailId">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            registerGridView("#tblContent");
+            $(".viewDetail").click(function () {
+                var val = $(this).attr("rel");
+                loadAjax("/Adminadc/Order/HistoryOrderDetail?orderId=" + val, "#GridOrderDetailId");
+            });
+            $('#Keyword').val('@Html.Raw(Model.SearchModel.keyword)');
+            $('#Status option[value="@Model.SearchModel.Status"]').attr('selected', 'selected');
+            $('#page').val(@Model.SearchModel.page);
+        });
+    </script>
+    @if (Model.OrderAdmin.ID > 0)
+    {
+        <script>
+            $(function () {
+                var item = $('#item_@(Model.OrderAdmin.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

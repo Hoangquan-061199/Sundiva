@@ -1,0 +1,106 @@
+﻿@using ADCOnline.Utils;
+@model Website.Areas.Admin.ViewModels.ContactUsViewModel
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('.back-grid-view').click(function () {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=@(Model.ContactUs.ID)";
+                loadAjax(listItems, "#loadGridView");
+                $('a[href="#tab_search"]').click();
+            });
+            $("#AddEditForm").validate({
+                submitHandler: function () {
+                    urlForm = '@Url.Action("AjaxForm")';
+                    PostWithAlert(urlPostAction, urlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+        });
+    </script>
+
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.ContactUs.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Khách hàng:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control-readonly notvalid" readonly value="@Model.ContactUs.FullName" placeholder="@Model.ContactUs.FullName" />
+                                </div>
+                                <label class="col-sm-1">Số điện thoại:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control-readonly notvalid" readonly value="@Model.ContactUs.Phone" placeholder="@Model.ContactUs.Phone" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Email:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control-readonly notvalid" readonly value="@Model.ContactUs.Email" placeholder="@Model.ContactUs.Email" />
+                                </div>
+                                <label class="col-sm-1">Trạng thái</label>
+                                <div class="col-sm-5">
+                                    <select name="Status" id="Status" class="form-control">
+                                        <option value="1" @(Model.ContactUs.Status == 1 ? "selected" : string.Empty)>Chưa đọc</option>
+                                        <option value="5" @(Model.ContactUs.Status == 5 ? "selected" : string.Empty)>Đã đọc</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Nội dung:</label>
+                                <div class="col-sm-5">
+                                    <textarea rows="5" class="form-control-readonly notvalid" readonly>@Model.ContactUs.Content</textarea>
+                                </div>
+                                @if (Model.TypeCode == StaticEnum.Product)
+                                {
+                                    <label class="col-sm-1">Sản phẩm</label>
+                                    <a href="@Utility.Link(Model.ProductItem.NameAscii, string.Empty, Model.ProductItem.LinkUrl)" title="@Model.ProductItem.Name" target="_blank" class="col-sm-5">
+                                        @Model.ProductItem.Name
+                                    </a>
+                                }
+                                else
+                                {
+                                    <label class="col-sm-1">Bài viết</label>
+                                    <a href="@Utility.Link(Model.ContentItem.NameAscii, string.Empty, Model.ContentItem.LinkUrl)" title="@Model.ContentItem.Name" target="_blank" class="col-sm-5">
+                                        @Model.ContentItem.Name
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .customer-service-panel {
+                    border-bottom: 5px solid #ccc;
+                    margin-bottom: 20px;
+                }
+
+                .del {
+                    margin-bottom: 10px
+                }
+
+                .form-control-readonly {
+                    background-color: #fff;
+                    border: 1px solid #d2d6de;
+                    width: 100%;
+                    outline: none !important;
+                }
+            </style>
+        </div>
+    </form>
+}

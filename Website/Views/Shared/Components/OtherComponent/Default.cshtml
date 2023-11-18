@@ -1,0 +1,9 @@
+﻿@model ADCOnline.Simple.Item.OtherContentItem
+
+@if (Model != null)
+{
+    if (!string.IsNullOrEmpty(Model.Content))
+    {
+        @Html.Raw(Model.Content)
+    }
+}

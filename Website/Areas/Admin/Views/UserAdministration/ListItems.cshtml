@@ -1,0 +1,136 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.UserAdminViewModel
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr role="row">
+                <th>Tên đăng nhập</th>
+                <th>Họ Tên</th>
+                <th>Email</th>
+                @*<th>Công ty</th>*@
+                <th>Phòng ban</th>
+                <th>Ngày tạo</th>
+                <th>Modules</th>
+                <th>Roles</th>
+                <th class="wd150">Modules website</th>
+                @*<th>User quản lý</th>*@
+                <th class="text-center">Hành động</th>
+            </tr>
+        </thead>
+        @if (Model.SystemActionAdmin.ViewFull)
+        {
+            if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+
+                <tbody>
+                    @foreach (var item in Model.ListItem)
+                    {
+                        var deparmentName = "";
+                        if (Model.ListDepartment != null && Model.ListDepartment.Count > 0)
+                        {
+                            var deparment = Model.ListDepartment.FirstOrDefault(c => c.ID == item.DepartmentID);
+                            if (deparment != null)
+                            {
+                                deparmentName = deparment.Name;
+                            }
+                        }
+                        <tr>
+                            <td>@item.UserName</td>
+                            <td>@item.FullName</td>
+                            <td>@item.Email</td>
+                            @*<td>
+            @{
+            var company = "";
+            if (!string.IsNullOrEmpty(item.Company))
+            {
+            company = Model.CommonJsonAdmins.Any() ? Model.CommonJsonAdmins.FirstOrDefault(x => x.ID.ToString() == item.Company).Name : string.Empty;
+            }
+            }
+            <span>@company</span>
+            </td>*@
+                            <td>@deparmentName</td>
+                            <td>@Utility.ConvertDateTimeVi(item.CreateDate)</td>
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Active)
+                                {
+                                    <a class="btnAdminModule" href="#@item.UserId"><span class="lnr lnr-database"></span></a>
+                                }
+
+                            </td>
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Active)
+                                {
+                                    <a class="btn_AdminRole" href="#@item.UserId"><span class="lnr lnr-database"></span></a>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (Model.SystemActionAdmin.Active)
+                                {
+                                    <a class="btn_AdminModule" href="#@item.UserId"><span class="lnr lnr-database"></span></a>
+                                }
+                            </td>
+                            <td class="act_delete">
+                                @if (Model.SystemActionAdmin.Edit)
+                                {
+                                    <a href="#@item.UserId" class="edit btn" ref="@item.UserName" title="Sửa:@item.UserName">
+                                        <span class="lnr lnr-pencil"></span>
+                                    </a>
+                                }
+                                @if (Model.SystemActionAdmin.Delete)
+                                {
+                                    <a href="#@item.UserId" class="delete btn" ref="@item.UserName" title="Xóa:@item.UserName">
+                                        <span class="lnr lnr-trash"></span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+        }
+    </table>
+     @Html.Raw(ViewBag.GridHtml)
+    <script src="~/Admin/js/GridView.js?v1"></script>
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+            $(".btn_AdminRole").click(function(event) {
+                event.preventDefault();
+                var id = $(this).attr("href").substring(1);
+                ModalADC.Open({
+                    title: "Chọn Active",
+                    urlLoad: '@Url.Action("AjaxActiveForm", "UserAdministration")?Do=active&ItemId=' + id,
+                    bottom: false
+                });
+            });
+            $(".btn_AdminModule").click(function(event) {
+                event.preventDefault();
+                var id = $(this).attr("href").substring(1);
+                ModalADC.Open({
+                    title: "Chọn Module website",
+                    urlLoad: '@Url.Action("AddModule", "UserAdministration")?Do=Order&ItemId=' + id,
+                    bottom: false
+                });
+            });
+            $(".btnAdminModule").click(function(event) {
+                event.preventDefault();
+                var id = $(this).attr("href").substring(1);
+                ModalADC.Open({
+                    title: "Chọn Module",
+                    urlLoad: '@Url.Action("AjaxModuleForm", "UserAdministration")?Do=Public&ItemId=' + id,
+                    bottom: false
+                });
+            });
+            $(".btnUserAdmin").click(function(event) {
+                event.preventDefault();
+                var id = $(this).attr("href").substring(1);
+                ModalADC.Open({
+                    title: "Chọn User Quản lý",
+                    urlLoad: '@Url.Action("AddUserManager", "UserAdministration")?Do=Complete&ItemId=' + id,
+                    bottom: false
+                });
+            });
+        });
+    </script>
+}

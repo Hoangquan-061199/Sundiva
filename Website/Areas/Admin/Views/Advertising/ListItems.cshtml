@@ -1,0 +1,144 @@
+﻿@model Website.Areas.Admin.ViewModels.AdvertisingViewModel
+@using Website.Utils
+@using ADCOnline.Simple.Admin
+@using ADCOnline.Utils
+@if (Model.SystemActionAdmin.View == true)
+{
+    <table id="tblContent" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd50">ID</th>
+                <th class="wd50">Ảnh</th>
+                <th>Tiêu đề</th>
+                <th>Đường dẫn</th>
+                <th>Layout</th>
+                <th class="text-center wd100">
+                    Thứ tự
+                    @if (Model.SystemActionAdmin.Order == true)
+                    {
+                        <a href="javascript:" class="EditOrderAll badge badge-primary"><span class="lnr lnr-pencil"></span></a> <a href="javascript:" class="SaveAll badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                    }
+                </th>
+                <th class="text-center wd80">Trạng thái</th>
+                <th class="act_roles wd80 text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Hành động <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><span class="lnr lnr-checkmark-circle"></span><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><span class="lnr lnr-warning"></span><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <li><a href="javascript:" class="resize"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr id="item_@item.ID" class="@(item.IsShow!=true ? "hid" : string.Empty)@(item.ID==Model.Advertising.ID ? " active" : string.Empty)">
+                        <td>@item.ID</td>
+                        <td class="text-center"><img src="@(!string.IsNullOrEmpty(item.UrlPicture) ? item.UrlPicture : "")" style="max-height:30px;max-width:40px;" /></td>
+                        <td>
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a class="edit" href="#@item.ID">@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))</a>
+                            }
+                            else
+                            {
+                                @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.LinkUrl))
+                            {
+                                <a href="@item.LinkUrl" title="@item.Name" target="_blank">@item.LinkUrl</a>
+                            }
+                        </td>
+                        <td>@item.PositionName</td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Order == true)
+                            {
+                                <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
+                            }
+                            else
+                            {
+                                @item.OrderDisplay;
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <a class="hiddens" href="#@item.ID">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                            }
+                            else
+                            {
+                                @Html.Raw(StaticEnum.Show(item.IsShow))
+                            }
+                        </td>
+                        <td class="act_delete text-center">
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a href="#@item.ID" class="edit btn" title="Chỉnh sửa: @item.Name"><span class="lnr lnr-pencil"></span></a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.Name"><span class="lnr lnr-trash"></span></a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {            
+            registerGridView("#tblContent");
+        });
+    </script>
+    @if (Model.SearchModel.page > 0)
+    {
+        <script>
+            $(function() {
+                $('#page').val(@Model.SearchModel.page);
+            });
+        </script>
+    }
+    @if (Model.Advertising.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.Advertising.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}
+
+

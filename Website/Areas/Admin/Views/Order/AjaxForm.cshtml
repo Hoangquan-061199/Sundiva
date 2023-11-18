@@ -1,0 +1,366 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.OrderViewModel
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <script src="/Admin/js/city.js"></script>
+    <form id="ModulePositionContent" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-success btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.OrderAdmin.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab=="TabGenaral" ? "active": string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Thông tin</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab=="TabProduct" ? "active": string.Empty)"><a href="#TabProduct" aria-controls="TabProduct" role="tab" data-toggle="tab">Sản phẩm</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab=="TabGenaral" ? "active": string.Empty)" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Họ và tên:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control name" id="FullName" name="FullName" value="@Model.OrderAdmin.FullName">
+                                </div>
+                                <label class="col-sm-1">Số điện thoại:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control number" id="Mobile" name="Mobile" value="@Model.OrderAdmin.Mobile">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Hình thức thanh toán:</label>
+                                <div class="col-sm-5">
+                                    <select id="PaymentType" name="PaymentType" class="form-control">
+                                        <option value="0">-- Hình thức thanh toán</option>
+                                        <option value="1" @(Model.OrderAdmin.PaymentType == "1" ? "selected" : string.Empty)>Thanh toán tiền mặt khi nhận hàng (COD)</option>
+                                        @*<option value="2" @(Model.OrderAdmin.PaymentType == "2" ? "selected" : string.Empty)>Thanh toán trực tuyến bằng thẻ ATM nội địa đã được đăng ký internet banking. </option>
+                                        <option value="3" @(Model.OrderAdmin.PaymentType == "3" ? "selected" : string.Empty)>Thanh toán online bằng thẻ VISA, MasterCard</option>
+                                        <option value="4" @(Model.OrderAdmin.PaymentType == "4" ? "selected" : string.Empty)>Cà thẻ khi nhận hàng</option>
+                                        <option value="5" @(Model.OrderAdmin.PaymentType == "5" ? "selected" : string.Empty)>Thanh toán bằng QR Code </option>*@
+                                    </select>
+                                </div>
+                                <label class="col-sm-1">Ngày tạo:</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control dateddmmyyy" id="CreatedDate" name="CreatedDate" value="@(Model.OrderAdmin.CreatedDate.HasValue?Model.OrderAdmin.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss"):string.Empty)">
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                        <div class="col-sm-1">Facebook</div>
+                        <div class="col-sm-5">
+                        @if (!string.IsNullOrEmpty(Model.OrderAdmin.Facebook))
+                        {
+                        var link = "";
+                        if (Model.OrderAdmin.Facebook.Contains("/messages/"))
+                        {
+                        link = Model.OrderAdmin.Facebook;
+                        }
+                        else
+                        {
+                        link = Model.OrderAdmin.Facebook.Replace("https://www.facebook.com/", "https://www.facebook.com/messages/t/");
+                        }
+                        <a href="@link" target="_blank" title="@Model.OrderAdmin.Facebook" class="badge badge-facebook">Chat facebook</a>
+                        }
+                        else
+                        {
+                        <span title="@Model.OrderAdmin.Facebook" class="badge badge-default">Không có</span>
+                        }
+                        </div>
+                        <div class="col-sm-1">Zalo</div>
+                        <div class="col-sm-5">
+                        @if (!string.IsNullOrEmpty(Model.OrderAdmin.Zalo))
+                        {
+                        <a href="https://chat.zalo.me/?phone=@Model.OrderAdmin.Zalo" target="_blank" title="@Model.OrderAdmin.Zalo" class="badge badge-zalo">Chat Zalo</a>
+                        }
+                        else
+                        {
+                        <span class="badge badge-default">Không có</span>
+                        }
+                        </div>
+                        </div>*@
+                            <div class="form-group">
+                                <label class="col-sm-1">Nhận hàng:</label>
+                                <div class="col-sm-5">
+                                    <input type="radio" id="paymentreceive1" name="paymentreceive" value="GHTN" @(Model.OrderAdmin.Paymentreceive == "GHTN" ? "checked" : string.Empty)> Giao hàng tận nơi
+                                    <div class="form-group" style="margin-top: 10px;">
+                                        <div class="col-sm-4">
+                                            <select name="CityID" id="CityID" class="form-control">
+                                                <option value="">-- Chọn Tỉnh/TP</option>
+                                                @if (Model.CityItems.Count > 0)
+                                                {
+                                                    string city = Model.OrderAdmin.CityId < 10 ? "0" + Model.OrderAdmin.CityId : string.Empty;
+                                                    foreach (var item in Model.CityItems.Where(c => c.Key == "01"))
+                                                    {
+                                                        <option value="@item.Key" @(city == item.Key ? "selected" : string.Empty)>@item.Value.name</option>
+                                                    }
+                                                    foreach (var item in Model.CityItems.Where(c => c.Key != "01").OrderBy(x => x.Value.type).OrderBy(x => x.Value.name))
+                                                    {
+                                                        <option value="@item.Key" @(city == item.Key ? "selected" : string.Empty)>@item.Value.name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select name="DistrictID" id="DistrictID" class="form-control">
+                                                <option value="">-- Chọn Quận(huyện)</option>
+
+                                                @foreach (var item in Model.DistrictItems.OrderBy(c => c.Value.name))
+                                                {
+                                                    <option value="@item.Key" @(Model.OrderAdmin.DistrictId == Convert.ToInt32(item.Key) ? "selected" : string.Empty)>@item.Value.name</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <select name="WardID" id="WardID" class="form-control">
+                                                <option value="">-- Chọn Phường(Xã)</option>
+                                                @{
+                                                    string WardId = Model.OrderAdmin.WardId < 10 ? "00" + Model.OrderAdmin.WardId : string.Empty;
+                                                }
+                                                @foreach (var item in Model.WardItems.OrderBy(c => c.Value.name))
+                                                {
+                                                    <option value="@item.Key" @(Model.OrderAdmin.WardId == Convert.ToInt32(item.Key) ? "selected" : string.Empty)>@item.Value.name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <label class="col-sm-2" style="margin-top: 10px;">Địa chỉ:</label>
+                                        <div class="col-sm-10" style="margin-top: 10px;">
+                                            <input type="text" class="form-control" id="Address" name="Address" value="@Model.OrderAdmin.Address">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">Email</div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control email" id="Email" name="Email" value="@Model.OrderAdmin.Email">
+                                </div>
+                                
+                               @* <div class="col-sm-5">
+                                   <input type="radio" id="paymentreceive1" name="paymentreceive" value="NTCH" @(Model.OrderAdmin.Paymentreceive == "NTCH" ? "checked" : string.Empty)> Nhận tại cửa hàng
+                                   <div class="form-group" style="margin-top: 10px;">
+                                   <div class="col-sm-4">
+                                   <select name="AreaAgencyIDParent" id="AreaAgencyParentID" class="form-control">
+                                   <option value="">-- Chọn Tỉnh/TP</option>
+                                   @foreach (var item in Model.AreaAgencyItems.Where(c => c.ParentID == 0).OrderBy(c => c.Name))
+                                   {
+                                   <option value="@item.ID" @(Model.OrderAdmin.AreaAgencyIDParent == item.ID ? "selected" : string.Empty)>@item.Name</option>
+                                   }
+                                   </select>
+                                   </div>
+                                   <div class="col-sm-4">
+                                   <select name="AreaAgencyIDChild" id="AreaAgencyChildID" class="form-control">
+                                   <option value="">-- Chọn Quận(huyện)</option>
+                                   @foreach (var item in Model.AreaAgencyItems.Where(c => c.ParentID != 0).OrderBy(c => c.Name))
+                                   {
+                                   <option value="@item.ID" @(Model.OrderAdmin.AreaAgencyIDChild == item.ID ? "selected" : string.Empty)>@item.Name</option>
+                                   }
+                                   </select>
+                                   </div>
+                                   <div class="col-sm-4">
+                                   <select name="AgenciesID" id="store" class="form-control">
+                                   <option value="">-- Chọn cửa hàng</option>
+                                   @foreach (var item in Model.AgenciesItems.OrderBy(c => c.Name))
+                                   {
+                                   <option value="@item.ID" @(Model.OrderAdmin.AgenciesID == item.ID ? "selected" : string.Empty)>@item.Name</option>
+                                   }
+                                   </select>
+                                   </div>
+                                   </div>
+                                   </div>*@
+                        </div>
+                            <div class="form-group">
+                                @if(Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                {
+                                    <label class="col-sm-1">Trạng thái</label>
+                                    <div class="col-sm-5">
+                                        <select id="Status" name="Status" class="form-control">
+                                            <option value="1" @(Model.OrderAdmin.Status == 1 ? "selected" : string.Empty)>Chờ thực hiện (đơn hàng chờ kinh doanh xử lý)</option>
+                                            <option value="2" @(Model.OrderAdmin.Status == 2 ? "selected" : string.Empty)>Chờ lấy hàng (đơn hàng đã xử lý đóng gói xong chờ vận chuyển qua lấy)</option>
+                                            <option value="3" @(Model.OrderAdmin.Status == 3 ? "selected" : string.Empty)>Đang giao (đơn hàng đã giao cho đơn vị vận chuyển)</option>
+                                            <option value="5" @(Model.OrderAdmin.Status == 5 ? "selected" : string.Empty)>Hoàn thành</option>
+                                            <option value="6" @(Model.OrderAdmin.Status == 6 ? "selected" : string.Empty)>Đã hủy</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-sm-1">Thanh toán</label>
+                                    <div class="col-sm-5">
+                                        <select id="IsPayment" name="IsPaymentn" class="form-control">
+                                            <option value="0" @(Model.OrderAdmin.IsPayment == false ? "selected" : string.Empty)>Chưa thanh toán</option>
+                                            <option value="1" @(Model.OrderAdmin.IsPayment == true ? "selected" : string.Empty)>Đã thanh toán</option>
+                                        </select>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ghi chú (Khách hàng)</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea rows="5" id="Note" name="Note" class="form-control">@Model.OrderAdmin.Note</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ghi chú (Admin)</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="NoteAdmin" name="NoteAdmin" class="form-control">@Model.OrderAdmin.NoteAdmin</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab=="TabProduct" ? "active": string.Empty)" id="TabProduct">
+                            <div class="table table-responsive table-order">
+                                <table border="1" cellpadding="3" style="border-collapse:collapse;width:100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:50px" class="text-center"><span><strong>STT</strong></span></td>
+                                            <td style="width:50%;" class="text-left"><span><strong>Sản phẩm</strong></span></td>
+                                            <td style="width:20%;" class="text-center"><span><strong>Quà tặng</strong></span></td>
+                                            <td class="text-right"><span><strong>Thành tiền</strong></span></td>
+                                        </tr>
+                                        @if (Model.ListOrderDetail != null && Model.ListOrderDetail.Count > 0)
+                                        {
+                                            var i = 1;
+                                            foreach (var item in Model.ListOrderDetail)
+                                            {
+                                                var product = item.ProductID.HasValue && Model.ProductAdmins.Any(c => c.ID == item.ProductID) ? Model.ProductAdmins.Where(c => c.ID == item.ProductID).First() : new ADCOnline.Simple.Admin.ProductAdmin();
+                                                var gifts = (!string.IsNullOrEmpty(item.GiftIds) && Model.ProductAdmins.Where(c => ("," + item.GiftIds + ",").Contains("," + c.ID + ",")).Any()) ? Model.ProductAdmins.Where(c => ("," + item.GiftIds + ",").Contains("," + c.ID + ",")).ToList() : new List<ADCOnline.Simple.Admin.ProductAdmin>();
+                                                <tr>
+                                                    <td class="text-center" style="vertical-align:top;"><span>@i</span></td>
+                                                    <td class="text-left;" style="vertical-align:top;">
+                                                        <p class="name-sp">
+                                                            @Html.Raw(product.Name)
+                                                            @if (product.IsDeleted == true)
+                                                            {
+                                                                <span class="badge badge-danger">Đã xóa</span>
+                                                            }
+                                                            else if (product.IsDeleted == true && product.IsShow == false)
+                                                            {
+                                                                <span class="badge badge-warning">Đã ẩn</span>
+                                                            }
+                                                            @if (!string.IsNullOrEmpty(item.PromotionText))
+                                                            {
+                                                                <br />
+
+                                                                <span style="color:red;font-weight:bold">
+                                                                    Khuyến mãi:
+                                                                </span>
+                                                                <div class="area_promotion">
+                                                                    @Html.Raw(item.PromotionText)
+                                                                </div>
+
+                                                            }
+
+                                                        </p>
+                                                        @if (item.Type == "0" && !string.IsNullOrEmpty(item.AttrIds))
+                                                        {
+                                                            foreach (var itemA in Model.Attributes.Where(c => c.ParentID == 0 && ("," + item.AttrIds + ",").Contains("," + c.ID + ",")))
+                                                            {
+                                                                string attrC = string.Join(",", Model.Attributes.Where(c => c.ParentID == itemA.ID).Select(c => c.Name));
+                                                                <span style="display:block;">- @itemA.Name: @attrC</span>
+                                                            }
+
+                                                        }
+                                                    </td>
+                                                    <td class="text-center" style="vertical-align:top;">
+                                                        @foreach (var gift in gifts)
+                                                        {
+                                                            <a href="/@gift.NameAscii" target="_blank">@gift.Name</a>
+
+                                                            <br />
+                                                        }
+                                                    </td>
+                                                    <td class="text-right" style="vertical-align:top;">
+                                                        <p>Giá: <b>@Utility.GetFormatPriceType(item.Price, 1, "Liên hệ", true)</b></p>
+                                                        <p>@(item.IsVAT==true ? "(Giá đã bao gồm thuế)" : string.Empty)</p>
+                                                        <p>Số Lượng: @item.Quantity</p>
+                                                        @if ((item.SumMoney - item.SumMoneyAfterSaleModule) > 0)
+                                                        {
+                                                            <p>Giảm giá: @Utility.GetFormatPriceType(item.SumMoney - item.SumMoneyAfterSaleModule, 1, "N/A")</p>
+                                                        }
+                                                        <p>Tạm tính: @Utility.GetFormatPriceType(item.SumMoney, 1, "Liên hệ")</p>
+                                                    </td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        }
+                                        <tr>
+                                            <td colspan="3" class="text-right"><span><strong>Tổng tạm tính</strong></span></td>
+                                            <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.OrderAdmin.TotalMoney, 1, "Liên hệ")</span></td>
+                                        </tr>
+                                        @*@if (Model.OrderAdmin.TotalVAT > 0)
+                                    {
+                                    <tr>
+                                    <td colspan="3" class="text-right"><span><strong>Thuế VAT</strong></span></td>
+                                    <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.OrderAdmin.TotalVAT, 1, "N/A")</span></td>
+                                    </tr>
+                                    }*@
+                                        @* @if (Model.OrderAdmin.DiscountCombo > 0)
+                                    {
+                                    <tr>
+                                    <td colspan="3" class="text-right"><span><strong>Giảm giá combo</strong></span></td>
+                                    <td class="text-right"><span style="font-weight:bold">- @Utility.GetFormatPriceType(Model.OrderAdmin.DiscountCombo, 1, "N/A")</span></td>
+                                    </tr>
+                                    } *@
+                                        @*<tr>
+                                    <td colspan="3" class="text-right"><span><strong>Giảm giá</strong></span></td>
+                                    <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.OrderAdmin.DiscountModule, 1, "N/A")</span></td>
+                                    </tr>*@
+                                        @* @if (!string.IsNullOrEmpty(Model.OrderAdmin.VoucherCode))
+                                    {
+                                    <tr>
+                                    <td colspan="3" class="text-right"><span><strong>Voucher</strong></span></td>
+                                    <td class="text-right"><span style="font-weight:bold">@Model.OrderAdmin.VoucherCode - @Utility.GetFormatPriceType(Model.OrderAdmin.DiscountVoucher, 1, "")</span></td>
+                                    </tr>
+                                    } *@
+                                        <tr>
+                                            <td colspan="3" class="text-right"><span><strong>Thành tiền</strong></span></td>
+                                            <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.OrderAdmin.TotalAfterSale, 1, "Liên hệ")</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $('.back-grid-view').click(function() {
+            var contentId = '@(Model.OrderAdmin.ID)';
+            if (contentId != '0') {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=" + contentId;
+                loadAjax(listItems, "#loadGridView");
+            }
+            $('a[href="#tab_search"]').click();
+        });
+        ChageCity();
+        ChageDistrict();
+        ChangeAreaAgencyParent();
+        ChangeAreaAgencyChild();
+        $(document).ready(function() {
+            LoadCKEDITOR('NoteAdmin', true);
+            $("#ModulePositionContent").validate({
+                submitHandler: function() { //onSubmit
+                    updateEditor();
+                    updateDateDDMMYYYY();
+                    debugger
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#ModulePositionContent");
+                    return false;
+                }
+            });
+        })
+    </script>
+    <style>
+        .timelog:first-child { margin-top: 0 !important }
+        .timelog { margin-top: 20px; font-weight: bold; }
+        #TabProduct tr td { padding: 10px }
+    </style>
+}

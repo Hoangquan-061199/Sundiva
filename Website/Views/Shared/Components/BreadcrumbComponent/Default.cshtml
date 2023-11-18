@@ -1,0 +1,10 @@
+﻿@model ADCOnline.Simple.Item.WebsiteModulesItem
+@using ADCOnline.Simple.Item
+@if (Model != null)
+{
+    <vc:bread-crumb-component module-id="@Model.ParentID"></vc:bread-crumb-component>
+    if (!string.IsNullOrEmpty(Model.NameAscii) || !string.IsNullOrEmpty(Model.LinkUrl))
+    {
+        <a href="@Utility.Link(Model.NameAscii,string.Empty,Model.LinkUrl)" title="@Model.Name">@Model.Name</a>
+    }
+}

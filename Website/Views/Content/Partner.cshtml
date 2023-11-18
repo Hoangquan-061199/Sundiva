@@ -1,0 +1,360 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Utils;
+@using Newtonsoft.Json;
+@using Website.Utils;
+@using Website.ViewModels;
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    ViewBag.Hidden = true;
+    string url = Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path;
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.LangModule = Model.ModuleItem.Lang;
+    List<WebsiteContentItem> Contents = new List<WebsiteContentItem>();
+    SizeImages image = new SizeImages();
+}
+@if (Model.ModuleItem != null)
+{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.css">
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+            {
+                image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                <div class="banner mb-block-content">
+                    <img src="@item.AlbumUrl"
+                         alt="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)" width="@image.Width"
+                         height="@image.Height" loading="lazy">
+                </div>
+            }
+        }
+        else
+        {
+            <div class="slide-index mb-block-content">
+                <div class="owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                        <div class="item">
+                            <img src="@item.AlbumUrl"
+                                 alt="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)"
+                                 width="@image.Width" height="@image.Height" loading="lazy">
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+
+    if (Model.ModuleItem.TypeView == StaticEnum.CongTrinhUngDung)
+    {
+        <div class="wrapper">
+            <div class="title line uppercase center">
+                <h1 class="sub">@Model.ModuleParentItem.Name</h1>
+            </div>
+            @if (Model.WebsiteModulesItems.Any())
+            {
+                <div class="list-module-child">
+                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.OrderBy(x => x.OrderDisplay))
+                    {
+                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name"
+                           class="item @(item.ID == Model.ModuleItem.ID ? "active": string.Empty)">@item.Name</a>
+                    }
+                </div>
+            }
+            <div class="construction-index construction-page mb-block-content">
+                <div class="container">
+                    @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 0))
+                    {
+                        <div class="slide-construction">
+                            <div class="owl-carousel owl-theme">
+                                @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 0))
+                                {
+                                    image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                                    <div class="item">
+                                        <div class="img">
+                                            <img src="@item.AlbumUrl"
+                                                 alt="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)"
+                                                 width="@image.Width" height="@image.Height" loading="lazy" />
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(item.AlbumTitle))
+                                        {
+                                            <p>@item.AlbumTitle</p>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <div class="right">
+                        <div class="paragraph detail-content">
+                            @Html.Raw(Model.ModuleItem.Content)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.ListContentItemAsync.Any())
+            {
+                <div class="list-construction mb-block-content">
+                    <div class="title title-form red center min">
+                        <h2 class="sub">
+                            @ResourceData.Resource("DanhSachCacDuAn", ViewBag.Lang)
+                            <span>@ResourceData.Resource("TieuBieu", ViewBag.Lang)</span>
+                        </h2>
+                    </div>
+                    <div class="container">
+                        @foreach (WebsiteContentItem item in Model.ListContentItemAsync)
+                        {
+                            List<AlbumGalleryItem> albums = !string.IsNullOrEmpty(item.AlbumPictureJson) ?
+                            JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(item.AlbumPictureJson) : new List<AlbumGalleryItem>();
+                            image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                            <div class="item" data-src="@item.UrlPicture" data-fancybox="gallery_@item.ID" data-caption="@item.Name">
+                                <div class="img">
+                                    <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                         height="@image.Height" loading="lazy" />
+                                </div>
+                                <h3>
+                                    @item.Name
+                                </h3>
+                            </div>
+                            if (albums.Any(x => x.AlbumType == 0))
+                            {
+                                <div class="album" style="display:none;">
+                                    @foreach (AlbumGalleryItem album in albums.Where(x => x.AlbumType == 0))
+                                    {
+                                        image = Utility.GetSizeImages(WebConfig.PathServer, album.AlbumUrl);
+                                        <div class="it-album" data-src="@album.AlbumUrl" data-fancybox="gallery_@item.ID"
+                                             data-caption="@item.Name">
+                                            <img src="@Utility.GetUrlPicture(WebConfig.PathServer, album.AlbumUrl)" alt="@item.Name" width="@image.Width"
+                                                 height="@image.Height" loading="lazy" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                    @if (Model.Total > Model.PageSize)
+                    {
+                        @Html.Raw(ViewBag.GridHtml)
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="partner-customer">
+            <div class="title line uppercase center">
+                <h1 class="sub">@Model.ModuleParentItem.Name</h1>
+            </div>
+            @if (Model.WebsiteModulesItems.Any())
+            {
+                <div class="list-module-child">
+                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.OrderBy(x => x.OrderDisplay))
+                    {
+                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name"
+                           class="item @(item.ID == Model.ModuleItem.ID ? "active": string.Empty)">@item.Name</a>
+                    }
+                </div>
+            }
+            <div class="container">
+                <div class="detail-content">
+                    @Html.Raw(Model.ModuleItem.Content)
+                </div>
+            </div>
+            @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 0))
+            {
+                <div class="slide-list-construction">
+                    <div class="container">
+                        <div class="title title-form center min">
+                            <h2 class="sub">
+                                @ResourceData.Resource("VanHoa", ViewBag.Lang)
+                                <span>@ResourceData.Resource("LayKhachHangLamTrungTam", ViewBag.Lang)</span>
+                            </h2>
+                        </div>
+                        <div class="block-slide">
+                            <div class="slide-construction2">
+                                <div class="owl-carousel owl-theme">
+                                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 0))
+                                    {
+                                        image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                                        <div class="item">
+                                            <div class="img">
+                                                <img src="@item.AlbumUrl"
+                                                     alt="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)"
+                                                     width="@image.Width" height="@image.Height" loading="lazy">
+                                            </div>
+                                            <h3>@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)</h3>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            @if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]) && !Utility.IsTablet(Context.Request.Headers["User-Agent"]))
+                            {
+                                <div class="slide-construction1">
+                                    <div class="owl-carousel owl-theme">
+                                        @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 0))
+                                        {
+                                            image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                                            <div class="item">
+                                                <div class="img">
+                                                    <img src="@item.AlbumUrl"
+                                                         alt="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ModuleItem.Name)"
+                                                         width="@image.Width" height="@image.Height" loading="lazy">
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.ListContentItemAsync.Any())
+            {
+                <div class="partner-index partner-page">
+                    <div class="container">
+                        <div class="title title-partner">
+                            <h2 class="sub">@Model.ModuleItem.Name</h2>
+                            <div class="sub">@Html.Raw(Model.ModuleItem.Description)</div>
+                        </div>
+                        <div class="list-partner">
+                            @foreach (WebsiteContentItem item in Model.ListContentItemAsync.OrderBy(x => x.OrderDisplay))
+                            {
+                                image = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                if (!string.IsNullOrEmpty(item.LinkUrl))
+                                {
+                                    <a href="@item.LinkUrl" target="_blank" rel="nofollow" title="@item.Name" class="item">
+                                        <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                             height="@image.Height" loading="lazy">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="item">
+                                        <img src="@item.UrlPicture" alt="@item.Name" width="@image.Width"
+                                             height="@image.Height" loading="lazy">
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.ListModuleChildItem.Any(x => x.TypeView == StaticEnum.TrachNhiemXaHoi))
+            {
+                foreach (WebsiteModulesItem module in Model.ListModuleChildItem.Where(x => x.TypeView == StaticEnum.TrachNhiemXaHoi).OrderBy(x => x.OrderDisplay))
+                {
+                    List<AlbumGalleryItem> albums = !string.IsNullOrEmpty(module.AlbumPictureJson) ? JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(module.AlbumPictureJson) : new List<AlbumGalleryItem>();
+                    if (albums.Any())
+                    {
+                        <div class="culture py-block-content">
+                            <div class="container">
+                                <div class="title title-form center min">
+                                    <h2 class="sub">
+                                        @module.Title
+                                        <span>@module.Name</span>
+                                    </h2>
+                                </div>
+                                <div class="slide-culture">
+                                    <div class="owl-carousel owl-theme">
+                                        @foreach (AlbumGalleryItem album in albums)
+                                        {
+                                            image = Utility.GetSizeImages(WebConfig.PathServer, album.AlbumUrl);
+                                            <div class="item item-culture">
+                                                <div class="img">
+                                                    <img src="@Utility.GetUrlPicture(WebConfig.PathServer, album.AlbumUrl)" alt="@album.AlbumTitle" width="@image.Width"
+                                                         height="@image.Height" loading="lazy" />
+                                                </div>
+                                                <h3>@album.AlbumTitle</h3>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+
+
+            @if (Model.ListModuleChildItem.Any(x => x.TypeView == StaticEnum.CoiTrongNguoiLaoDong || x.TypeView == StaticEnum.KhachHangTrungTam))
+            {
+                <div class="culture-group py-block-content">
+                    <div class="container">
+                        @foreach (WebsiteModulesItem module in Model.ListModuleChildItem.Where(x => x.TypeView == StaticEnum.CoiTrongNguoiLaoDong || x.TypeView == StaticEnum.KhachHangTrungTam).OrderBy(x => x.OrderDisplay))
+                        {
+                            @if (module.TypeView == StaticEnum.CoiTrongNguoiLaoDong)
+                            {
+                                image = Utility.GetSizeImages(WebConfig.PathServer, module.UrlPicture);
+                                <div class="left">
+                                    <div class="title title-form center min wrap">
+                                        <h2 class="sub">
+                                            @module.Title
+                                            <span>@module.Name</span>
+                                        </h2>
+                                    </div>
+                                    <div class="img">
+                                        <img src="@Utility.GetUrlPicture(WebConfig.PathServer, module.UrlPicture)" alt="@module.Name" width="@image.Width"
+                                             height="@image.Height" loading="lazy" />
+                                    </div>
+                                </div>
+                            }
+                            @if (module.TypeView == StaticEnum.KhachHangTrungTam)
+                            {
+                                List<AlbumGalleryItem> albums = !string.IsNullOrEmpty(module.AlbumPictureJson) ?
+                                JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(module.AlbumPictureJson) : new List<AlbumGalleryItem>();
+                                <div class="right">
+                                    <div class="title title-form center min wrap">
+                                        <h2 class="sub">
+                                            @module.Title
+                                            <span>@module.Name</span>
+                                        </h2>
+                                    </div>
+                                    <div class="desc detail-content">
+                                        @Html.Raw(module.Description)
+                                    </div>
+
+                                    <div class="slide-culture-customer-center">
+                                        <div class="owl-carousel owl-theme">
+                                            @foreach (AlbumGalleryItem album in albums)
+                                            {
+                                                image = Utility.GetSizeImages(WebConfig.PathServer, album.AlbumUrl);
+                                                <div class="item">
+                                                    <div class="img">
+                                                        <img src="@Utility.GetUrlPicture(WebConfig.PathServer, album.AlbumUrl)" alt="@album.AlbumTitle" width="@image.Width"
+                                                             height="@image.Height" loading="lazy" />
+                                                    </div>
+                                                    <h3>@album.AlbumTitle</h3>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+
+        </div>
+
+    }
+    <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+}

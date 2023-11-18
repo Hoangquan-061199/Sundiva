@@ -1,0 +1,59 @@
+@using Website.Utils
+@{
+    ViewBag.Title = "Quản lý member";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <div class="ct_tabssc">
+                <form id="searchFrm">
+                    <div class="w_searchgr">
+                        <div class="form-group form-inline text-center">
+                            <input type="text" class="form-control title" name="Keyword" placeholder="Nhập từ khóa cần tìm">
+                            <button type="button" class="btn btn-primary" id="btnSearch"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                    <div class="w_searchadv collapse " id="tab_filter">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-4">
+                                <div class="form-group">
+                                    <label>Trạng thái</label>
+                                    <select id="status" name="status" class="form-control">
+                                        <option value="">Tất cả</option>
+                                        <option value="1">Chờ duyệt</option>
+                                        <option value="5">Đã duyệt</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="w_tablegr" id="loadGridView"></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add"></div>
+    </div>
+    <script>
+        $(function() {  
+            ValidInput();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            $("#btnSearch").click(function() {
+                var form = $("#searchFrm");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+        });
+
+    </script>
+}

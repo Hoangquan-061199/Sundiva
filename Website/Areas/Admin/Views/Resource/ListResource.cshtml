@@ -1,0 +1,110 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.ResourceViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="box" id="gridItems" style="padding:0;">
+        <div class="box-body table-responsive">
+            <table id="tblContent" class="table table-bordered">
+                <thead>
+                    <tr role="row">
+                        <th class="wd150">Mã</th>
+                        <th>
+                            Giá trị
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="javascript:" class="EditSource badge badge-primary" style="margin-left:5px;"><span class="lnr lnr-pencil"></span></a>
+                                <a href="javascript:" class="SaveSource badge badge-primary" style="display:none;"><i class="glyphicon glyphicon-floppy-disk"></i></a>
+                            }
+                        </th>
+                        <th class="act_roles text-center" style="width:50px;">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                                <ul class="dropdown-menu" role="menu">
+                                    @if (Model.SystemActionAdmin.Delete)
+                                    {
+                                        <li><a href="#deleteAll" data-type="@ViewBag.Type" title="Xóa chọn" class="deleteAllJson"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </th>
+                        <th class="text-center wd50">
+                            <div class="label-check">
+                                <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                                <label for="checkAll"></label>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                @if (Model.GetListItem != null && Model.GetListItem.Count > 0)
+                {
+                    <tbody>
+                        @foreach (var item in Model.GetListItem.OrderBy(X => X.Key))
+                        {
+                            <tr id="item_@item.Key" class="@(item.Key == Model.Keys ? "active" : string.Empty)">
+                                <td>@item.Key</td>
+                                <td>
+                                    @if (Model.SystemActionAdmin.Edit)
+                                    {
+                                        <input type="text" class="Source title form-control" name="Source" onchange="changeSource('@item.Key', this.value, '@ViewBag.Type')" value="@item.Value" disabled />    
+                                    }
+                                    else
+                                    {
+                                        @item.Value
+                                    }
+                                </td>
+                                <td class="act_delete noexport">
+                                    @if (Model.SystemActionAdmin.Edit)
+                                    {
+                                        <a href="#@item.Key" class="edit-js" title="Sửa:@item.Key" data-type="@ViewBag.Type">
+                                            <span class="lnr lnr-pencil"></span>
+                                        </a>
+                                    }
+                                    @if (Model.SystemActionAdmin.Delete)
+                                    {
+                                        <a href="#@item.Key" class="delete-js" data-type="@ViewBag.Type" title="Xóa:@item.Key">
+                                            <span class="lnr lnr-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="label-check">
+                                        <input type="checkbox" id="Check@(item.Key)" class="minimal check" value="@item.Key">
+                                        <label for="Check@(item.Key)"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        ValidInput();
+        $('#Keyword').val('@Model.SearchModel.keyword');
+        $('#page').val(@Model.SearchModel.page);
+        $(function() {
+            registerGridView("#gridItems");
+            $("#TypeJson").val("@ViewBag.Type");
+        });
+        $(document).ready(function() {
+            urlForm = replaceUrlParam(urlForm, "TypeJson", "@ViewBag.Type");
+            urlForm = urlForm.replace("#", "?");
+        });
+    </script>
+    @if (!string.IsNullOrEmpty(Model.Keys))
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.Keys)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

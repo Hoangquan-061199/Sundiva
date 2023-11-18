@@ -1,0 +1,45 @@
+﻿@using ADCOnline.Simple.Item
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptChaConfig
+
+<form action="@Url.Action("SendQuestion","Home")" id="SendQuestion" method="post" autocomplete="off">
+    <div class="form-input">
+        <input type="text" name="FirstName" placeholder="@ResourceData.Resource("FirstName",ViewBag.Lang)*" />
+        <input type="text" name="LastName" placeholder="@ResourceData.Resource("LastName",ViewBag.Lang)*" />
+    </div>
+    <div class="form-input">
+        <input type="text" name="Phone" placeholder="@ResourceData.Resource("PhoneNumber",ViewBag.Lang)*" />
+        <input type="email" name="Email" placeholder="@ResourceData.Resource("Email",ViewBag.Lang)*" />
+    </div>
+    <div class="form-select">
+        <select name="" id="">
+            <option value="">Country</option>
+        </select>
+    </div>
+    <div class="form-textarea">
+        <textarea name="Content" id="" cols="30" rows="5" placeholder="@ResourceData.Resource("Messagge", ViewBag.Lang)"></textarea>
+    </div>
+    <button type="submit" class="btn-submit-form">
+        @ResourceData.Resource("Submit", ViewBag.Lang)
+    </button>
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Token" id="ModelTokenQuestion" />
+</form>
+
+<script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptChaConfig.Value.SiteKey"></script>
+<script>
+    function getTokenQuestion() {
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@GoogleCaptChaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
+                document.getElementById('ModelTokenQuestion').value = token;
+            });
+        });
+    }
+    setInterval(getTokenQuestion, 11500);
+    $(function () {
+        getTokenQuestion();
+        var process = new ProcessData();
+        process.SendQuestion();
+    });
+</script>

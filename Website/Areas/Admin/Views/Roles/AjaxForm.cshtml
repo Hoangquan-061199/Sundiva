@@ -1,0 +1,96 @@
+﻿@model Website.Areas.Admin.ViewModels.RolesViewModel
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <script>
+        $(function() {
+            $('.back-grid-view').click(function () {
+                var contentId = '@Model.Roles.RoleId';
+                if (contentId != '0') {
+                    var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&RoleId=" + contentId;
+                    loadAjax(listItems, "#loadGridView");
+                }
+                $('a[href="#tab_search"]').click();
+            });
+            $("#AddEditForm").validate({
+                rules: {
+                    RoleName: {
+                        required: true
+                    }
+                },
+                messages: {
+                    RoleName: {
+                        required: "Mã quyền bắt buộc nhập"
+                    }
+                },
+                submitHandler: function() {
+                    $.post(urlPostAction, $("#AddEditForm").serialize(), function(data) {
+                        if (data.errors)
+                            createMessage("Đã có lỗi xảy ra", data.Message);
+                        else {
+                            ModalADC.Close();
+                            createMessage("Thông báo", data.Message, data.ID);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
+    <div class="row">
+        <div class="col-sm-12" style="position: static">
+            <div class="box-footer">
+                <div class="titlecss">
+                    <label id="titleAddEdit">Sửa</label>
+                </div>
+                <div class="btncss">
+                    <button id="submit" type="submit" class="primaryAction btn btn-success">@ViewBag.ActionText</button>
+                    <button id="reset" type="reset" class="primaryAction btn btn-warning ">Nhập lại</button>
+                    <button id="close" type="button" class="btn btn-info back-grid-view" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+                </div>
+            </div>
+            <form id="AddEditForm">
+                <div class="box-body col-sm-12 col-md-12">
+                    <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+                    <input type="hidden" name="ItemId" id="ItemId" value="@Model.Roles.RoleId" />
+                    <div class="content-panel" id="Show-Destination" style="display: block">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist" id="myTab">
+                                <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                                    @if (ViewBag.Action == "Add")
+                                    {
+                                        <div class="form-group">
+                                            <div class="col-sm-1">
+                                                <label>Mã quyền</label>
+                                            </div>
+                                            <div class="col-sm-11">
+                                                <input type="text" class="form-control name" name="RoleName" id="RoleName" value="@Model.Roles.RoleName">
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        <div class="col-sm-1">
+                                            <label>Tên quyền</label>
+                                        </div>
+                                        <div class="col-sm-11">
+                                            <input type="text" class="form-control code" name="Description" id="Description" value="@Model.Roles.Description">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-5">
+            @*@Html.Action("AjaxTreeSelect", "Module", new { type = 2, ValuesSelected = Model.RolesItem.ModuleIds })*@
+        </div>
+    </div>
+
+    <style>
+        .content-modal { display: -webkit-box; display: block; }
+    </style>
+}

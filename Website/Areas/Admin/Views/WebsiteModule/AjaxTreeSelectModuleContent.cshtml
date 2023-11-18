@@ -1,0 +1,60 @@
+﻿@model Website.Areas.Admin.ViewModels.WebsiteModuleViewModel
+@using Website.Utils
+@{
+    ViewBag.Title = ViewBag.ActionText + " module";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <link href="~/lib/jquery/css/jquery.treeview.css" rel="stylesheet" />
+    <link href="~/lib/jquery/css/customtreeview.css" rel="stylesheet" />
+    <script src="~/lib/jquery/js/jquery.treeview.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#SelectTreeCategoryModule").treeview({
+                collapsed: false,
+                animated: "medium",
+                control: "#SelectTreeControlModule",
+                persist: "location"
+            });
+            let moduleid = window.location.href.getParamFromUrl("ModuleId");
+            if (moduleid > 0) {
+                $('#SelectTreeCategoryModule li a').removeClass('active');
+                $('#' + moduleid + '>span>a').addClass('active');
+            }
+            $('.chooseModule').click(function() {
+                $('.tab-content .tab-pane').removeClass('active in');
+                $('#tab_search').addClass('active in');
+                $('.list_tabsct').removeClass('active');
+                $('.list_tabsct a[href="#tab_search"]').parent('.list_tabsct').addClass('active');
+                var id = $(this).data('id');
+                $('#SelectTreeCategoryModule li a').removeClass('active');
+                $('#' + id + '>span>a').addClass('active');
+                $('#ModuleId').find('option').removeAttr('selected');
+                $('#ModuleId').find('option[value=' + id + ']').attr('selected', 'true');
+                $('#page').val(1);
+                window.location.href = "#ModuleId=" + id;
+                loadAjax("/@WebConfig.AdminAlias/WebsiteContent/ListItems?ModuleId=" + id, "#loadGridView");
+            });
+        });
+    </script>
+    <fieldset class="forms">
+        <table class="table">
+            <tr>
+                <td>
+                    <div id="SelectTreeControlModule" class="treeTool">
+                        <a title="Đóng tất cả các nhánh" href="#" class="collapse"><i class="fa fa-plus-square-o"></i>Đóng tất cả</a>
+                        <a title="Mở tất cả các nhánh" href="#" class="expand"><i class="fa fa-minus-square-o"></i>Mở tất cả</a>
+                    </div>
+                    <ul id="SelectTreeCategoryModule" class="filetree gridView treeview" style="border: 0;padding-left:18px;">
+                        @Html.Raw(Model.StringBuilder)
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <style>
+        a.chooseModule { cursor: pointer; }
+    </style>
+
+}

@@ -1,0 +1,62 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.ContentDataJsonViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="box" id="gridItems" style="padding:0;">
+        <div class="box-body table-responsive">
+            <table id="tblContent" class="table table-bordered">
+                <thead>
+                    <tr role="row">
+                        <th class="wd100">ID</th>
+                        <th>Email</th>
+                        <th>Ngày gửi</th>
+                        <th class="act_roles noexport wd100 text-center"></th>
+                    </tr>
+                </thead>
+                @if (Model.GetListItem != null && Model.GetListItem.Count > 0)
+                {
+                    <tbody>
+                        @foreach (var item in Model.GetListItem.OrderBy(x => x.Order))
+                        {
+                            <tr id="item_@item.ID" class="@(item.ID==Model.CommonJsonAdmin.ID ? "active" : string.Empty)">
+                                <td>@item.ID</td>
+                                <td>@item.Email</td>
+                                <td>@(item.CreatedDate.ToString("dd/MM/yyyy"))</td>
+                                <td class="act_delete noexport">
+                                    @if (Model.SystemActionAdmin.Delete)
+                                    {
+                                        <a href="#@item.ID" class="delete-js" data-type="@ViewBag.Type" title="Xóa:@item.Name">
+                                            <span class="lnr lnr-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            registerGridView("#Griditems");
+            $("#TypeJson").val("@ViewBag.Type");
+            urlForm = replaceUrlParam(urlForm, "TypeJson", "@ViewBag.Type");
+            urlForm = urlForm.replace("#", "?");
+        });
+    </script>
+    @if (Model.CommonJsonAdmin.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.CommonJsonAdmin.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

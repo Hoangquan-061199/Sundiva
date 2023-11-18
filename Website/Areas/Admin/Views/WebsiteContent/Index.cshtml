@@ -1,0 +1,137 @@
+﻿@model Website.Areas.Admin.ViewModels.WebsiteContentViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Quản lý bài viết";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <link href="/lib/select-bootstrap/bootstrap-select.css" rel="stylesheet" />
+    <style>
+        .dropdown.bootstrap-select.form-control.change-search.selectmodule.bs3 {
+            display: none;
+        }
+    </style>
+    <script src="/lib/select-bootstrap/bootstrap-select.js"></script>
+    <div class="col-sm-12">
+        @if (Model.ListModule.Any())
+        {
+            @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+            {
+                <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+            }
+        }
+    </div>
+    <span></span>
+    <div class="col-xs-12">
+        <div class="tab-content">
+            <div class="tab-pane active fade in" id="tab_search">
+                <form id="searchFrm">
+                    <div class="w_searchgr form-inline">
+                        <input type="text" class="form-control title" name="Keyword" placeholder="Nhập từ khóa cần tìm" style="width:auto;margin-bottom:10px;vertical-align:top;">
+                        <select class="form-control" name="Show" id="Show">
+                            <option value="">-- Ẩn/Hiện --</option>
+                            <option value="1">Hiện</option>
+                            <option value="0">Ẩn</option>
+                        </select>
+                        <select class="form-control" name="type" id="type">
+                            <option value="">-- Khác --</option>
+                            <option value="10">Có Sitemap</option>
+                            <option value="11">Chưa có Sitemap</option>
+                        </select>
+                        <select class="form-control" name="sort" id="sort">
+                            <option value="">-- Sắp xếp --</option>
+                            <option value="0">Mới nhất</option>
+                            <option value="1">Thứ tự tăng dần</option>
+                            <option value="2">Thứ tự giảm dần</option>
+                            <option value="3">A-Z</option>
+                            <option value="4">Z-A</option>
+                            @*<option value="5">Ngày ban hành</option>*@
+                        </select>
+                        <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                        @if (Model.ListWebsiteModuleAdmin.Any())
+                        {
+                            <select class="form-control change-search selectmodule" name="ModuleId" id="ModuleId" data-container="body" data-live-search="true" title="-- Danh mục --" data-hide-disabled="true">
+                                <option value="" data-type="">-- Tất cả --</option>
+                                @foreach (var parent in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == 0).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <option value="@parent.ID" data-type="@parent.ModuleTypeCode">@parent.Name</option>
+                                    foreach (var module in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == parent.ID).OrderBy(x => x.OrderDisplay))
+                                    {
+                                        <option value="@module.ID" data-type="@module.ModuleTypeCode">- @module.Name -</option>
+                                        foreach (var item in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == module.ID).OrderBy(x => x.OrderDisplay))
+                                        {
+                                            <option value="@item.ID" data-type="@item.ModuleTypeCode">-- @item.Name --</option>
+                                            foreach (var item1 in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == item.ID).OrderBy(x => x.OrderDisplay))
+                                            {
+                                                <option value="@item1.ID" data-type="@item1.ModuleTypeCode">--- @item1.Name ---</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        }
+                        @*<select class="form-control" name="pagesize" id="pagesize">
+                    <option value="">-- Hiển thị/Trang --</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="100">100</option>
+                    </select>
+                    <input type="text" class="form-control" style="width:100px !important;" name="page" value="" id="page" placeholder="Trang" />*@
+                    </div>
+                </form>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <div class="w_tablegr" id="loadGridModuleView">
+                        </div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="w_tablegr" id="loadGridView">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab_add">
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            ValidInput();
+            $('.selectmodule').selectpicker();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            urlList = '@Url.Action("ListItems")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            $("#loadGridModuleView").load(encodeURI("/@WebConfig.AdminAlias/WebsiteModule/AjaxTreeSelectModuleContent"));
+            var form = $("#searchFrm");
+            form.validate({
+                submitHandler: function () {
+                    LoadSearch(form);
+                }
+            });
+            $("#btnSearch").click(function (e) {
+                LoadSearch(form);
+            });
+            $('#searchFrm select').change(function () {
+                LoadSearch(form);
+            });
+            function LoadSearch(t) {
+                window.location.href = '#' + getValueFormMutilSelect(t);
+                return false;
+            }
+        });
+    </script>
+}

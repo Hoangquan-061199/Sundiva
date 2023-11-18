@@ -1,0 +1,49 @@
+﻿@model Website.Areas.Admin.ViewModels.SystemConfigViewModel
+@using ADCOnline.Utils
+<table id="tblContent" class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr role="row">
+            <th class="wd50">ID</th>
+            <th>Tên</th>
+            <th class="text-center wd80">Trạng thái</th>
+            <th class="act_roles wd80 text-center">
+                Hành động
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.ListItem != null && Model.ListItem.Count > 0)
+        {
+            foreach (var item in Model.ListItem)
+            {
+                <tr>
+                    <td>@item.ID</td>
+                    <td>@item.Name</td>
+                    <td style="text-align:center;">@Html.Raw(StaticEnum.Show(item.IsShow))</td>
+                    <td class="act_delete">
+                        <a href="#@item.ID" class="edit btn" title="Chỉnh sửa: @item.Name">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="#@item.ID" class="delete btn" title="Xóa: @item.Name">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>
+@if (ViewBag.IsExport)
+{
+    <script src="~/Admin/js/export.js"></script>
+}
+else
+{
+    @Html.Raw(ViewBag.GridHtml)
+}
+<script>
+    $(function () {
+        registerGridView("#tblContent");
+    });
+</script>

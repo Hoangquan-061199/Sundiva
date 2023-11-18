@@ -1,0 +1,64 @@
+﻿@using ADCOnline.Utils
+@using Website.Utils
+@model Website.Areas.Admin.ViewModels.LogAdminViewModel
+<table id="tblContent" class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr role="row">
+            <th>ID</th>
+            <th>Thao tác</th>
+            <th>Người dùng</th>
+            <th>Url</th>
+            <th>Ngày tạo</th>
+            <th>Nội dung</th>
+            @*<th>ClassControl</th>*@
+            <th class="act_roles wd80 text-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Hành động <span class="fa fa-caret-down"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><i class="fa fa-trash"></i><span>Xóa</span></a></li>
+                    </ul>
+                </div>
+            </th>
+            @*<th class="text-center wd50"><input type="checkbox" class="minimal checkAll" value=""></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.ListItem != null && Model.ListItem.Count > 0)
+        {
+
+            foreach (var item in Model.ListItem)
+            {
+                <tr>
+                    <td>@Utility.FormatNumber(item.ID)</td>
+                    <td>@item.Action</td>
+                    <td>@item.UserLogin</td>
+                    <td><a href="/@WebConfig.AdminAlias/@item.ClassControl/Index" class="text-blue">@item.NameModule</a></td>
+                    <td>@Utility.ConvertDateTimeVi(item.DateCreated)</td>
+                    <td>@item.Content</td>
+                    @*<td>@item.ClassControl</td>*@
+                    <td class="act_delete">
+                        <a href="#@item.ID" class="delete btn" title="Xóa: @item.ID">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                    @*<td class="text-center"><input type="checkbox" class="minimal check" value="@item.ID"></td>*@
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@if (ViewBag.IsExport)
+{
+    <script src="~/Admin/js/export.js"></script>
+}
+else
+{
+    @Html.Raw(ViewBag.GridHtml)
+}
+<script>
+    $(function () {
+        registerGridView("#tblContent");
+    });
+</script>
+
+

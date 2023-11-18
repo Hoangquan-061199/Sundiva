@@ -1,0 +1,102 @@
+﻿@using ADCOnline.Simple.Admin
+@using Newtonsoft.Json
+@model Website.Areas.Admin.ViewModels.UserAdminViewModel
+@{
+    ViewBag.Title = "Quản lý quyền";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <form id="AddEditForm" style="width: 100%;overflow:hidden;padding-bottom:15px;">
+        <input type="hidden" name="do" id="do" value="@ViewBag.Action" />
+        <input type="hidden" name="ItemID" id="ItemID" value="@Model.MembershipAdmin.UserId" />
+        <div class="box-footer">
+            <button id="btnEditAll" name="btnEditAll" type="submit" class="primaryAction btn btn-success">Lưu</button>
+            <button id="close" type="button" class="primaryAction btn btn-primary">Đóng lại</button>
+        </div>
+        <div class="col-md-12" style="padding:0">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Tên Module</th>
+                    @foreach (var item1 in Model.ListActiveRole)
+                    {
+                        <th>@item1.NameActive</th>
+                    }
+                </tr>
+                <tr>
+                    <th>Chọn tất cả</th>
+                    @foreach (var item1 in Model.ListActiveRole)
+                    {
+                        <th><input type="checkbox" name="@(item1.NameActive)All" class="checkAll" ref="@item1.NameActive" /></th>
+                    }
+                </tr>
+
+                @if (!string.IsNullOrEmpty(Model.MembershipAdmin.DataJson))
+                {
+                    var moduleList = JsonConvert.DeserializeObject<List<ModuleAdmin>>(Model.MembershipAdmin.DataJson);
+                    if (Model.ListModuleAdmin != null && Model.ListModuleAdmin.Count > 0)
+                    {
+
+                        foreach (var module in Model.ListModuleAdmin)
+                        {
+                            var listActiveId = new List<int>();
+                            var active = moduleList.FirstOrDefault(c => c.ID == module.ID);
+                            if (active != null && !string.IsNullOrEmpty(active.DataJson))
+                            {
+                                var listActive = JsonConvert.DeserializeObject<List<ActiveRoleAdmin>>(active.DataJson);
+
+                                if (listActive != null && listActive.Count > 0)
+                                {
+                                    listActiveId = listActive.Select(c => c.ID).ToList();
+                                }
+                            }
+                            <tr>
+                                <td>@module.NameModule</td>
+                                @foreach (var item1 in Model.ListActiveRole)
+                                {
+                                    <td><input type="checkbox" name="Module@(module.ID)" value="@item1.NameActive" class="@item1.NameActive" @(listActiveId.Contains(item1.Id) ? "checked" : "") /></td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function() {
+            $(".checkAll").change(function() {
+                var classs = "." + $(this).attr("ref");
+                if ($(this).is(":checked")) {
+                    $(classs).prop("checked", true);
+                } else {
+                    $(classs).prop("checked", false);
+
+                }
+            });
+        });
+        var urlPostAction = "@Url.Action("Actions","UserAdministration")";
+        $("#AddEditForm").validate({
+            rules: {
+                RoleName: {
+                    require: true
+                }
+            },
+            messages: {
+                RoleName: {
+                    require: "Mã quyền bắt buộc nhập"
+                }
+            },
+            submitHandler: function() {
+                Post(urlPostAction, "#AddEditForm");
+                return false;
+            }
+        });
+
+    </script>
+    <style>
+        .table.table-bordered.table-striped { width: 100%; background: #fff; padding: 0; margin: 0; }
+    </style>
+
+}
+
+

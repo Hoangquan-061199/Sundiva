@@ -1,0 +1,127 @@
+﻿@model Website.Areas.Admin.ViewModels.OtherContentViewModel
+@using ADCOnline.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd50">ID</th>
+                <th>Tên</th>
+                <th>Mã</th>
+                <th class="text-center wd50">Ngôn ngữ</th>
+                <th class="text-center wd80">Trạng thái</th>
+                <th class="act_roles wd80 text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Hành động <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><span class="lnr lnr-checkmark-circle"></span><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><span class="lnr lnr-warning"></span><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr id="item_@item.ID" class="@(item.IsShow!=true ? "hid" : string.Empty)@(item.ID==Model.OtherContent.ID ? "active" : string.Empty)">
+                        <td>@item.ID</td>
+                        <td>
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit">@Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))</a>
+                            }
+                            else
+                            {
+                                @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
+                            }
+                        </td>
+                        <td>@item.Code</td>
+                        <td style="text-align:center;">
+                            @switch (item.Lang)
+                            {
+                                case "en":
+                                    {
+                                        <img src="/Admin/images/flag-en.png" width="30">
+                                        break;
+                                    }
+                                case "vi":
+                                    {
+                                        <img src="/Admin/images/flag-vn.png" width="30">
+                                        break;
+                                    }
+                                @*case "ru":
+                                    {
+                                        <img src="/Admin/images/flag-ru.png" width="30">
+                                        break;
+                                    }*@
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (Model.SystemActionAdmin.Active)
+                            {
+                                <a href="#@item.ID" class="hiddens">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                            }
+                            else
+                            {
+                                @Html.Raw(StaticEnum.Show(item.IsShow))
+                            }
+                        </td>
+                        <td class="act_delete">
+                            @if (Model.SystemActionAdmin.Edit)
+                            {
+                                <a href="#@item.ID" class="edit btn" title="Chỉnh sửa: @item.Name">
+                                    <span class="lnr lnr-pencil"></span>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.Name">
+                                    <span class="lnr lnr-trash"></span>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+        });
+    </script>
+    @if (Model.OtherContent.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.OtherContent.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

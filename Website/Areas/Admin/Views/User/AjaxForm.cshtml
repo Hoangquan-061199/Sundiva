@@ -1,0 +1,128 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.UserAdminViewModel
+@{
+    ViewBag.Title = "Quản lý quyền";
+}
+@*<form id="RoleForm" style="width: 100%;">
+    <input type="hidden" name="do" id="do" value="@ViewBag.Action" />
+    <input type="hidden" name="ItemID" id="ItemID" value="@Model.ItemId" />
+    <input type="hidden" name="moduleid" id="moduleid" value="" />
+    <div class="box-footer">
+        <button id="btnEditAll" name="btnEditAll" type="submit" class="primaryAction btn btn-success">Lưu</button>
+        <button id="close" type="button" class="primaryAction btn btn-primary">Đóng lại</button>
+    </div>
+    <div class="col-md-12">
+
+
+        @if (Model != null)
+        {
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Tên Module</th>
+                    @foreach (var item1 in Model.ListActiveRole)
+                    {
+                        <th>@item1.NameActive</th>
+                    }
+                    <th class="act_delete"></th>
+                    <th class="act_edit"></th>
+                </tr>
+
+                @{
+                    //int i = 0;
+                    var Modules = Model.AspnetUsers.Modules.Where(p=>p.IsShow==true);
+                    foreach (var item2 in Modules.Where(c => c.PrarentID == 1).OrderBy(c => c.Ord))
+                    {
+                        <tr id="line-@item2.ID">
+                            <td><strong>@item2.NameModule</strong></td>
+                            @foreach (var item in Model.AspnetUsers.User_ModuleActive.Where(m => m.ModuleId == item2.ID))
+                            {
+                                <td>
+                                    <input type="checkbox" name="@item.ID" id="@item.ID" value="@item.ActiveRoleId" @((item.Active == true) ? " checked" : string.Empty) />
+                                </td>
+
+                            }
+                            <td>
+                                <a href='javascript:editRole(@item2.ID);' title="Lưu Module @item2.NameModule">
+                                    <img src="/Content/Admin/images/gridview/point-icon.png" border="0" />
+                                </a>
+                            </td>
+                            <td>
+                                <a href='javascript:deleteRole(@item2.ID);' title="Xóa Module: @item2.NameModule">
+                                    <img src="/Content/Admin/images/gridview/delete.gif" border="0" />
+                                </a>
+                            </td>
+                        </tr>
+                        foreach (var item3 in Modules.Where(c => c.PrarentID == item2.ID).OrderBy(c => c.Ord))
+                        {
+                            <tr id="line-@item3.ID">
+                                <td>@item3.NameModule</td>
+                                @foreach (var item in Model.AspnetUsers.User_ModuleActive.Where(m => m.ModuleId == item3.ID))
+                                {
+                                    <td>
+                                        <input type="checkbox" name="@item.ID" id="@item.ID" value="@item.ActiveRoleId" @((item.Active == true) ? " checked" : string.Empty) />
+                                    </td>
+
+                                }
+                                <td>
+                                    <a href='javascript:editRole(@item3.ID);' title="Lưu Module @item3.NameModule">
+                                        <img src="/Content/Admin/images/gridview/point-icon.png" border="0" />
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href='javascript:deleteRole(@item3.ID);' title="Xóa Module: @item3.NameModule">
+                                        <img src="/Content/Admin/images/gridview/delete.gif" border="0" />
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+        }
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    $('#btnEditAll').click(function () {
+        $("#moduleid").val(0);
+        var link = '/@WebConfig.AdminAlias/User/EditRoleAction';
+        $.post(link, $("#RoleForm").serialize(), function (data) {
+            if (data.Erros)
+                Example.show(data.Message);
+            else {
+                ModalADC.Close();
+                createMessage("Thông báo", data.Message, data.ID);
+            }
+        });
+        return false;
+    });
+    function editRole(ItemId) {
+        $("#moduleid").val(ItemId);
+        var link = '/@WebConfig.AdminAlias/User/EditRoleAction';
+        $.post(link, $("#RoleForm").serialize(), function (data) {
+            if (data.Erros)
+                Example.show(data.Message);
+            else {
+                ModalADC.Close();
+                createMessage("Thông báo", data.Message, data.ID);
+            }
+        });
+
+        return false;
+    }
+    function deleteRole(ItemId) {
+        $("#moduleid").val(ItemId);
+        var link = '/@WebConfig.AdminAlias/User/DeleteRoleAction';
+        $.post(link,
+             $("#RoleForm").serialize()
+        , function (data) {
+            ModalADC.Close();
+            createMessage("Thông báo", data.Message, data.ID);
+            var s = "#line-" + ItemId + "";
+            $(s).remove();
+        });
+        return false;
+    }
+</script>*@

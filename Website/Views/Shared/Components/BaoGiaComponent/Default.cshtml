@@ -1,0 +1,91 @@
+﻿@model ModuleViewModels
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptChaConfig
+
+<form class="form-cs" id="SendBaoGia" method="post" action="@Url.Action("SendBaoGia","Home")" autocomplete="off">
+    <div class="title">
+        <p>@ResourceData.Resource("BaoGiaDichVu", ViewBag.lang)</p>
+        <div class="icon-close"><img src="/html/style/images/icon-close.webp" alt="icon-close"></div>
+    </div>
+    <div class="text">
+        <div class="paragraph">
+            <vc:other-component code="DescriptionQuote"></vc:other-component>
+        </div>
+        @if (ViewBag.ModuleTypeCode == StaticEnum.Product)
+        {
+            <div class="content">
+                <div class="left">
+                    <input type="hidden" name="ProductID" value="@Model.ProductItem.ID" />
+                    <input type="hidden" name="TypeCode" value="@ViewBag.ModuleTypeCode" />
+                    <div class="img"><img src="@Model.ProductItem.UrlPicture" alt="@Model.ProductItem.Name"></div>
+                    <div class="name">
+                        <p>@Model.ProductItem.Name</p>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="input-form">
+                        <p>@ResourceData.Resource("TenLienHe", ViewBag.lang)*</p>
+                        <input type="text" class="fullname" id="FullName" name="FullName" />
+                    </div>
+                    <div class="input-form">
+                        <p>@ResourceData.Resource("SoDienThoai", ViewBag.lang)*</p>
+                        <input type="text" class="phone" id="Phone" name="Phone" />
+                    </div>
+                    <div class="input-form">
+                        <p>@ResourceData.Resource("Email", ViewBag.lang)*</p>
+                        <input type="text" class="Email" id="Email" name="Email" />
+                    </div>
+                    <div class="textarea-form">
+                        <p>@ResourceData.Resource("YeuCauBaoGia", ViewBag.lang)</p>
+                        <textarea name="Content"></textarea>
+                    </div>
+                    <button class="btnSendBaoGia btn-send" type="submit">@ResourceData.Resource("Gui", ViewBag.lang)</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <input type="hidden" name="ContentID" value="@Model.WebsiteContentItem.ID" />
+            <input type="hidden" name="TypeCode" value="@ViewBag.ModuleTypeCode" />
+
+            <div class="input-form">
+                <p>@ResourceData.Resource("TenLienHe", ViewBag.lang)*</p>
+                <input type="text" class="fullname" id="FullName" name="FullName" />
+            </div>
+            <div class="input-form">
+                <p>@ResourceData.Resource("SoDienThoai", ViewBag.lang)*</p>
+                <input type="text" class="phone" id="Phone" name="Phone" />
+            </div>
+            <div class="input-form">
+                <p>@ResourceData.Resource("Email", ViewBag.lang)*</p>
+                <input type="text" class="Email" id="Email" name="Email" />
+            </div>
+            <div class="textarea-form">
+                <p>@ResourceData.Resource("YeuCauBaoGia", ViewBag.lang)</p>
+                <textarea name="Content"></textarea>
+            </div>
+            <button class="btnSendBaoGia btn-send" type="submit">@ResourceData.Resource("Gui", ViewBag.lang)</button>
+        }
+    </div>
+
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Token" id="ModelTokenBaoGia" />
+</form>
+
+<script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptChaConfig.Value.SiteKey"></script>
+<script>
+    function getToken() {
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@GoogleCaptChaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
+                document.getElementById('ModelTokenBaoGia').value = token;
+            });
+        });
+    }
+    setInterval(getToken, 11500);
+    $(function () {
+        getToken();
+        var process = new ProcessData();
+        process.SendBaoGia();
+    });
+</script>

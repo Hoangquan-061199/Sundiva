@@ -1,0 +1,104 @@
+﻿@using ADCOnline.Simple.Base
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.SubItemViewModel
+@if (Model.SystemActionAdmin.Add || Model.SystemActionAdmin.Edit)
+{
+    <form id="QuickAddSubForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <button id="close" type="button" class="primaryAction btn btn-danger" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.SubItem.ID" />
+            <input type="hidden" name="ProductID" id="ProductID" value="@Model.Product.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Tiêu đề</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control title" name="Name" id="Name" value="@Model.SubItem.Name" placeholder="@Model.SubItem.Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ảnh</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="background:transparent;padding-right:10px;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatarSub','UrlPictureSub',0);" class="btn btn-info btn-sm"><span class="lnr lnr-upload" style="margin-right:5px;"></span>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatarSub', 'UrlPictureSub',0)" value="@Model.SubItem.UrlPicture" />
+                                    </div>
+                                    <div id="AddAvatarSub">
+                                        @if (Model.SubItem.UrlPicture != null)
+                                        {
+                                            <table class="removeParent text-center">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <img style="max-width:100px;max-height:100px;" src="@Model.SubItem.UrlPicture">
+                                                            <input type="hidden" name="UrlPictureSub" value="@Model.SubItem.UrlPicture">
+                                                            <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                                @if (Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber" data-val="true" data-val-number="The field Ord must be a number." id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.SubItem.OrderDisplay" placeholder="@Model.SubItem.OrderDisplay" />
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">Mô tả</div>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="ContentSub" name="ContentSub" class="form-control">@Model.SubItem.Content</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(function () {
+            ValidInput();
+            LoadCKEDITOR('ContentSub', true, 200);
+            $("#QuickAddSubForm").validate({
+                rules: {
+                    Name:
+                    {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    Name: "Bạn cần nhập tiêu đề"
+                },
+                submitHandler: function () { //onSubmit
+                    updateEditor();
+                    PostAjaxQuickSub("/Adminadc/SubItem/Actions", "#QuickAddSubForm", "#append_sub_@Model.Product.ID");
+                    return false;
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,41 @@
+﻿@model CommentViewModel
+
+@{
+    Layout = null;
+}
+
+@if (Model.CommentItems.Any())
+{
+    foreach (var item in Model.CommentItems)
+    {
+        <div class="item">
+            <div class="info">
+                <div class="avt">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="content">
+                    @if (!string.IsNullOrEmpty(item.AdminId.ToString()))
+                    {
+                        <div class="user-text">@item.Fullname<span>Administrator</span></div>
+                        @Html.Raw(item.Content)
+                    }
+                    else
+                    {
+                        <div class="user-text">@item.Fullname</div>
+                        <p>@item.Content</p>
+                    }
+                    @if (!string.IsNullOrEmpty(item.UrlPicture))
+                    {
+                        <div class="img-cmt" data-src="@item.UrlPicture" data-fancybox="comment" data-caption="@item.Fullname">
+                            <img src="@item.UrlPicture" alt="@item.Fullname" />
+                        </div>
+                    }
+                </div>
+                <div class="action item-@item.ID">
+                    <span class="_like" onclick="LikeComment(@item.ID)"><i class="fa-solid fa-thumbs-up"></i> <span>(@(item.Good > 0 ? item.Good : 0))</span>@ResourceData.Resource("Thich", ViewBag.Lang)</span>
+                    <span class="time-span">@item.Timespan</span>
+                </div>
+            </div>
+        </div>
+    }
+}

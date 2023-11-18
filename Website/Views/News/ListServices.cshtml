@@ -1,0 +1,240 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Utils
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+}
+
+@if (Model.ModuleItem != null)
+{
+    @if (Model.ListContentItemAsync.Count() == 1)
+    {
+        <div class="breadcrumb">
+            <div class="container">
+                <ul>
+                    <li>
+                        <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                            @ResourceData.Resource("TrangChu",
+                    ViewBag.Lang)
+                        </a>/
+                    </li>
+                    <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+                    <li>
+                        @Model.ContentItem.Name
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="service-detail">
+            <div class="container">
+                <div class="left">
+                    <h1 class="title">@Model.ContentItem.Name</h1>
+                    <div class="paragraph">
+                        @Html.Raw(Model.ContentItem.Content)
+                    </div>
+                    <div class="btn-form-advise">
+                        <div class="btn btn-show"><p>@ResourceData.Resource("NhanTuVanVaBaoGiaDichVu", ViewBag.Lang)</p></div>
+                    </div>
+                    <div class="contact-information">
+                        <div class="title-main">
+                            <p>@ResourceData.Resource("ThongTinLienHe", ViewBag.Lang)</p>
+                        </div>
+                        <p><b>@ResourceData.Resource("DiaChi", ViewBag.Lang):</b> @Model.SystemConfigItem.Address1</p>
+                        <p><b>@ResourceData.Resource("DienThoai", ViewBag.Lang):</b> <a href="">@Model.SystemConfigItem.Hotline</a></p>
+                        <p><b>@ResourceData.Resource("Email", ViewBag.Lang):</b> <a href="">@Model.SystemConfigItem.Email2</a></p>
+                        <p><b>@ResourceData.Resource("Website", ViewBag.Lang):</b> <a href="">tekchem.com.vn</a></p>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="service-right">
+
+                        <div class="title-main">
+                            <p>@Model.ModuleItem.Name</p>
+                        </div>
+                        <div class="list-service">
+                            @if (Model.WebsiteModulesItems.Any())
+                            {
+                                @foreach (var item in Model.WebsiteModulesItems.Where(x => x.ParentID > 0).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <div class="item">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" class="img-service"><img src="@item.UrlPicture" alt="@item.ModuleNameAscii"></a>
+                                        <div class="text">
+                                            <div class="name"><a href="@Utility.Link(item.Name, string.Empty, item.LinkUrl)">@item.Name</a></div>
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" class="view-more">
+                                                <p>›</p> @ResourceData.Resource("XemChiTiet", ViewBag.Lang)
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="new-product-right">
+                        <div class="title-main">
+                            <p>@ResourceData.Resource("SanPhamMoi", ViewBag.lang)</p>
+                        </div>
+                        <div class="slide-new-product product-list owl-carousel owl-theme">
+                            @foreach (var item in Model.ListProductModels.OrderBy(x => x.OrderDisplay))
+                            {
+
+                                <div class="product-item">
+                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" class="img">
+                                        <img src="@item.UrlPicture" alt="@item.Name">
+                                        <div class="view-detail">
+                                            <p>@ResourceData.Resource("XemChiTiet", ViewBag.lang)<i class="fa-solid fa-arrow-right"></i></p>
+                                        </div>
+                                    </a>
+                                    <h3 class="product-name">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)">
+                                            @item.Name
+                                        </a>
+                                    </h3>
+                                    <div class="price">
+                                        @if (item.Price == null || item.Price == 0)
+                                        {
+                                            <p>@ResourceData.Resource("LienHe", ViewBag.Lang)</p>
+                                        }
+                                        else
+                                        {
+                                            <p>@item.Price</p>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.ListContentItem.Any())
+        {
+            <div class="contact-index">
+                <div class="container">
+                    <div class="title-main">
+                        <p>@Model.moduleContactUs.Name</p>
+                    </div>
+                    <div class="@(Model.ListContentItem.Count() <= 4 ? "contact-list" : "contact-list-slide owl-carousel owl-theme")">
+                        @foreach (var item in Model.ListContentItem.OrderBy(x => x.OrderDisplay))
+                        {
+
+                            <div class="item">
+                                <div class="img-contact"><img src="@item.UrlPicture" alt="@item.Name"></div>
+                                <div class="text-contact">
+                                    <div class="title">
+                                        <p><b>@item.Name</b></p>
+                                        <p>@item.Title</p>
+                                    </div>
+                                    <p><i class="fa-solid fa-phone"></i> <a href="tel:@Utility.FormatPhone(item.Phone)" rel="nofollow" title="phone">@item.Phone</a></p>
+                                    <p><i class="fa-sharp fa-solid fa-envelope"></i><a href="mailto:@item.Email">@item.Email</a></p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="form-advise">
+            <vc:bao-gia-component id="@Model.ContentItem.ID" code="@Model.ModuleItem.ModuleTypeCode"></vc:bao-gia-component>
+        </div>
+    }
+    else
+    {
+        <div class="banner">
+            <div class="img-banner">
+                @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+                {
+                    @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        <img src="@item.AlbumUrl" alt="@Model.ModuleItem.Name">
+                    }
+                }
+                else
+                {
+                    <img src="/Upload/banner-service.webp" alt="@Model.ModuleItem.Name">
+                }
+            </div>
+            <div class="container">
+                <div class="title">
+                    <h1>@Model.ModuleItem.Name</h1>
+                    <div class="breadcrumb">
+                        <ul>
+                            <li>
+                                <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                                    @ResourceData.Resource("TrangChu",
+                            ViewBag.Lang)
+                                </a> /
+                            </li>
+                            <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+                            <li>
+                                @Model.ModuleItem.Name
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="service-index main">
+            <div class="container">
+                <div class="slide-service owl-carousel owl-theme">
+                    @if (Model.ListContentItemAsync.Any())
+                    {
+                        @foreach (var item in Model.ListContentItemAsync.OrderBy(x => x.OrderDisplay))
+                        {
+                            <div class="item">
+                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" class="img"><img src="@item.UrlPicture" alt="@item.Name"></a>
+                                <div class="text-service">
+                                    <h2><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)">@item.Name</a></h2>
+                                    <div class="paragraph">
+                                        @Html.Raw(item.Description)
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        @if (Model.ListContentItem.Any())
+        {
+            <div class="contact-index">
+                <div class="container">
+                    <div class="title-main">
+                        <p>@Model.moduleContactUs.Name</p>
+                    </div>
+                    <div class="@(Model.ListContentItem.Count() <= 4 ? "contact-list" : "contact-list-slide owl-carousel owl-theme")">
+                        @foreach (var item in Model.ListContentItem.OrderBy(x => x.OrderDisplay))
+                        {
+
+                            <div class="item">
+                                <div class="img-contact"><img src="@item.UrlPicture" alt="@item.Name"></div>
+                                <div class="text-contact">
+                                    <div class="title">
+                                        <p><b>@item.Name</b></p>
+                                        <p>@item.Title</p>
+                                    </div>
+                                    <p><i class="fa-solid fa-phone"></i> <a href="tel:@Utility.FormatPhone(item.Phone)" rel="nofollow" title="phone">@item.Phone</a></p>
+                                    <p><i class="fa-sharp fa-solid fa-envelope"></i><a href="mailto:@item.Email">@item.Email</a></p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}

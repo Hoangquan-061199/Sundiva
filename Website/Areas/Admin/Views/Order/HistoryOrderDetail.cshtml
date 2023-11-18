@@ -1,0 +1,254 @@
+﻿@using ADCOnline.Utils
+@using Newtonsoft.Json
+@model Website.Areas.Admin.ViewModels.OrderViewModel
+<script src="/Common/js/print.min.js"></script>
+<div id="orderdetailprint">
+    <h2 style="text-align:center;padding-top:20px">Đơn Đặt Hàng</h2>
+    <div class="print btnPrint" title="In đơn hàng @Model.Order.OrderCode"><i class="fa fa-print" aria-hidden="true"></i></div>
+    <div class="date-order" style="text-align:center;">Mã đơn hàng: <span id="OrderCode">#@Model.Order.OrderCode</span></div>
+    <ul class="list-ifod clearfix">
+        <li>
+            <p>
+                <b>Họ và tên</b><span id="fullName">
+                    : @Model.Order.FullName  
+                </span>
+            </p>
+        </li>
+
+        @if (Model.Order.DateofBirth != null)
+        {
+            <li>
+                <p>
+                    <b>Ngày sinh</b><span id="fullName">: @Model.Order.DateofBirth.Value.ToString("dd/MM/yyyy")</span>
+                </p>
+            </li>
+        }
+
+        <li>
+            <p><b>Địa chỉ nhận</b><span id="address">: @Model.Order.Address</span></p>
+        </li>
+        <li>
+            <p><b>Email</b> <span id="email">: @Model.Order.Email</span></p>
+        </li>
+        <li>
+            <p>
+                <b>Số điện thoại:</b><span id="mobile">: @Model.Order.Mobile</span>               
+            </p>
+        </li>
+        <li>
+            <p><b>Ngày tạo</b> <span>: @Model.Order.CreatedDate.Value.ToString("dd-MM-yyyy HH:mm")</span></p>
+        </li>
+        <li>
+            <p>
+                <b>Thanh toán</b> <span>: @Temp.PaymentTypeText(Model.Order.PaymentType)</span>
+            </p>
+        </li>        
+        @*@if (!string.IsNullOrEmpty(Model.Order.Note))
+        {
+            <li><p><b>Ghi chú:</b> <span>&nbsp;@Model.Order.Note</span></p></li>
+        }
+        @if (!string.IsNullOrEmpty(Model.Order.Facebook))
+        {
+            <li><p><a href="@Model.Order.Facebook" title="Facebook" class="badge badge-facebook" target="_blank">Facebook</a></p></li>
+        }
+        @if (!string.IsNullOrEmpty(Model.Order.Zalo))
+        {
+            <li><p><a href="@Model.Order.Zalo" title="Zalo" class="badge badge-facebook" target="_blank">Zalo</a></p></li>
+        }*@
+    </ul>    
+    <div class="table table-responsive table-order">
+        <table border="1" cellpadding="3" style="border-collapse:collapse;width:100%;">
+            <tbody>
+                <tr>
+                    <td style="width:5%;" class="text-center"><span><strong>STT</strong></span></td>
+                    <td style="width:45%;" class="text-left"><span><strong>Sản phẩm</strong></span></td>
+                    <td style="width:30%;" class="text-center"><span><strong>Quà tặng</strong></span></td>
+                    <td class="text-right"><span><strong>Thành tiền</strong></span></td>
+                </tr>
+                @if (Model.ListOrderDetail != null && Model.ListOrderDetail.Count > 0)
+                {
+                    var i = 1;
+                    foreach (var item in Model.ListOrderDetail)
+                    {
+                        var product = (item.ProductID.HasValue && Model.ProductAdmins.Any()) ? Model.ProductAdmins.Where(c => c.ID == item.ProductID).First() : new ADCOnline.Simple.Admin.ProductAdmin();
+                        var gifts = (!string.IsNullOrEmpty(item.GiftIds) && Model.ProductAdmins.Where(c => ("," + item.GiftIds + ",").Contains("," + c.ID + ",")).Any()) ? Model.ProductAdmins.Where(c => ("," + item.GiftIds + ",").Contains("," + c.ID + ",")).ToList() : new List<ADCOnline.Simple.Admin.ProductAdmin>();
+                        <tr>
+                            <td class="text-center"><span>@i</span></td>
+                            <td class="text-left;" style="vertical-align:top;">
+                                <p class="name-sp"><a href="@Utility.Link(string.Empty,product._NameAscii,product.LinkUrl)" title="@Html.Raw(product.Name)" target="_blank"><b>@Html.Raw(product.Name)</b></a></p>
+                                @if (item.Type == "0" && !string.IsNullOrEmpty(item.AttrIds))
+                                {
+                                    foreach (var itemA in Model.Attributes.Where(c => c.ParentID == 0 && ("," + item.AttrIds + ",").Contains("," + c.ID + ",")))
+                                    {
+                                        string attrC = string.Join(",", Model.Attributes.Where(c => c.ParentID == itemA.ID).Select(c => c.Name));
+                                        <span style="display:block;">- @itemA.Name: @attrC</span>
+                                    }
+                                }
+                                @if (!string.IsNullOrEmpty(item.PromotionText))
+                                {
+                                    <span style="color:red;font-weight:bold">
+                                        Khuyến mãi:
+                                    </span>
+                                    <div class="area_promotion">
+                                        @Html.Raw(item.PromotionText)
+                                    </div>
+
+                                }
+                            </td>
+                            <td class="text-left" style="vertical-align:top;">
+                                @foreach (var gift in gifts)
+                                {
+                                    <a href="/@gift.NameAscii" target="_blank">@gift.Name</a><br />
+                                }
+                            </td>
+                            <td class="text-right" style="vertical-align:top;">
+                                <p>Giá: <b>@Utility.GetFormatPriceType(item.Price, 1, "Liên hệ", true)</b></p>
+                                <p>@(item.IsVAT==true ? "(Giá đã bao gồm VAT)" : string.Empty)</p>
+                                <p>Số Lượng: @item.Quantity</p>
+                                <p>Tạm tính: @Utility.GetFormatPriceType(item.SumMoney, 1, "N/A")</p>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                }
+                <tr>
+                    <td colspan="3" class="text-right"><span><strong>Tổng tạm tính</strong></span></td>
+                    <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.Order.TotalMoney, 1, "Liên hệ")</span></td>
+                </tr>
+                @*@if (Model.Order.TotalVAT > 0)
+                {
+                    <tr>
+                        <td colspan="3" class="text-right"><span><strong>Thuế VAT</strong></span></td>
+                        <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.Order.TotalVAT, 1, "N/A")</span></td>
+                    </tr>
+                }*@
+                @*<tr>
+                        <td colspan="3" class="text-right"><span><strong>Giảm giá</strong></span></td>
+                        <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.Order.DiscountModule, 1, "N/A")</span></td>
+                    </tr>*@
+                @* @if (Model.Order.DiscountCombo > 0)
+                {
+                    <tr>
+                        <td colspan="3" class="text-right"><span><strong>Giảm giá combo</strong></span></td>
+                        <td class="text-right"><span style="font-weight:bold">- @Utility.GetFormatPriceType(Model.Order.DiscountCombo, 1, "N/A")</span></td>
+                    </tr>
+                }
+                @if (!string.IsNullOrEmpty(Model.Order.VoucherCode))
+                {
+                    <tr>
+                        <td colspan="3" class="text-right"><span><strong>Voucher</strong></span></td>
+                        <td class="text-right"><span style="font-weight:bold">@Model.Order.VoucherCode - @Utility.GetFormatPriceType(Model.Order.DiscountVoucher, 1, "N/A")</span></td>
+                    </tr>
+                } *@
+                <tr>
+                    <td colspan="3" class="text-right"><span><strong>Thành tiền</strong></span></td>
+                    <td class="text-right"><span style="font-weight:bold">@Utility.GetFormatPriceType(Model.Order.TotalAfterSale, 1, "Liên hệ")</span></td>
+                </tr>
+            </tbody>
+        </table>
+        @if (Model.SystemActionAdmin.Active)
+        {
+            <div class="check-box-admin">
+                <div class="form-group">
+                    <input type="radio" name="status" value="1" @(Model.Order.Status == 1 ? "checked" : string.Empty)>
+                    <label for="vehicle1"> @Utility.RemoveHTMLTag(Temp.OrderStatus(1))</label><br>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="status" value="2" @(Model.Order.Status == 2 ? "checked" : string.Empty)>
+                    <label for="vehicle1"> @Utility.RemoveHTMLTag(Temp.OrderStatus(2))</label><br>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="status" value="3" @(Model.Order.Status == 3 ? "checked" : string.Empty)>
+                    <label for="vehicle1"> @Utility.RemoveHTMLTag(Temp.OrderStatus(3))</label><br>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="status" value="5" @(Model.Order.Status == 5 ? "checked" : string.Empty)>
+                    <label for="vehicle1">@Utility.RemoveHTMLTag(Temp.OrderStatus(5))</label><br>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="status" value="6" @(Model.Order.Status == 6 ? "checked" : string.Empty)>
+                    <label for="vehicle1">@Utility.RemoveHTMLTag(Temp.OrderStatus(6))</label><br>
+                </div>
+            </div>
+            <div class="check-box-admin">
+                <div class="form-group">
+                    <input type="radio" name="IsPaymentN" value="1" @(Model.Order.IsPayment == true ? "checked" : string.Empty)>
+                    <label for="vehicle1"> Đã thanh toán</label><br>
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="IsPaymentN" value="0" @(Model.Order.IsPayment != true ? "checked" : string.Empty)>
+                    <label for="vehicle1"> Chưa thanh toán</label><br>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div style="text-align:center">
+    <button class="btn btn-action btn-update-status" data-id="@Model.Order.ID" style="background-color:#008a7f !important;margin-bottom: 10px;">Cập nhật trạng thái</button>
+</div>
+<div class="success" style="text-align:center;margin-bottom: 15px;    font-style: italic;    color: red;">
+    Cập nhật trạng thái đơn hàng thành công!
+</div>
+<style>
+    .check-box-admin { padding: 10px 0 0 0; align-items: center; display: flex; }
+        .check-box-admin .form-group { margin: 0 10px 0 0; }
+    .area_promotion span { margin-bottom: 0; position: relative; padding-left: 25px; }
+        .area_promotion span .numeric { position: absolute; top: 0; left: 0; }
+</style>
+<script>
+    $(function () {
+        $(".btnPrint").click(function () {
+            var html = $("#orderdetailprint").html();
+            printJS({
+                printable: html,
+                type: 'raw-html',
+                scanStyles: false,
+                css: '/html/destop/css/OrderDetail.css',
+                //style: ''
+            });
+        })
+        $(".btn-update-status").click(function () {
+            var id = $(this).data("id");
+            var status = $("input[name=status]:checked").val();
+            var payment = $("input[name=IsPaymentN]:checked").val();
+            $.ajax({
+                url: "/Adminadc/Order/UpdateOrderStatus",
+                type: "post",
+                dataType: "html",
+                data: { id: parseInt(id), status: parseInt(status), payment: parseInt(payment) },
+                success: function (result) {
+                    $(".success").show();
+                    window.location.reload();
+                }
+            });
+        })
+    });
+
+</script>
+<style>
+    .success { display: none }
+    .login-dialog.modal.fade .modal-dialog { max-height: calc(100vh - 50px); margin-bottom: 20px; max-width: calc(100vw - 50px); }
+        .login-dialog.modal.fade .modal-dialog .modal-content { margin-bottom: 15px; }
+    .detail-order { padding: 0 20px; }
+        .detail-order h2 { text-align: center; color: #008a7f; text-transform: uppercase; font-weight: bold; font-size: 24px; position: relative; margin: 25px; }
+            .detail-order h2:before { content: ''; position: absolute; bottom: -10px; height: 2px; width: 50px; left: 50%; margin-left: -25px; background: red; }
+        .detail-order .date-order { text-align: center; text-transform: uppercase; font-size: 14px; line-height: 24px; margin: 0; color: #333; }
+            .detail-order .date-order span { font-weight: bold; color: #000; }
+    .list-ifod { list-style: none; overflow: hidden; margin: 20px 0 10px; padding: 0; }
+        .list-ifod li { width: 50%; float: left; padding: 2px; border-bottom: 1px dashed #dcdcdc; }
+            .list-ifod li p { line-height: 24px; margin: 0; display: table; width: 100%; }
+                .list-ifod li p > * { display: table-cell; }
+                .list-ifod li p > b { width: 90px; }
+    .table-order tr { border-top: 1px solid #ddd; border-left: 1px solid #ddd; }
+        .table-order tr td { border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; padding: 5px; }
+    .table-order p { margin-bottom: 0; }
+    #Detail-order .close { position: absolute; top: -10px; right: -10px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; z-index: 1060; opacity: 1; box-shadow: 0 0 5px #000; background: #008a7f; transition: all .35s; }
+        #Detail-order .close:before, #Detail-order .close:after { content: ''; position: absolute; width: 12px; height: 2px; background: #fff; left: 4px; top: 50%; margin-top: -1px; transform: rotate(45deg); border-radius: 2px; }
+        #Detail-order .close:after { transform: rotate(135deg); }
+        #Detail-order .close:hover { background: #003f3a; }
+    .btn-del.disabled { background: #676262; cursor: no-drop; }
+    @@media (min-width: 768px) {
+        .modal-dialog { width: 900px; }
+    }
+    .print { right: 35px; position: absolute; top: 15px; background: #008a7f; color: #fff; padding: 5px 10px 7px; border-radius: 3px; cursor: pointer }
+</style>

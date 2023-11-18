@@ -1,0 +1,91 @@
+﻿
+@using Website.Utils
+@{
+    ViewBag.Title = "Quản lý log";
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = false;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="tab-content">
+    <div class="tab-pane active fade in" id="tab_search">
+        <div class="ct_tabssc">
+            <form id="searchFrm">
+                <div class="w_searchgr form-inline">
+                    <input type="text" class="form-control" name="Keyword" placeholder="Nhập từ khóa tìm kiếm">
+                    <button type="button" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                </div>
+                <div class="w_searchadv collapse " id="tab_filter">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="form-group">
+                                <label>Từ ngày</label>
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control" name="from" id="from">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="form-group">
+                                <label>Đến ngày</label>
+                                <div class="input-group date">
+                                    <input type="text" class="form-control pull-right" name="to" id="to">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <div class="form-group">
+                                <label>Trạng thái</label>
+                                <select id="status" name="status" class="form-control">
+                                    <option value="">Tất cả</option>
+                                    <option value="1">Chờ duyệt</option>
+                                    <option value="5">Đã duyệt</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView">
+
+            </div>
+        </div>
+    </div>
+    <!-- /.tab-pane -->
+    <div class="tab-pane fade" id="tab_add">
+    </div>
+    <!-- /.tab-pane -->
+</div>
+<script>
+    $(function () {
+        $('#from').datetimepicker({
+            format: 'd/m/Y',
+            timepicker: false,
+        });
+        $('#to').datetimepicker({
+            format: 'd/m/Y',
+            timepicker: false,
+        });
+        urlPostAction = "@Url.Action("Actions")";
+           urlForm = '@Url.Action("AjaxForm")';
+        initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+        $("#btnSearch").click(function () {
+            var form = $("#searchFrm");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+            return false;
+        });
+    });
+
+</script>
+
+

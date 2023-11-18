@@ -1,0 +1,17 @@
+﻿@model ADCOnline.Simple.Item.OtherContentItem
+
+@if (Model != null)
+{
+    if (!string.IsNullOrEmpty(Model.Content))
+    {
+        @Html.Raw(Model.Content)
+    }
+    else
+    {
+        <span style="display:none;">@ViewBag.Code</span>
+    }
+}
+else
+{
+    <span style="display:none;">@ViewBag.Code</span>
+}

@@ -1,0 +1,145 @@
+﻿@model Website.Areas.Admin.ViewModels.WebsiteContentViewModel
+@using ADCOnline.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    @*if (ViewBag.IsSearch == false)
+    {
+        <div class="w_searchgr form-inline" id="SearchAjax@(ViewBag.Code)">
+            <input type="text" class="form-control title" name="Keyword" id="Keyword@(ViewBag.Code)" value="" placeholder="Nhập từ khóa cần tìm" style="width:200px">
+            @if (Model.ListWebsiteModuleAdmin.Any())
+            {
+                <select class="form-control change-search selectpicker" name="ModuleId" id="ModuleId" data-container="body" data-live-search="true" title="-- Danh mục --" data-hide-disabled="true">
+                    <option value="" data-type="">-- Tất cả --</option>
+                    @foreach (var parent in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == 0).OrderBy(x => x.OrderDisplay))
+                    {
+                        <option value="@parent.ID" data-type="@parent.ModuleTypeCode">@parent.Name</option>
+                        foreach (var module in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == parent.ID).OrderBy(x => x.OrderDisplay))
+                        {
+                            <option value="@module.ID" data-type="@module.ModuleTypeCode">- @module.Name -</option>
+                            foreach (var item in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == module.ID).OrderBy(x => x.OrderDisplay))
+                            {
+                                <option value="@item.ID" data-type="@item.ModuleTypeCode">-- @item.Name --</option>
+                                foreach (var item1 in Model.ListWebsiteModuleAdmin.Where(x => x.ParentID == item.ID).OrderBy(x => x.OrderDisplay))
+                                {
+                                    <option value="@item1.ID" data-type="@item1.ModuleTypeCode">--- @item1.Name ---</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+            }
+            <button type="button" class="btn btn-info btn-sm" id="btnSearch@(ViewBag.Code)"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+        </div>
+    }*@
+    <div id="tblContentAjax@(ViewBag.Code)">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr role="row">
+                    <th class="text-center wd50">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                    </th>
+                    <th class="wd50">Ảnh</th>
+                    <th>Tiêu đề</th>
+                    <th class="wd150">Lượt xem</th>
+                    <th class="text-center wd100">Thứ tự</th>
+                    <th>Ngày tạo</th>
+                    <th style="text-align:center; width:100px;">Trạng thái</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ListItem != null && Model.ListItem.Count > 0)
+                {
+                    foreach (var item in Model.ListItem)
+                    {
+                        <tr class="@(item.IsShow!=true ? " hid" : string.Empty)">
+                            <td class="text-center">
+                                <input type="checkbox" data-title="@item.Name" id="Check@(item.ID)" class="minimal check" value="@item.ID" @(("," + Model.ValueSelected + ",").Contains("," + item.ID + ",") ? "checked" : string.Empty)>
+                            </td>
+                            <td class="text-center">
+                                <img width="50" src="@(!string.IsNullOrEmpty(item.UrlPicture) ? item.UrlPicture :"/Admin/images/no-image-icon.png")" />
+                            </td>
+                            <td>
+                                @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
+                                @if (("," + item.ViewHome + ",").Contains(",3,"))
+                                {
+                                    <span class="badge badge-warning">Nổi bật</span>
+                                }
+                            </td>
+                            <td>@Utility.FormatNumber(item.TotalViews)</td>
+                            <td class="text-center">@item.OrderDisplay</td>
+                            <td class="listdate"><i class="fa fa-clock-o"></i> @Utility.ConvertDateTimeVi(item.CreatedDate)</td>
+                            <td style="text-align:center;">@Html.Raw(StaticEnum.Show(item.IsShow))</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        @Html.Raw(ViewBag.GridHtml)
+    </div>
+    <script>
+        $(function () {
+            ValidInput();
+            registerGridView("#tblContent");
+        });
+    </script>
+    <script>
+        $('#tblContentAjax@(ViewBag.Code) .checkAll').click(function () {
+            $('#tblContentAjax@(ViewBag.Code) input.check[type=checkbox]').not(".checkAll").not("#checkAll").prop("checked", $(this).is(":checked"));
+        });
+        $(function () {
+            var textContainer = "#@(ViewBag.Code)Remove";
+            var hiddenContainer = "#@(ViewBag.Code)Ids";
+            $('#tblContentAjax@(ViewBag.Code) input[type=checkbox]').not('.checkAll').change(function () {
+                var values = $(hiddenContainer).val();
+                var arrVal = values != '' ? values.split(',') : [];
+                var id = $(this).val();
+                var txt = $(this).data("title");
+                var v = $(this).is(":checked");
+                if (v == true) {
+                    if (containsObject(id, arrVal) == false) {
+                        arrVal.push(id);
+                        var html = `<li data-id="` + id + `"><span id="` + id + `">` + txt + `</span><a style="margin-left:5px;" class="badge badge-danger" title="Xóa: ` + txt + `" href="javascript:removeRelate(` + id + `,'@(ViewBag.Code)','@(ViewBag.Code)');"><span class="lnr lnr-trash"></span></a></li>`;
+                        $(textContainer).append(html);
+                    }
+                }
+                else {
+                    if (containsObject(id, arrVal) == true) {
+                        removeElement(arrVal, id);
+                        $(textContainer + ' li[data-id=' + id + ']').remove();
+                    }
+                }
+                if (arrVal != null && arrVal.length > 0) {
+                    $(hiddenContainer).val(arrVal.toString());
+                }
+                else {
+                    $(textContainer).html('');
+                    $(hiddenContainer).val('');
+                }
+            });
+        });
+        var hiddenContainer = "#@(ViewBag.Code)Ids";
+        var values = $(hiddenContainer).val();
+        $('#tblContentAjax@(ViewBag.Code) .pagi ul li a').click(function () {
+            var page = $(this).data('page');
+            var url = '@Url.Action("ListItemsAjax", "WebsiteContent")?code=@(ViewBag.Code)&ids=' + values + '&isSearch=true';
+            url += '&' + getValueFormMutilSelect($('#SearchAjax@(ViewBag.Code)')) + "&page=" + page;
+            loadAjax(url, '#tblContentAjax@(ViewBag.Code)');
+        });
+    </script>
+    @if (ViewBag.IsSearch == false)
+    {
+        <link href="/lib/select-bootstrap/bootstrap-select.css" rel="stylesheet" />
+        <script src="/lib/select-bootstrap/bootstrap-select.js"></script>
+        <script>
+            $('.selectpicker').selectpicker();
+            var hiddenContainer = "#@(ViewBag.Code)Ids";
+            var values = $(hiddenContainer).val();
+            $('#btnSearch@(ViewBag.Code)').click(function () {
+                var url = '@Url.Action("ListItemsAjax", "WebsiteContent")?code=@(ViewBag.Code)&ids=' + values + '&isSearch=true';
+                url += '&' + getValueFormMutilSelect($('#SearchAjax@(ViewBag.Code)'));
+                loadAjax(url, '#tblContentAjax@(ViewBag.Code)');
+            });
+        </script>
+    }
+}

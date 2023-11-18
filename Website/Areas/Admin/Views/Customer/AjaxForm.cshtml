@@ -1,0 +1,192 @@
+﻿@using ADCOnline.Simple.Base
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.CustomerViewModel
+@{
+    string cateIds = string.Empty;
+    if (!string.IsNullOrEmpty(Model.Customer.CategoryIds))
+    {
+        cateIds = Model.Customer.CategoryIds;
+    }
+}
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <script type="text/javascript">
+        $(function() {
+            $('.back-grid-view').click(function() {
+                var contentId = '@(Model.Customer.ID)';
+                if (contentId != '0') {
+                    var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=" + contentId;
+                    loadAjax(listItems, "#loadGridView");
+                }
+                $('a[href="#tab_search"]').click();
+            });
+            ValidInput();
+            formatPriceChange();
+            DateVi(".dateddmmyyy");
+            $("#AddEditForm").validate({
+                rules: {
+                    UserName:
+                    {
+                        required: true,
+                        maxlength: 255
+                    },
+                    FullName: {
+                        required: true,
+                        maxlength: 255
+                    }
+                },
+                messages: {
+                    UserName: {
+                        required: "Mã khách hàng bắt buộc nhập.",
+                        maxlength: "Mã khách hàng không được quá 255 ký tự."
+                    },
+                    FullName: {
+                        required: "Họ tên khách hàng bắt buộc nhập.",
+                        maxlength: "Họ tên khách hàng không được quá 255 ký tự."
+                    }
+                },
+                submitHandler: function() { //onSubmit
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+            var moduleSelected = $("#Value_ModuleValues").val();
+            loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=' + moduleSelected + '&module=@string.Join(",", StaticEnum.ModuleContent)', "#LoadGridModule")
+        });
+    </script>
+
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.Customer.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab =="TabModule" ? "active" : string.Empty)"><a href="#TabModule" aria-controls="TabModule" role="tab" data-toggle="tab">Danh mục</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Tên đăng nhập</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control code" name="UserName" id="UserName" value="@Model.Customer.UserName">
+                                </div>
+                                <label class="col-sm-1">Họ tên</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control name" name="FullName" id="FullName" value="@Model.Customer.FullName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Số điện thoại</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control number" name="Mobile" id="Mobile" value="@Model.Customer.Mobile">
+                                </div>
+                                 <label class="col-sm-1">Email</label>
+                                <div class="col-sm-5">
+                                    <input type="email" class="form-control email" name="Email" id="Email" value="@Model.Customer.Email">
+                                </div>
+                                @*<label class="col-sm-1">Giới tính</label>
+                                <div class="col-sm-1">
+                                    <input type="radio" name="Gender" @(Model.Customer.Gender == 0 ? "checked" : string.Empty) value="0"> Nam
+                                </div>
+                                <div class="col-sm-1">
+                                    <input type="radio" name="Gender" @(Model.Customer.Gender == 1 ? "checked" : string.Empty) value="1"> Nữ
+                                </div>
+                                <div class="col-sm-1">
+                                    <input type="radio" name="Gender" @(Model.Customer.Gender == 2 ? "checked" : string.Empty) value="2"> Khác
+                                </div>*@
+                            </div>
+                            @*<div class="form-group">
+                        <label class="col-sm-1">Zalo Id</label>
+                        <div class="col-sm-5">
+                        <input type="email" class="form-control" name="ZaloId" id="ZaloId" value="@Model.Customer.ZaloId">
+                        </div>
+                        <label class="col-sm-1">Facebook Id</label>
+                        <div class="col-sm-5">
+                        <input type="text" class="form-control" name="FaceBookId" id="FaceBookId" value="@Model.Customer.FaceBookId">
+                        </div>
+                        </div>*@
+                            <div class="form-group">
+                                @*<label class="col-sm-1">Google Id</label>
+                            <div class="col-sm-5">
+                            <input type="email" class="form-control" name="GoogleId" id="GoogleId" value="@Model.Customer.GoogleId">
+                            </div>*@
+                                @*<label class="col-sm-1">Địa chỉ</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control valid" name="Address" id="Address" value="@Model.Customer.Address">
+                                </div>*@
+                                <label class="col-sm-1">Mật khẩu mới</label>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control valid" name="NewPassword" id="NewPassword" value="">
+                                        <span class="input-group-addon" onclick="RandomCode('NewPassword')">
+                                            <span class="lnr lnr-sync"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    @if (Model.Customer.IsActivated == true)
+                                    {
+                                        <label class="badge badge-success">Đã kích hoạt</label>
+                                    }
+                                    else if(Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                    {
+                                        <label for="IsSitemap">
+                                            <span>Kích hoạt</span>
+                                            <input type="checkbox" name="IsActivated" id="IsActivated" value="True" @((Model.Customer.IsActivated == false) ? "" : "checked") />
+                                            <input type="hidden" name="IsActivated" value="false" @((Model.Customer.IsActivated != true) ? "checked" : "") />
+                                        </label>
+                                    }
+                                </div>
+                                @if(Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-3">
+                                        <label for="IsSitemap">
+                                            <span>Khóa</span>
+                                            <input type="checkbox" name="IsLocked" id="IsLocked" value="True" @((Model.Customer.IsLocked == true) ? "checked" : "") />
+                                            <input type="hidden" name="IsLocked" value="false" @((Model.Customer.IsLocked != true) ? "checked" : "") />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab =="TabModule" ? "active" : string.Empty)" id="TabModule">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Danh mục đã chọn</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="hidden" name="RoleModuleIds" id="Value_ModuleValues" value="@Model.Customer.RoleModuleIds" />
+                                    <div id="Text_ModuleValues" class="checkBoxValues" style="font-weight:600;">@string.Join(",", Model.ListWebsiteModuleAdmin.Select(c => c.Name))</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <p style="position: absolute; right: 12px; top: 5px; font-weight: 600; text-transform: uppercase; margin: 0;">Danh mục</p>
+                                    <div id="LoadGridModule"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .customer-service-panel { border-bottom: 5px solid #ccc; margin-bottom: 20px; }
+                .del { margin-bottom: 10px }
+            </style>
+        </div>
+    </form>
+}

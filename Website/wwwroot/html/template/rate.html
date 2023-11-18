@@ -1,0 +1,215 @@
+﻿<div class="comment frm-comment frm-reply-rate">
+    <form method="post" action="/Ajax/Comment/ReplyRateAction" id="ReplyRate">
+        <input type="hidden" name="ContentID" id="ContentID_Reply" value="[ContentID]">
+        <input type="hidden" name="ParentID" id="CommentID_Reply" value="[ParentID]">
+        <input type="hidden" name="Type" id="TypeID" value="[Type]">
+        <div class="frms">
+            <textarea placeholder="[EnterComment]" name="Content">[Content]</textarea>
+            <div class="action">
+                <div class="img">
+                    <div class="input-file">
+                        <input type="file" id="Avatar_Reply_Rate" name="AvatarFile">
+                        <label for="Avatar_Reply_Rate"><span></span>[SendImage]</label>
+                    </div>
+                </div>
+                <div class="input">
+                    <input type="text" name="Fullname" [Readonly] value="[Fullname]" placeholder="[FullName] *">
+                    <input class="number" type="text" name="Phone" [Readonly] value="[Phone]" placeholder="[Phone] *">
+                    <input  type="text" name="Email" [Readonly] value="[Email]" placeholder="Email *">
+                    <button id="btnReplyRate" type="button">[Send]</button>
+                    <div class="processing">
+                        <div class="text-left">
+                            <div class="loadingio-spinner-spinner-uzlublexfob sending" style="display:none;">
+                                <div class="ldio-c4d59ljt0jh">
+                                    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="alrt-comment alrt-cmt-rate-[ParentID]" style="display:none;"></div>
+        </div>
+    </form>
+    <div class="insert-img-rate_Reply" style="display:none;"><img id="frm-avt-img-rate_Reply" src="" alt=""><i class="fa fa-times"></i></div>
+    <script>
+        function readURL_Rate_Reply(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.rate_Reply').show();
+                    $('#frm-avt-img-rate_Reply').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $('#Avatar_Reply_RAte').change(function () {
+            readURL_Reply(this);
+        });
+        $('.insert-img-rate_Reply').click(function () {
+            $('#Avatar_Reply_Rate').val('');
+            $('.insert-img-rate_Reply').hide();
+        });
+    </script>
+    <script>
+        $(function () {
+            ReplyRateAction();
+            $('.frm-comment textarea').focus(function () {
+                $(this).next('.action').addClass('active');
+            });
+            $('input.valid').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\.|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+            $('input.valid2').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+            $('textarea.valid').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+
+            $('input.email').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|�|�|`/g, "");
+                old = old.replace(/-+-/g, "");
+                $(this).val(old);
+            });
+            $('input.number').on('keyup', function () {
+                var old = $(this).val();
+                old = old.replace(/\D/g, '');
+                $(this).val(old);
+            })
+            $('input.fullname').on('keyup', function (e) {
+                e.preventDefault();
+                var old = $(this).val();
+                old = old.replace(/!|\$|\\|\{|\}|\||@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\:|\;|\'|\"|\&|\#|\[|\]|~|$|_|–|”|“|`/g, "");
+                old = old.replace(/-+-/g, "");
+                old = old.replace(/0|1|2|3|4|5|6|7|8|9/g, '');
+                old = old.replace(/^\-+|\-+$/g, "");
+                $(this).val(old);
+            });
+        })
+    </script>
+</div>
+
+<style>
+    .frm-comment {
+        margin-bottom: 30px;
+        width: 100%;
+    }
+
+        .frm-comment textarea {
+            border-radius: 3px;
+            border: 1px solid #dedede;
+            height: 120px;
+            width: 100%;
+            padding: 10px;
+            font-size: 14px
+        }
+
+        .frm-comment .action {
+            display: none;
+            width: 100%;
+            background: #fff
+        }
+
+            .frm-comment .action.active {
+                display: table;
+            }
+
+            .frm-comment .action .img input {
+                display: none
+            }
+
+            .frm-comment .action > * {
+                display: table-cell;
+                border: 1px solid #dedede;
+                border-collapse: collapse;
+                padding: 7.5px
+            }
+
+            .frm-comment .action .img {
+                width: 110px;
+                border-right: 0
+            }
+
+                .frm-comment .action .img label {
+                    font-weight: 400;
+                    font-size: 13px
+                }
+
+        .frm-comment label.error {
+            display: none !important;
+        }
+
+        .frm-comment .action .img label span {
+            width: 27px;
+            height: 20px;
+            display: block;
+            margin-right: 10px;
+            background-image: url(/html/style/images/ic-camera.jpg);
+            background-repeat: no-repeat;
+            float: left
+        }
+
+        .frm-comment .action .input {
+            text-align: right
+        }
+
+        .frm-comment .action input.error {
+            border: 1px solid red !important;
+        }
+
+        .frm-comment .action .input .processing {
+            display: none;
+            line-height: 1;
+            float: right
+        }
+
+            .frm-comment .action .input .processing.show {
+                display: inherit
+            }
+
+        .frm-comment .action .input > * {
+            margin-left: 3.5px;
+            display: inline-block;
+        }
+
+        .frm-comment .action .input input {
+            height: 30px;
+            border: 1px solid #dedede;
+            padding: 0 15px;
+            font-size: 14px;
+            color: #000
+        }
+
+            .frm-comment .action .input input::placeholder {
+                color: #000
+            }
+
+            .frm-comment .action .input input:read-only {
+                border: 0;
+                color: gray
+            }
+
+        .frm-comment .action .input button {
+            background: #1c348d;
+            line-height: 30px;
+            color: #fff;
+            padding: 0 10px;
+            border: 1px solid #dadada
+        }
+
+</style>

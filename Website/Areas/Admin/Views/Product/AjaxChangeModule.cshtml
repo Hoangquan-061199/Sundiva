@@ -1,0 +1,51 @@
+﻿@model Website.Areas.Admin.ViewModels.ProductViewModel
+@using ADCOnline.Utils
+@using ADCOnline.Simple.Base
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="UpdateForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-success btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <button id="close" type="button" class="primaryAction btn btn-danger" data-dismiss="modal" aria-label="Close"><span class="fa fa-close"></span></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.ContentIds" />
+            <div class="form-group">
+                <div class="col-sm-1">
+                    <label>Module</label>
+                </div>
+                <div class="col-sm-11">
+                    <input type="hidden" name="ModuleIds" id="Value_ModuleValues" value="" />
+                    <div id="Text_ModuleValues" class="checkBoxValues" style="font-weight:600"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <p style="position: absolute; right: 12px; top: 5px; font-weight: 600; text-transform: uppercase; margin: 0;">Danh mục</p>
+                    <div id="LoadGridModulePopup"></div>
+                </div>
+                <div class="col-sm-6">
+                    <p style="position: absolute; right: 12px; top: 5px; font-weight: 600; text-transform: uppercase; margin: 0;">Thương hiệu</p>
+                    <div id="LoadGridTradeMarkPopup"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(function() {
+            $("#UpdateForm").validate({
+                submitHandler: function() {
+                    Post(urlPostAction, "#UpdateForm");
+                    ModalADC.Close();
+                    return false;
+                }
+            });
+            loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=&module=Product', "#LoadGridModulePopup")
+            loadAjax('@Url.Action("AjaxGridSelect", "WebsiteModule")?MutilFile=True&ValuesSelected=&module=TradeMark', "#LoadGridTradeMarkPopup")
+        });
+    </script>
+}

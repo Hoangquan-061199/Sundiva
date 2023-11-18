@@ -1,0 +1,84 @@
+﻿@model Website.Areas.Admin.ViewModels.RedirectJsonViewModel
+@{
+    ViewBag.Title = ViewBag.ActionText + " điều hướng 301";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <script type="text/javascript">
+        $(function() {
+            $('.back-grid-view').click(function() {
+                var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&ItemID=@(Model.RedirectJsonAdmin.ID)";
+                loadAjax(listItems, "#loadGridView");
+                $('a[href="#tab_search"]').click();
+            });
+            $("#AddEditForm").validate({
+                rules: {
+                    OldUrl: { required: true, maxlength: 255 },
+                    NewUrl: { required: true, maxlength: 255 }
+                },
+                messages: {
+                    OldUrl: "Đường dẫn cũ bắt buộc nhập.",
+                    NewUrl: "Đường dẫn mới bắt buộc nhập."
+                },
+                submitHandler: function() { //onSubmit
+                    var tab = $('#Show-Destination ul li.active a').attr('href');
+                    tab = tab.substring(1, tab.length);
+                    var newurlForm = '@Url.Action("AjaxForm")' + "?tab=" + tab;
+                    PostWithAlert(urlPostAction, newurlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+
+        });
+    </script>
+
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.RedirectJsonAdmin.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="@(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab == "TabGenaral" ? "active" : string.Empty)"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Đường dẫn cũ</label>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control link" name="OldUrl" id="OldUrl" value="@Model.RedirectJsonAdmin.OldUrl">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Đường dẫn mới</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control link" name="NewUrl" id="NewUrl" value="@Model.RedirectJsonAdmin.NewUrl">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1"><label>Loại</label></div>
+                                <div class="col-sm-2">
+                                    <select class="form-control" name="TypeRedirect">
+                                        <option value="">No redirect</option>
+                                        <option value="301" @(Model.RedirectJsonAdmin.TypeRedirect=="301" ? "selected" : string.Empty)>301 - Moved Permanently</option>
+                                        <option value="302" @(Model.RedirectJsonAdmin.TypeRedirect=="302" ? "selected" : string.Empty)>302 - Moved Temporarily</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}

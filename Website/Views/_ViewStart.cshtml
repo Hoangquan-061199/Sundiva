@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "_Layout";
+    if (Context.Request.Cookies["viewer"] != null)
+    {
+        ViewBag.Viewer = Context.Request.Cookies["viewer"];
+    }
+    else
+    {
+        ViewBag.Viewer = Utility.IsMobile(Context.Request.Headers["User-Agent"]) ? "mobile" : "destop";
+    }
+    ViewBag.Lang = Context.Request.Cookies["lang"] != null ? Context.Request.Cookies["lang"] : StaticEnum.DefaultLanguage;
+    ViewBag.LangGoogle = Context.Request.Cookies["googtrans"] != null ? Context.Request.Cookies["googtrans"] : "/vi/vi";
+    ViewBag.UserId = Context.Session.GetInt32("WebUserID");
+    ViewBag.FullName = Context.Session.GetInt32("FullName");
+    ViewBag.IsMobile = Utility.IsMobile(Context.Request.Headers["User-Agent"]);
+}

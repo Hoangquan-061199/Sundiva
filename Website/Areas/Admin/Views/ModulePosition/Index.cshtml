@@ -1,0 +1,66 @@
+﻿@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Quản lý vị trí";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="col-sm-12">
+        @if (Model.ListModule.Any())
+        {
+            @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+            {
+                <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+            }
+        }
+    </div>
+    <span></span>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr form-inline">
+                    <input type="text" class="form-control title" id="Keyword" name="Keyword" placeholder="Nhập từ khóa cần tìm" style="width: calc(100% - 221px); margin-bottom: 10px; vertical-align: top;">
+                    <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                    <button type="reset" class="btn btn-default btn-sm" id="btnReset"><i class="lnr lnr-trash fa-fw" aria-hidden="true"></i> Xóa tìm kiếm</button>
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView"></div>
+        </div>
+        <div class="tab-pane fade" id="tab_add"></div>
+    </div>
+    <script>
+        $(function () {
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            $("#btnSearch").click(function () {
+                var form = $("#searchFrm");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+            $("#btnReset").click(function () {
+                var form = $("#searchFrm");
+                $("#searchFrm")[0].reset();
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+            $('#Keyword').donetyping(function () {
+                var form = $("#searchFrm");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+            $('.grid-note>span').click(function () {
+                $(this).next('.note-content').slideToggle();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,33 @@
+﻿@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Quản lý gán quyền Module";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <script type="text/javascript">
+        $(function() {
+            urlPostAction = '@Url.Action("Actions")';
+            urlLists = '@Url.Action("ListItems")';
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad(urlLists, "#ModuleGriditems");
+        });
+    </script>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <div class="ct_tabssc">
+                <div class="col-xs-12" id="ModuleGriditems"></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add"></div>
+    </div>
+}

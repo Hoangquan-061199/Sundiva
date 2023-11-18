@@ -1,0 +1,74 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.ContentDataJsonViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-hover">
+        <thead>
+            <tr role="row">
+                <th>ID</th>
+                <th>Email</th>
+                <th>Ngày tạo</th>
+                <th class="act_roles wd150 text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        @if (Model.GetListItem != null && Model.GetListItem.Count > 0)
+        {
+            <tbody>
+                @foreach (var item in Model.GetListItem.OrderByDescending(x => x.CreatedDate))
+                {
+                    <tr>
+                        <td>@item.ID</td>
+                        <td>@item.Email</td>
+                        <td>@Utility.ConvertDateTimeVi(item.CreatedDate)</td>
+                        <td class="act_delete noexport">
+                            <a href="#@item.ID" class="delete-js" data-type="@ViewBag.Type" title="Xóa:@item.Name">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+    <script>
+        $(function () {
+            registerGridView("#tblContent");
+        });
+    </script>
+    @if (Model.CommonJsonAdmin.ID > 0)
+    {
+        <script>
+            $(function () {
+                var item = $('#item_@(Model.CommonJsonAdmin.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}

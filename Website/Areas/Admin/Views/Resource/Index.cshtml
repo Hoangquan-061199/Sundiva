@@ -1,0 +1,70 @@
+﻿@using ADCOnline.Utils
+@using Website.Utils
+@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@{
+    ViewBag.Title = "Quản lý dữ liệu resource";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="col-sm-12">
+        @if (Model.ListModule.Any())
+        {
+            @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+            {
+                <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+            }
+        }
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <div class="ct_tabssc">
+                <form id="searchFrm">
+                    <div class="w_searchgr" style="padding:0;">
+                        <div class="form-group form-inline">
+                            <input type="text" class="form-control title" id="Keyword" name="Keyword" placeholder="Nhập từ khóa cần tìm" value="@Html.Raw(Context.Request.Query["Keyword"])">
+                            <select id="TypeJson" name="TypeJson" class="form-control">
+                                @*<option value="">--Ngôn ngữ--</option>*@
+                                <option value="@Resources.VI" @(Context.Request.Query["TypeJson"] == Resources.VI ? "selected" : "")>Tiếng Việt</option>
+                            </select>
+                            <input type="text" class="form-control" style="width: 100px !important;" name="page" value="" id="page" placeholder="Trang" />
+                            <button type="button" class="btn btn-info" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="w_tablegr" id="loadGridView"></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add"></div>
+    </div>
+    <script>
+        $(function() {
+            ValidInput();
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            var form = $("#searchFrm");
+            $("#btnSearch").click(function() {
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+            $("#TypeJson").change(function() {
+                var type = $("#TypeJson").val();
+                if (type == undefined || type == '') {
+                    createMessage("Thông báo", "Bạn phải ngôn ngữ");
+                    return false;
+                }
+                urlForm = replaceUrlParam(urlForm, "TypeJson", type);
+                urlForm = urlForm.replace("#", "?");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+            });
+        });
+    </script>
+}

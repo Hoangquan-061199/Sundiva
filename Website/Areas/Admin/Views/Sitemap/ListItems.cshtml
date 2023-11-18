@@ -1,0 +1,267 @@
+﻿@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="box" id="gridItems" style="padding:0;">
+        <div class="box-body table-responsive">
+            <table id="tblContent" class="table table-bordered">
+                <thead>
+                    <tr role="row">
+                        <th class="wd100">ID</th>
+                        <th>Url</th>
+                        <th>ModuleIds</th>
+                        <th class="wd200">Mã</th>
+                        <th>Priority</th>
+                        <th>Change frequency</th>
+                        <th class="wd150">Last modified (GMT)</th>
+                        <th class="wd150">Ngày tạo</th>
+                        <th class="act_roles noexport wd100 text-center">
+                            @if (Model.SystemActionAdmin.Delete)
+                            {
+                                <a href="#deleteAll" title="Xóa chọn" class="deleteAll btn btn-info"><span class="lnr lnr-trash"></span><span>Xóa nhiều</span></a>
+                            }
+                        </th>
+                        <th class="text-center wd50">
+                            <input type="checkbox" class="minimal checkAll" value="">
+                        </th>
+                    </tr>
+                </thead>
+                @if (Model.SitemapJsons.Any())
+                {
+                    if (!string.IsNullOrEmpty(Model.SearchModel.keyword) || Model.SearchModel.ModuleId.HasValue || !string.IsNullOrEmpty(Model.SearchModel.type) || !string.IsNullOrEmpty(Model.SearchModel.Status))
+                    {
+                        <tbody>
+                            @foreach (var item in Model.SitemapJsons.OrderBy(x => x.CreatedDate))
+                            {
+                                <tr id="item_@item.ID" class="@(item.ID==Model.SitemapJson.ID ? "active" : string.Empty)">
+                                    <td>@item.ID</td>
+                                    <td class="open-child" data-id="@item.ID">
+                                        @item.Url
+                                        @if (Model.SitemapJsons.Count(x => x.ParentID == item.ID) > 0)
+                                        {
+                                            <span class="badge badge-danger">@Model.SitemapJsons.Count(x => x.ParentID == item.ID)</span>
+                                        }
+                                    </td>
+                                    <td>@item.ModuleIds</td>
+                                    <td>@item.Code</td>
+                                    <td>@item.Priority%</td>
+                                    <td>@item.ChangeFrequency</td>
+                                    <td>@(item.LastModified.HasValue ? item.LastModified.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                    <td class="act_delete noexport">
+                                        @if (Model.SystemActionAdmin.Edit)
+                                        {
+                                            <a href="#@item.ID" class="edit-js" title="Sửa:@item.Url">
+                                                <span class="lnr lnr-pencil"></span>
+                                            </a>
+                                        }
+                                        <a href="@item.Url" target="_blank">
+                                            <span class="lnr lnr-eye"></span>
+                                        </a>
+                                        @if (Model.SystemActionAdmin.Delete)
+                                        {
+                                            <a href="#@item.ID" class="delete-js" data-type="@ViewBag.Type" title="Xóa:@item.Url">
+                                                <span class="lnr lnr-trash"></span>
+                                            </a>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="minimal check" value="@item.ID">
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    }
+                    else
+                    {
+                        <tbody>
+                            @foreach (var item in Model.SitemapJsons.Where(x => x.ParentID == 0).OrderBy(x => x.CreatedDate))
+                            {
+                                <tr id="item_@item.ID" class="@(item.ID==Model.SitemapJson.ID ? "active" : string.Empty)">
+                                    <td>@item.ID</td>
+                                    <td class="open-child" data-id="@item.ID">
+                                        @item.Url
+                                        @if (Model.SitemapJsons.Count(x => x.ParentID == item.ID) > 0)
+                                        {
+                                            <span class="badge badge-danger">@Model.SitemapJsons.Count(x => x.ParentID == item.ID)</span>
+                                        }
+                                    </td>
+                                    <td>@item.ModuleIds</td>
+                                    <td>@item.Code</td>
+                                    <td>@item.Priority%</td>
+                                    <td>@item.ChangeFrequency</td>
+                                    <td>@(item.LastModified.HasValue ? item.LastModified.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                    <td class="act_delete noexport">
+                                        @if (Model.SystemActionAdmin.Edit)
+                                        {
+                                            <a href="#@item.ID" class="edit-js" title="Sửa:@item.Url">
+                                                <span class="lnr lnr-pencil"></span>
+                                            </a>
+                                        }
+                                        <a href="@item.Url" target="_blank">
+                                            <span class="lnr lnr-eye"></span>
+                                        </a>
+                                        @if (Model.SystemActionAdmin.Delete)
+                                        {
+                                            <a href="#@item.ID" class="delete-js" data-type="@ViewBag.Type" title="Xóa:@item.Url">
+                                                <span class="lnr lnr-trash"></span>
+                                            </a>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="minimal check" value="@item.ID">
+                                    </td>
+                                </tr>
+                                foreach (var child in Model.SitemapJsons.Where(x => x.ParentID == item.ID).OrderBy(x => x.LastModified))
+                                {
+                                    <tr id="item_@child.ID" class="child-@item.ID level-2 hide@(child.ID==Model.SitemapJson.ID ? " active" : string.Empty)">
+                                        <td>@child.ID</td>
+                                        <td class="open-child" data-id="@child.ID">
+                                            @if (!string.IsNullOrEmpty(child.Code))
+                                            {
+                                                <span>I. @child.Url</span>
+                                                if (Model.SitemapJsons.Count(x => x.ParentID == child.ID) > 0)
+                                                {
+                                                    <span class="badge badge-danger">@Model.SitemapJsons.Count(x => x.ParentID == child.ID)</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>&#9679; @child.Url</span>
+                                            }
+                                        </td>
+                                        <td>@child.ModuleIds</td>
+                                        <td>@child.Code</td>
+                                        <td>@child.Priority%</td>
+                                        <td>@child.ChangeFrequency</td>
+                                        <td>@(child.LastModified.HasValue ? child.LastModified.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                        <td>@(child.CreatedDate.HasValue ? child.CreatedDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                        <td class="act_delete noexport">
+                                            @if (Model.SystemActionAdmin.Edit == true)
+                                            {
+                                                <a href="#@child.ID" class="edit-js" title="Sửa:@child.Url">
+                                                    <span class="lnr lnr-pencil"></span>
+                                                </a>
+                                            }
+                                            <a href="@child.Url" target="_blank">
+                                                <span class="lnr lnr-eye"></span>
+                                            </a>
+                                            @if (Model.SystemActionAdmin.Delete)
+                                            {
+                                                <a href="#@child.ID" class="delete-js" data-type="Sitemap" title="Xóa:@child.Url">
+                                                    <span class="lnr lnr-trash"></span>
+                                                </a>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="minimal check" value="@child.ID">
+                                        </td>
+                                    </tr>
+                                    foreach (var child2 in Model.SitemapJsons.Where(x => x.ParentID == child.ID).OrderBy(x => x.CreatedDate))
+                                    {
+                                        <tr id="item_@child2.ID" class="child-@child.ID level-3 hide@(child2.ID==Model.SitemapJson.ID ? " active" : string.Empty)">
+                                            <td>@child2.ID</td>
+                                            <td class="open-child" data-id="@child2.ID">
+                                                @if (!string.IsNullOrEmpty(child2.Code))
+                                                {
+                                                    <span>II. @child2.Url</span>
+                                                    @if (Model.SitemapJsons.Count(x => x.ParentID == child2.ID) > 0)
+                                                    {
+                                                        <span class="badge badge-danger">@Model.SitemapJsons.Count(x => x.ParentID == child2.ID)</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>&#9679; @child2.Url</span>
+                                                }
+                                            </td>
+                                            <td>@child2.ModuleIds</td>
+                                            <td>@child2.Code</td>
+                                            <td>@child2.Priority%</td>
+                                            <td>@child2.ChangeFrequency</td>
+                                            <td>@(child2.LastModified.HasValue ? child2.LastModified.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                            <td>@(child2.CreatedDate.HasValue ? child2.CreatedDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : string.Empty)</td>
+                                            <td class="act_delete noexport">
+                                                @if (Model.SystemActionAdmin.Edit)
+                                                {
+                                                    <a href="#@child2.ID" class="edit-js" title="Sửa: @child2.Url">
+                                                        <span class="lnr lnr-pencil"></span>
+                                                    </a>
+                                                }
+                                                <a href="@child2.Url" target="_blank">
+                                                    <span class="lnr lnr-eye"></span>
+                                                </a>
+                                                @if (Model.SystemActionAdmin.Delete)
+                                                {
+                                                    <a href="#@child2.ID" class="delete-js" data-type="Sitemap" title="Xóa: @child2.Url">
+                                                        <span class="lnr lnr-trash"></span>
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="checkbox" class="minimal check" value="@child2.ID">
+                                            </td>
+                                        </tr>
+
+                                    }
+                                }
+                            }
+                        </tbody>
+                    }
+
+                }
+            </table>
+        </div>
+    </div>
+    <p>@ViewBag.Total</p>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+            $('.lnr-enter, .open-child').click(function() {
+                var id = $(this).data('id');
+                $('.child-' + id).toggleClass('hide');
+            });
+            $('#ShowAll').click(function() {
+                $("tr[class^='child-']").removeClass('hide');
+            });
+            $('#HideAll').click(function() {
+                $("tr[class^='child-']").addClass('hide');
+            });
+            $('table tbody tr.active').each(function() {
+                var id = $(this).data('id');
+                $('.child-' + id).removeClass('hide');
+                var parent = $('#item_' + id).data('id');
+                $('.child-' + parent).removeClass('hide');
+            });
+        });
+    </script>
+    <style>
+        .level-2 td:nth-child(2) { padding-left: 15px; }
+        .level-3 td:nth-child(2) { padding-left: 25px; }
+        .level-4 td:nth-child(2) { padding-left: 35px; }
+        .level-5 td:nth-child(2) { padding-left: 45px; }
+        .lnr-enter, .open-child { cursor: pointer; }
+    </style>
+    @if (Model.SitemapJson.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.SitemapJson.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+    @if (Model.SearchModel.ModuleId.HasValue && Model.SearchModel.ModuleId != 0)
+    {
+        <script>
+            $('.selectpicker').selectpicker('val', '@Model.SearchModel.ModuleId');
+        </script>
+    }
+}

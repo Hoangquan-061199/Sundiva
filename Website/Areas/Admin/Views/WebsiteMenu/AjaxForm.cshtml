@@ -1,0 +1,185 @@
+﻿@using ADCOnline.Simple.Base
+@using ADCOnline.Utils
+@model Website.Areas.Admin.ViewModels.WebsiteMenuViewModel
+@if (Model.SystemActionAdmin.Add || Model.SystemActionAdmin.Edit)
+{
+    <link href="/lib/select-bootstrap/bootstrap-select.css" rel="stylesheet" />
+    <script src="/lib/select-bootstrap/bootstrap-select.js"></script>
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+                <div class="btn btn-info back-grid-view">Quay lại</div>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.ObjBase.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Tên</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control title" autocomplete="off" name="Name" id="Name" value="@Model.ObjBase.Name" placeholder="Tên" />
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Tiêu đề</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control title" autocomplete="off" name="Title" id="Title" value="@Model.ObjBase.Title" placeholder="Tiêu đề" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Menu cha</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select class="form-control selectsearch" name="ParentID" id="ParentID" data-container="body" data-live-search="true" title="Chọn menu cha" data-hide-disabled="true">
+                                        <option value="0" @(Model.ObjBase.ParentID.Value == 0 ? "selected" : string.Empty)>-- Chọn</option>
+                                        @if (Model.ListItem.Any())
+                                        {
+                                            foreach (var item in Model.ListItem.Where(x => x.ParentID == 0).OrderBy(x => x.OrderDisplay))
+                                            {
+                                                <option value="@item.ID" @(item.ID == Model.ObjBase.ParentID ? "selected" : string.Empty)>@item.Name</option>
+                                                foreach (var module in Model.ListItem.Where(x => x.ParentID == item.ID).OrderBy(x => x.OrderDisplay))
+                                                {
+                                                    <option value="@module.ID" @(module.ID == Model.ObjBase.ParentID ? "selected" : string.Empty)>- @module.Name</option>
+                                                    foreach (var child in Model.ListItem.Where(x => x.ParentID == module.ID).OrderBy(x => x.OrderDisplay))
+                                                    {
+                                                        <option value="@child.ID" @(child.ID == Model.ObjBase.ParentID ? "selected" : string.Empty)>-- @child.Name</option>
+                                                        foreach (var child1 in Model.ListItem.Where(x => x.ParentID == child.ID).OrderBy(x => x.OrderDisplay))
+                                                        {
+                                                            <option value="@child1.ID" @(child1.ID == Model.ObjBase.ParentID ? "selected" : string.Empty)>--- @child1.Name</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Link url</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <input type="text" class="form-control link" autocomplete="off" name="Link" id="Link" value="@Model.ObjBase.Link" placeholder="Link url" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ảnh</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                        <input type="text" class="changeUrlTinyMce link form-control" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" style="margin:0;" value="@Model.ObjBase.UrlPicture" />
+                                    </div>
+                                    <div id="AddAvatar">
+                                        @if (Model.ObjBase.UrlPicture != null)
+                                        {
+                                            <table class="removeParent">
+                                                <tr>
+                                                    <td>
+                                                        <img style="width: 100px; max-height: 100px;" src="@Model.ObjBase.UrlPicture">
+                                                        <input type="hidden" name="UrlPicture" value="@Model.ObjBase.UrlPicture">
+                                                        <a href="javascript:void(0);" class="removeObject"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Video</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('Video','UrlVideo',2);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Chọn file</button>
+                                        </span>
+                                        <input type="text" class="form-control link" id="UrlVideo" name="UrlVideo" placeholder="Link video" style="margin:0;" value="@Model.ObjBase.UrlVideo" />
+                                    </div>
+                                    <span>Hướng dẫn: Chọn file hoặc Copy link youtube (bHLG1RVt7Kw)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.SystemActionAdmin.Order || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Thứ tự</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control text-box single-line maskNumber text-center" id="OrderDisplay" name="OrderDisplay" type="number" value="@Model.ObjBase.OrderDisplay" placeholder="Thứ tự" autocomplete="off" />
+                                    </div>
+                                }
+                                @if (Model.SystemActionAdmin.Active || ViewBag.Action == "Add")
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Hiện</label>
+                                        <label>
+                                            <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.ObjBase.IsShow == false) ? "" : "checked") />
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Mô tả</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="Description" name="Description" class="form-control">@Model.ObjBase.Description</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Chi tiết menu</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <textarea rows="10" id="Content" name="Content" class="form-control">@Model.ObjBase.Content</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        ValidInput();
+        $('.back-grid-view').click(function() {
+            var listItems = '@Url.Action("ListItems")' + "?" + getValueFormMutilSelect($("#searchFrm")) + "&contentId=@(Model.ObjBase.ID)";
+            loadAjax(listItems, "#loadGridView");
+            $('a[href="#tab_search"]').click();
+        });
+        LoadCKEDITOR('Description', true);
+        LoadCKEDITOR('Content', true);
+        $('.selectsearch').selectpicker();
+        $(function() {
+            $("#AddEditForm").validate({
+                rules: {
+                    Name: { required: true, maxlength: 255 },
+                },
+                messages: {
+                    Name: "Tên Module bắt buộc nhập."
+                },
+                submitHandler: function() { //onSubmit
+                    updateEditor();
+                    urlForm = '@Url.Action("AjaxForm")';
+                    PostWithAlert(urlPostAction, urlForm, "#AddEditForm");
+                    return false;
+                }
+            });
+        });
+    </script>
+}

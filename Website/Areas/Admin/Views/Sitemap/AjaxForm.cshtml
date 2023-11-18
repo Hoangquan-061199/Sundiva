@@ -1,0 +1,121 @@
+﻿@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = ViewBag.ActionText + " sitemap";
+    Layout = "~/Areas/Admin/Views/Shared/_Ajax.cshtml";
+}
+@if (Model.SystemActionAdmin.Edit || Model.SystemActionAdmin.Add)
+{
+    <form id="AddEditForm" class="form-horizontal">
+        <div class="box-footer">
+            <div class="btncss">
+                <button id="submit" type="submit" class="primaryAction btn btn-info btn-sm">@ViewBag.ActionText</button>
+                <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <input type="hidden" name="Do" id="Do" value="@ViewBag.Action" />
+            <input type="hidden" name="ItemId" id="ItemId" value="@Model.SitemapJson.ID" />
+            <div class="content-panel" id="Show-Destination" style="display: block">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist" id="myTab">
+                        <li role="presentation" class="active"><a href="#TabGenaral" aria-controls="TabGenaral" role="tab" data-toggle="tab">Tổng quan</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="TabGenaral">
+                            <div class="form-group">
+                                <label class="col-sm-1">Url</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control link" name="Url" id="Url" value="@Model.SitemapJson.Url">
+                                </div>
+                                <label class="col-sm-1">Code</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control code" name="Code" id="Code" value="@Model.SitemapJson.Code">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Priority</label>
+                                <div class="col-sm-5">
+                                    <input type="number" max="100" min="0" name="Priority" class="form-control promotion-input" id="Priority" value="@Model.SitemapJson.Priority" placeholder="%" />
+                                </div>
+                                <div class="col-sm-1">Change frequency</div>
+                                <div class="col-sm-5">
+                                    <select name="ChangeFrequency" class="form-control">
+                                        <option value="Always" @(Model.SitemapJson.ChangeFrequency == "Always" ? "selected" : string.Empty)>Always</option>
+                                        <option value="Hourly" @(Model.SitemapJson.ChangeFrequency == "hourly" ? "selected" : string.Empty)>Hourly</option>
+                                        <option value="Daily" @(Model.SitemapJson.ChangeFrequency == "Daily" ? "selected" : string.Empty)>Daily</option>
+                                        <option value="Weekly" @(Model.SitemapJson.ChangeFrequency == "Weekly" ? "selected" : string.Empty)>Weekly</option>
+                                        <option value="Monthly" @(Model.SitemapJson.ChangeFrequency == "Monthly" ? "selected" : string.Empty)>Monthly</option>
+                                        <option value="Yearly" @(Model.SitemapJson.ChangeFrequency == "Yearly" ? "selected" : string.Empty)>Yearly</option>
+                                        <option value="Never" @(Model.SitemapJson.ChangeFrequency == "Never" ? "selected" : string.Empty)>Never</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">Last modified (GMT)</div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" id="LastModified" autocomplete="off" value="@Utility.ConvertDateTimeVi(Model.SitemapJson.LastModified??DateTime.Now)" class="form-control dateddmmyyy">
+                                        <div class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">Sitemap cha</div>
+                                <div class="col-sm-5">
+                                    <select class="form-control parent-sitemap" name="ParentID" data-container="body" data-live-search="true" title="-- Sitemap cha --" data-hide-disabled="true">
+                                        <option value="0">-- Gốc</option>
+                                        @if (Model.SitemapJsons.Any())
+                                        {
+                                            foreach (var parent in Model.SitemapJsons.Where(x => x.ParentID == 0).OrderByDescending(x => x.LastModified))
+                                            {
+                                                <option value="@parent.ID" @(parent.ID == Model.SitemapJson.ParentID ? "selected" : string.Empty)>@parent.Url</option>
+
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <link href="/lib/select-bootstrap/bootstrap-select.css" rel="stylesheet" />
+    <script src="/lib/select-bootstrap/bootstrap-select.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            ValidInput();
+            $('.parent-sitemap').selectpicker();
+            removeObject();
+            $('#Priority').change(function() {
+                var val = $(this).val();
+                if (val < 0) $(this).val(0);
+                if (val > 100) $(this).val(100);
+            });
+            DateTimeVi("#LastModified");
+            $("#AddEditForm").validate({
+                rules: {
+                    Url: { required: true },
+                    Priority: { required: true },
+                    ChangeFrequency: { required: true },
+                    LastModified: { required: true },
+                },
+                messages: {
+                    Url: "Url bắt buộc nhập.",
+                    Priority: "Priority bắt buộc nhập.",
+                    ChangeFrequency: "Change frequency bắt buộc nhập.",
+                    LastModified: "Last modified bắt buộc nhập.",
+                },
+                submitHandler: function() { //onSubmit
+                    updateDateDDMMYYYY();
+                    Post(urlPostAction, "#AddEditForm");
+                    return false;
+                }
+            });
+        });
+    </script>
+
+}
