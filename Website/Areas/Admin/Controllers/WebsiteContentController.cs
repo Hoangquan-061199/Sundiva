@@ -282,7 +282,7 @@ namespace Website.Areas.Admin.Controllers
                 return View("AjaxFormSimple", module);
             }
             List<string> lstType = new() {
-                StaticEnum.ContactUs, StaticEnum.Doctorteam, StaticEnum.Specialist,StaticEnum.Video, StaticEnum.Contact, StaticEnum.Project, StaticEnum.DistributionSystem, StaticEnum.QA,StaticEnum.Gallery,
+                StaticEnum.Catalogue, StaticEnum.ContactUs, StaticEnum.Doctorteam, StaticEnum.Specialist,StaticEnum.Video, StaticEnum.Contact, StaticEnum.Project, StaticEnum.DistributionSystem, StaticEnum.QA,StaticEnum.Gallery,
                 StaticEnum.Document, StaticEnum.Recuitment, StaticEnum.Company, StaticEnum.Introduce, StaticEnum.Application, StaticEnum.Partner, StaticEnum.BusinessAreas
             };
             if (!string.IsNullOrEmpty(type) && lstType.Contains(type))

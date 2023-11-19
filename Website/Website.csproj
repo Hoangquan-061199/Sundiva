@@ -33,6 +33,7 @@
     <Compile Remove="Views\Shared\Components\ViewedProductComponent\**" />
     <Compile Remove="Views\Stores\**" />
     <Compile Remove="wwwroot\api\**" />
+    <Compile Remove="wwwroot\apply\**" />
     <Compile Remove="wwwroot\ckeditor\**" />
     <Compile Remove="wwwroot\comment\**" />
     <Compile Remove="wwwroot\html\catalog\**" />
@@ -66,6 +67,7 @@
     <Content Remove="Views\Shared\Components\ViewedProductComponent\**" />
     <Content Remove="Views\Stores\**" />
     <Content Remove="wwwroot\api\**" />
+    <Content Remove="wwwroot\apply\**" />
     <Content Remove="wwwroot\ckeditor\**" />
     <Content Remove="wwwroot\comment\**" />
     <Content Remove="wwwroot\html\catalog\**" />
@@ -104,6 +106,7 @@
     <EmbeddedResource Remove="Views\Shared\Components\ViewedProductComponent\**" />
     <EmbeddedResource Remove="Views\Stores\**" />
     <EmbeddedResource Remove="wwwroot\api\**" />
+    <EmbeddedResource Remove="wwwroot\apply\**" />
     <EmbeddedResource Remove="wwwroot\ckeditor\**" />
     <EmbeddedResource Remove="wwwroot\comment\**" />
     <EmbeddedResource Remove="wwwroot\html\catalog\**" />
@@ -141,6 +144,7 @@
     <None Remove="Views\Shared\Components\ViewedProductComponent\**" />
     <None Remove="Views\Stores\**" />
     <None Remove="wwwroot\api\**" />
+    <None Remove="wwwroot\apply\**" />
     <None Remove="wwwroot\ckeditor\**" />
     <None Remove="wwwroot\comment\**" />
     <None Remove="wwwroot\html\catalog\**" />
@@ -1307,10 +1311,6 @@
     <None Include="wwwroot\lib\tinymce\js\jquery-dateFormat.min.js" />
     <None Include="wwwroot\lib\tinymce\js\main.js" />
     <None Include="wwwroot\lib\tinymce\js\main.min.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\apply\" />
   </ItemGroup>
 
 </Project>

@@ -42,7 +42,8 @@
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
             pageLanguage: "vi",
-            includedLanguages: "@string.Join(",", Model.LanguageItems.Select(x => x.Code))",
+            // includedLanguages: "@string.Join(",", Model.LanguageItems.Select(x => x.Code))",
+            includedLanguages: "vi,en",
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: true
         }, "google_translate_element");

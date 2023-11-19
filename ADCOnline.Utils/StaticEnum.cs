@@ -8,7 +8,7 @@ namespace ADCOnline.Utils
         public const string HeadTop = "HeadTop";//HeadTop
         public const string Logo = "Logo";
         public const string MainMenu = "MainMenu";
-        public const string Menu2 = "Menu2";
+        public const string MenuTop = "MenuTop";
         public const string MainTop = "MainTop";
         public const string AboutIndex = "AboutIndex";
         public const string PartnerIndex = "PartnerIndex";
@@ -49,12 +49,12 @@ namespace ADCOnline.Utils
         public const string TinTucNoiBat = "TinTucNoiBat";
         public const string TechnicalAdviceIndex = "TechnicalAdviceIndex";
         public const string Footer = "Footer";//Footer
-        public const string MenuFooterColumn = "MenuFooterColumn";
-        public const string MenuFooterColumn1 = "MenuFooterColumn1";
+        public const string CatalogueIndex = "CatalogueIndex";
         public const string GoogleMap = "GoogleMap";
         public const string LogoFooter = "LogoFooter";
         public const string FormContact = "FormContact";
-        public const string MenuFooterRow = "MenuFooterRow";
+        public const string MenuFooter = "MenuFooter";
+        public const string ContactFooter = "ContactFooter";
         public const string RightLayout = "RightLayout";//RightLayout
         public const string ModuleGuide = "ModuleGuide";
         public const string SpecialistIndex = "SpecialistIndex";
@@ -95,6 +95,7 @@ namespace ADCOnline.Utils
         public const string Video = "Video";
         public const string Trademark = "Trademark";
         public const string Cart = "Cart";
+        public const string Catalogue = "Catalogue";
         public const string LogIn = "LogIn";
         public const string Register = "Register";
         public const string History = "History";
@@ -121,9 +122,13 @@ namespace ADCOnline.Utils
         #endregion
         #region loại hiển thị giới thiệu
         public const string ThuNgo = "ThuNgo";
-        public const string Quatrinh = "Quatrinh";
+        public const string GioiThieuChung = "GioiThieuChung";
         public const string TamNhin = "TamNhin";
-        public const string SoDo = "SoDo";
+        public const string GiaTri = "GiaTri";
+        public const string LichSu = "LichSu";
+        public const string NangLuc = "NangLuc";
+        public const string DoiNgu = "DoiNgu";
+        public const string ThanhTich = "ThanhTich";
         #endregion
         #region loại hiển thị thư viện
         public const string Videos = "Videos";

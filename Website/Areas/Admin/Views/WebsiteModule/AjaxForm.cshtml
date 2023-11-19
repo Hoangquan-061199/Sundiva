@@ -44,10 +44,15 @@
                                 <div class="col-sm-1">
                                     <label>Tên</label>
                                 </div>
-                                <div class="col-sm-8">
+                                <div class="col-sm-5">
                                     <input type="text" class="form-control notvalid count @(ViewBag.Action.Equals("Add") ? "autoPermalink" : "" )" autocomplete="off" name="Name" id="Name" value="@Model.WebsiteModule.Name" placeholder="Tên module" />
                                 </div>
-                                <div class="col-sm-3"><span class="Val-Name"><span><b>0</b> ký tự <b>0</b> từ</span></span></div>
+                                <div class="col-sm-1">
+                                    <label>Tên khác</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control notvalid" autocomplete="off" name="Title" id="Title" value="@Model.WebsiteModule.Title" placeholder="Tên khác" />
+                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
@@ -58,12 +63,10 @@
                                         <input type="text" class="form-control link" name="NameAscii" id="NameAscci" value="@Model.WebsiteModule.NameAscii" placeholder="Link" autocomplete="off" />
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
                                 <div class="col-sm-1">
                                     <label>Link redirect</label>
                                 </div>
-                                <div class="col-sm-11">
+                                <div class="col-sm-5">
                                     <input type="text" class="form-control link" name="LinkUrl" id="LinkUrl" value="@Model.WebsiteModule.LinkUrl" placeholder="Link url" autocomplete="off" />
                                 </div>
                             </div>
@@ -144,7 +147,7 @@
 
 
 
-                                <div class="col-sm-1">
+                                @* <div class="col-sm-1">
                                     <label>Kiểu sản phẩm</label>
                                 </div>
                                 <div class="col-sm-2">
@@ -153,7 +156,7 @@
                                         <option value="@StaticEnum.TypeProductI" @(Model.WebsiteModule.TypeView == StaticEnum.TypeProductI ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.TypeProductI)</option>
                                         <option value="@StaticEnum.TypeProductII" @(Model.WebsiteModule.TypeView == StaticEnum.TypeProductII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.TypeProductII)</option>
                                     </select>
-                                </div>
+                                </div> *@
                                 @*<div class="col-sm-1">
                             <label>Đặc biệt</label>
                             </div>
