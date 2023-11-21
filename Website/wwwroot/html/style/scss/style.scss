@@ -9,6 +9,7 @@ body {
 
     @include maxWidth(992px) {
         margin-top: 59.85px;
+
         @include maxWidth(767px) {
             margin-top: 53px;
         }
@@ -641,6 +642,7 @@ body {
             top: -67.8px;
             left: 20px;
             border-radius: 5px 5px 0 0;
+
             @include maxWidth(767px) {
                 top: -60.13px;
             }
@@ -1280,6 +1282,7 @@ body {
             }
         }
     }
+
     @include maxWidth(992px) {
         padding: 0 15px !important;
     }
@@ -1711,6 +1714,22 @@ header {
         .item {
             padding: 15px;
 
+            .text {
+                .paragraph {
+                    ul {
+                        display: flex;
+                        align-items: flex-start;
+                        flex-wrap: wrap;
+                        column-gap: 35px;
+                        row-gap: 15px;
+
+                        li {
+                            width: calc(50% - 35px / 2);
+                        }
+                    }
+                }
+            }
+
             .img {
                 img {
                     @include resizeImg();
@@ -1918,7 +1937,7 @@ footer {
             }
 
             .logo {
-                width: 151px;
+                width: var(--width-logo-ft);
                 aspect-ratio: 151/44;
             }
 
@@ -2761,6 +2780,7 @@ footer {
             &.full {
                 grid-template-columns: 100%;
             }
+
             @include maxWidth(992px) {
                 grid-template-columns: 100%;
                 gap: 20px;
