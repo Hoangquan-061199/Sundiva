@@ -24,6 +24,7 @@
     ViewBag.Canonical = !string.IsNullOrEmpty(Model.ProductItem.Canonical) ? Model.ProductItem.Canonical : string.Empty;
     ViewBag.IsSchema = false;
     ViewBag.Index = false;
+    var hotline = !string.IsNullOrEmpty(Model.SystemConfigJson.Hotline) ? Model.SystemConfigJson.Hotline.Replace(" ", "").Split(',') : null;
     ViewBag.LangModule = Model.ModuleItem.Lang;
     var TotalRate = Model.ProductItem.TotalRate;
     ViewBag.Banner = false;
@@ -31,12 +32,10 @@
 @if (Model.ProductItem != null)
 {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.css">
-    <div class="path">
+    <div class="path no-banner">
         <div class="container">
             <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
-                <svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 0 576 512">
-                    <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
-                </svg>
+                @ResourceData.Resource("TrangChu", ViewBag.Lang)
             </a>
             <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
@@ -46,555 +45,210 @@
                 </svg>
             </div>
             <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
-            <a href="@Utility.Link(Model.ModuleItem.NameAscii, string.Empty, Model.ModuleItem.LinkUrl)" title="@Model.ModuleItem.Name">
-                @Model.ModuleItem.Name
-            </a>
+            <div>@Model.ModuleItem.Name</div>
         </div>
     </div>
-    <div class="endow-tour-detail">
+    <div class="product-detail">
         <div class="container">
-            <div class="title">
-                <div class="left">
-                    <h1 class="big-title">
-                        @Model.ProductItem.Name_
-                    </h1>
-                    <div class="rate">
-                        <div class="star first">
-                            @if (Model.ProductItem.TotalStars == 0)
-                            {
-                                <div class="item">
-                                    <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                         viewBox="0 0 576 512">
-                                        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                    </svg>
-                                </div>
-                                <div class="item">
-                                    <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                         viewBox="0 0 576 512">
-                                        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                    </svg>
-                                </div>
-                                <div class="item">
-                                    <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                         viewBox="0 0 576 512">
-                                        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                    </svg>
-                                </div>
-                                <div class="item">
-                                    <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                         viewBox="0 0 576 512">
-                                        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                    </svg>
-                                </div>
-                                <div class="item">
-                                    <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                         viewBox="0 0 576 512">
-                                        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                    </svg>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="item 5">
-                                    @if (Model.ProductItem.TotalStars == 5)
-                                    {
-                                        <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                    else if (Model.ProductItem.TotalStars < 5 && Model.ProductItem.TotalStars > 4)
-                                    {
-                                        <svg class="1-2 active" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M320 376.4l.1-.1 26.4 14.1 85.2 45.5-16.5-97.6-4.8-28.7 20.7-20.5 70.1-69.3-96.1-14.2-29.3-4.3-12.9-26.6L320.1 86.9l-.1 .3V376.4zm175.1 98.3c2 12-3 24.2-12.9 31.3s-23 8-33.8 2.3L320.1 439.8 191.8 508.3C181 514 167.9 513.1 158 506s-14.9-19.3-12.9-31.3L169.8 329 65.6 225.9c-8.6-8.5-11.7-21.2-7.9-32.7s13.7-19.9 25.7-21.7L227 150.3 291.4 18c5.4-11 16.5-18 28.8-18s23.4 7 28.8 18l64.3 132.3 143.6 21.2c12 1.8 22 10.2 25.7 21.7s.7 24.2-7.9 32.7L470.5 329l24.6 145.7z" /></svg>
-                                    }
-                                    else
-                                    {
-                                        <svg class="full" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                </div>
-                                <div class="item 4">
-                                    @if (Model.ProductItem.TotalStars >= 4)
-                                    {
-                                        <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                    else if (Model.ProductItem.TotalStars < 4 && Model.ProductItem.TotalStars > 3)
-                                    {
-                                        <svg class="1-2 active" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M320 376.4l.1-.1 26.4 14.1 85.2 45.5-16.5-97.6-4.8-28.7 20.7-20.5 70.1-69.3-96.1-14.2-29.3-4.3-12.9-26.6L320.1 86.9l-.1 .3V376.4zm175.1 98.3c2 12-3 24.2-12.9 31.3s-23 8-33.8 2.3L320.1 439.8 191.8 508.3C181 514 167.9 513.1 158 506s-14.9-19.3-12.9-31.3L169.8 329 65.6 225.9c-8.6-8.5-11.7-21.2-7.9-32.7s13.7-19.9 25.7-21.7L227 150.3 291.4 18c5.4-11 16.5-18 28.8-18s23.4 7 28.8 18l64.3 132.3 143.6 21.2c12 1.8 22 10.2 25.7 21.7s.7 24.2-7.9 32.7L470.5 329l24.6 145.7z" /></svg>
-                                    }
-                                    else
-                                    {
-                                        <svg class="full" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                </div>
-                                <div class="item 3">
-                                    @if (Model.ProductItem.TotalStars >= 3)
-                                    {
-                                        <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                    else if (Model.ProductItem.TotalStars < 3 && Model.ProductItem.TotalStars > 2)
-                                    {
-                                        <svg class="1-2 active" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M320 376.4l.1-.1 26.4 14.1 85.2 45.5-16.5-97.6-4.8-28.7 20.7-20.5 70.1-69.3-96.1-14.2-29.3-4.3-12.9-26.6L320.1 86.9l-.1 .3V376.4zm175.1 98.3c2 12-3 24.2-12.9 31.3s-23 8-33.8 2.3L320.1 439.8 191.8 508.3C181 514 167.9 513.1 158 506s-14.9-19.3-12.9-31.3L169.8 329 65.6 225.9c-8.6-8.5-11.7-21.2-7.9-32.7s13.7-19.9 25.7-21.7L227 150.3 291.4 18c5.4-11 16.5-18 28.8-18s23.4 7 28.8 18l64.3 132.3 143.6 21.2c12 1.8 22 10.2 25.7 21.7s.7 24.2-7.9 32.7L470.5 329l24.6 145.7z" /></svg>
-                                    }
-                                    else
-                                    {
-                                        <svg class="full" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                </div>
-                                <div class="item 2">
-                                    @if (Model.ProductItem.TotalStars >= 2)
-                                    {
-                                        <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                    else if (Model.ProductItem.TotalStars < 2 && Model.ProductItem.TotalStars > 1)
-                                    {
-                                        <svg class="1-2 active" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M320 376.4l.1-.1 26.4 14.1 85.2 45.5-16.5-97.6-4.8-28.7 20.7-20.5 70.1-69.3-96.1-14.2-29.3-4.3-12.9-26.6L320.1 86.9l-.1 .3V376.4zm175.1 98.3c2 12-3 24.2-12.9 31.3s-23 8-33.8 2.3L320.1 439.8 191.8 508.3C181 514 167.9 513.1 158 506s-14.9-19.3-12.9-31.3L169.8 329 65.6 225.9c-8.6-8.5-11.7-21.2-7.9-32.7s13.7-19.9 25.7-21.7L227 150.3 291.4 18c5.4-11 16.5-18 28.8-18s23.4 7 28.8 18l64.3 132.3 143.6 21.2c12 1.8 22 10.2 25.7 21.7s.7 24.2-7.9 32.7L470.5 329l24.6 145.7z" /></svg>
-                                    }
-                                    else
-                                    {
-                                        <svg class="full" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                </div>
-                                <div class="item 1">
-                                    @if (Model.ProductItem.TotalStars >= 1)
-                                    {
-                                        <svg class="full active" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                    else if (Model.ProductItem.TotalStars < 1)
-                                    {
-                                        <svg class="1-2 active" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M320 376.4l.1-.1 26.4 14.1 85.2 45.5-16.5-97.6-4.8-28.7 20.7-20.5 70.1-69.3-96.1-14.2-29.3-4.3-12.9-26.6L320.1 86.9l-.1 .3V376.4zm175.1 98.3c2 12-3 24.2-12.9 31.3s-23 8-33.8 2.3L320.1 439.8 191.8 508.3C181 514 167.9 513.1 158 506s-14.9-19.3-12.9-31.3L169.8 329 65.6 225.9c-8.6-8.5-11.7-21.2-7.9-32.7s13.7-19.9 25.7-21.7L227 150.3 291.4 18c5.4-11 16.5-18 28.8-18s23.4 7 28.8 18l64.3 132.3 143.6 21.2c12 1.8 22 10.2 25.7 21.7s.7 24.2-7.9 32.7L470.5 329l24.6 145.7z" /></svg>
-                                    }
-                                    else
-                                    {
-                                        <svg class="full" xmlns="http://www.w3.org/2000/svg" height="15px"
-                                             viewBox="0 0 576 512">
-                                            <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                    }
-                                </div>
-                            }
-                        </div>
-                        <div class="star none">
-                            <input name="stars" id="e1" type="radio" value="5">
-                            <label for="e1">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="15px"
-                                     viewBox="0 0 576 512">
-                                    <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                </svg>
-                            </label>
-                            <input name="stars" id="e2" type="radio" value="4">
-                            <label for="e2">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="15px"
-                                     viewBox="0 0 576 512">
-                                    <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                </svg>
-                            </label>
-                            <input name="stars" id="e3" type="radio" value="3">
-                            <label for="e3">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="15px"
-                                     viewBox="0 0 576 512">
-                                    <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                </svg>
-                            </label>
-                            <input name="stars" id="e4" type="radio" value="2">
-                            <label for="e4">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="15px"
-                                     viewBox="0 0 576 512">
-                                    <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                </svg>
-                            </label>
-                            <input name="stars" id="e5" type="radio" value="1">
-                            <label for="e5">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="15px"
-                                     viewBox="0 0 576 512">
-                                    <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                </svg>
-                            </label>
-                        </div>  
-                        <p>
-                            <strong><spa class="total-star">@Model.ProductItem.TotalStars</spa>/5</strong>
-                            @if (Model.ProductItem.TotalRate != null)
-                            {
-                                @ResourceData.Resource("Trong", ViewBag.Lang) <strong class="total-rate">@Model.ProductItem.TotalRate</strong> @ResourceData.Resource("DanhGia", ViewBag.Lang)
-                            }
-                        </p>
-                    </div>
-                </div>
-                <div class="right">
-                    <div class="price">
-                        <p>@ResourceData.Resource("GiaTu", ViewBag.Lang): <strong>@Utility.GetFormatPriceType(Model.ProductItem.Price, 1, ResourceData.Resource("LienHe", ViewBag.Lang), true)</strong></p>
-                    </div>
-                    <a href="dat-tour/@Model.ProductItem.ID" class="more order uppercase">
-                        <p>@ResourceData.Resource("DatTour", ViewBag.Lang)</p>
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" fill="currentColor"
-                                 class="bi bi-chevron-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                            </svg>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="content">
+            <div class="detail">
                 <div class="left">
                     @if (Model.ProductItem.AlbumGalleryItems.Any(x => x.AlbumType == 0))
                     {
-                        <div class="slide-img owl-carousel owl-theme">
+                        <div class="slide-product-detail owl-carousel owl-theme">
                             @foreach (var item in Model.ProductItem.AlbumGalleryItems.Where(x => x.AlbumType == 0))
                             {
-                                <div class="item">
-                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ProductItem.Name))
+                                <div class="item" data-src="@item.AlbumUrl" data-fancybox="album" data-caption="@(!string.IsNullOrEmpty(item.AlbumTitle) ? item.AlbumTitle : Model.ProductItem.Name)">
+                                    <div class="img">
+                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ProductItem.Name))
+                                    </div>
+                                    <div class="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 512 512">
+                                            <path d="M344 0H488c13.3 0 24 10.7 24 24V168c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-39-39-87 87c-9.4 9.4-24.6 9.4-33.9 0l-32-32c-9.4-9.4-9.4-24.6 0-33.9l87-87L327 41c-6.9-6.9-8.9-17.2-5.2-26.2S334.3 0 344 0zM168 512H24c-13.3 0-24-10.7-24-24V344c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2l39 39 87-87c9.4-9.4 24.6-9.4 33.9 0l32 32c9.4 9.4 9.4 24.6 0 33.9l-87 87 39 39c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8z" />
+                                        </svg>
+                                    </div>
                                 </div>
                             }
                         </div>
-                    }
-                    <div class="highlight">
-                        <div class="content-title">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="19px"
-                                     viewBox="0 0 512 512">
-                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
-                                </svg>
-                            </div>
-                            <h2 class="big-title title-content">@ResourceData.Resource("DiemNhanHanhTrinh", ViewBag.Lang)</h2>
-                        </div>
-                        <div class="paragraph justify detail-content">
-                            @if (!string.IsNullOrEmpty(Model.ProductItem.Information))
-                            {
-                                @Html.Raw(Model.ProductItem.Information)
-                            }
-                            else
-                            {
-                                <p class="update">@ResourceData.Resource("DangCapNhap", ViewBag.Lang)</p>
-                            }
-                        </div>
-                    </div>
-                    <div class="schedule">
-                        <div class="content-title">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="21" viewBox="0 0 576 512">
-                                    <path d="M408 120c0 54.6-73.1 151.9-105.2 192c-7.7 9.6-22 9.6-29.6 0C241.1 271.9 168 174.6 168 120C168 53.7 221.7 0 288 0s120 53.7 120 120zm8 80.4c3.5-6.9 6.7-13.8 9.6-20.6c.5-1.2 1-2.5 1.5-3.7l116-46.4C558.9 123.4 576 135 576 152V422.8c0 9.8-6 18.6-15.1 22.3L416 503V200.4zM137.6 138.3c2.4 14.1 7.2 28.3 12.8 41.5c2.9 6.8 6.1 13.7 9.6 20.6V451.8L32.9 502.7C17.1 509 0 497.4 0 480.4V209.6c0-9.8 6-18.6 15.1-22.3l122.6-49zM327.8 332c13.9-17.4 35.7-45.7 56.2-77V504.3L192 449.4V255c20.5 31.3 42.3 59.6 56.2 77c20.5 25.6 59.1 25.6 79.6 0zM288 152a40 40 0 1 0 0-80 40 40 0 1 0 0 80z" />
-                                </svg>
-                            </div>
-                            <h2 class="big-title title-content">@ResourceData.Resource("LichTrinh", ViewBag.Lang)</h2>
-                        </div>
-                        <div class="list-schedule">
-                            @if (Model.ProductItem.ListSubItems.Any())
-                            {
-                                @foreach (var item in Model.ProductItem.ListSubItems)
+                        <div class="bot">
+                            <div class="slide-product-detail1 owl-carousel owl-theme">
+                                @foreach (var item in Model.ProductItem.AlbumGalleryItems.Where(x => x.AlbumType == 0))
                                 {
                                     <div class="item">
-                                        <div class="title-list-schedule">
-                                            <div class="big-title title-item">
-                                                <p>@item.Name</p>
-                                            </div>
-                                            <div class="icon btn-down">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="11"
-                                                     height="11" fill="currentColor" class="bi bi-chevron-down"
-                                                     viewBox="0 0 16 16">
-                                                    <path fill-rule="evenodd"
-                                                          d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <div class="paragraph detail-content">
-                                            @Html.Raw(item.Content)
-                                        </div>
+                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ProductItem.Name))
                                     </div>
                                 }
-                            }
-                            else
-                            {
-                                <p class="update">@ResourceData.Resource("DangCapNhap", ViewBag.Lang)</p>
-                            }
-                        </div>
-                    </div>
-                    <div class="synthetic-service">
-                        <div class="content-title">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="21" viewBox="0 0 448 512">
-                                    <path d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z" />
-                                </svg>
                             </div>
-                            <h2 class="big-title title-content">@ResourceData.Resource("DichVuBaoGomVaKhongBaoGom",ViewBag.Lang)</h2>
-                        </div>
-                        <div class="paragraph detail-content">
-                            @if (!string.IsNullOrEmpty(Model.ProductItem.Content))
-                            {
-                                @Html.Raw(Model.ProductItem.Content)
-                            }
-                            else
-                            {
-                                <p class="update">@ResourceData.Resource("DangCapNhap", ViewBag.Lang)</p>
-                            }
-                        </div>
-                    </div>
-                    <div class="note">
-                        <div class="content-title">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="21" viewBox="0 0 448 512">
-                                    <path d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z" />
-                                </svg>
+                            <div class="video">
+                                <div class="img">
+                                    <img src="/html/style/images/video.webp" alt="img">
+                                </div>
+                                <p>Video</p>
                             </div>
-                            <h2 class="big-title title-content">@ResourceData.Resource("GhiChu", ViewBag.Lang)</h2>
                         </div>
-                        <div class="paragraph detail-content">
-                            @if (!string.IsNullOrEmpty(Model.ProductItem.Document))
-                            {
-                                @Html.Raw(Model.ProductItem.Document)
-                            }
-                            else
-                            {
-                                <p class="update">@ResourceData.Resource("DangCapNhap", ViewBag.Lang)</p>
-                            }
-                        </div>
-                    </div>
+                    }
                 </div>
                 <div class="right">
-                    <div class="info">
-                        <h2 class="big-title title-item">
-                            @Model.ProductItem.Name_
-                        </h2>
-                        <div class="paragraph">
-                            <table>
-                                @if (!string.IsNullOrEmpty(Model.ProductItem.ProductCode))
-                                {
-                                    <tr>
-                                        <td>
-                                            <p><strong>@ResourceData.Resource("MaTour", ViewBag.Lang)</strong></p>
-                                        </td>
-                                        <td>
-                                            <p>: @Model.ProductItem.ProductCode</p>
-                                        </td>
-                                    </tr>
-                                }
-                                @if (!string.IsNullOrEmpty(Model.ProductItem.TimesValue))
-                                {
-                                    <tr>
-                                        <td>
-                                            <p><strong>@ResourceData.Resource("ThoiGian", ViewBag.Lang)</strong></p>
-                                        </td>
-                                        <td>
-                                            <p>: @Model.ProductItem.TimesValue</p>
-                                        </td>
-                                    </tr>
-                                }
-                                @if (Model.ProductItem.TimeStart.HasValue)
-                                {
-                                    <tr>
-                                        <td>
-                                            <p><strong>@ResourceData.Resource("KHoiHanh", ViewBag.Lang)</strong></p>
-                                        </td>
-                                        <td>
-                                            <p>: @Model.ProductItem.TimeStart.Value.ToString("dd/MM/yyyy")</p>
-                                        </td>
-                                    </tr>
-                                }
-                                @if (!string.IsNullOrEmpty(Model.ProductItem.Shipping))
-                                {
-                                    <tr>
-                                        <td>
-                                            <p><strong>@ResourceData.Resource("VanChuyen", ViewBag.Lang)</strong></p>
-                                        </td>
-                                        <td>
-                                            <p>: @Model.ProductItem.Shipping</p>
-                                        </td>
-                                    </tr>
-                                }
-                                @if (!string.IsNullOrEmpty(Model.ProductItem.Address))
-                                {
-                                    <tr>
-                                        <td>
-                                            <p><strong>@ResourceData.Resource("XuatPhat", ViewBag.Lang)</strong></p>
-                                        </td>
-                                        <td>
-                                            <p>: @Model.ProductItem.Address</p>
-                                        </td>
-                                    </tr>
-                                }
-                                @if (Model.ProductItem.Quantity > 0)
-                                {
-                                    <tr>
-                                        <td>
-                                            <p><strong>@ResourceData.Resource("SoChoCon", ViewBag.Lang)</strong></p>
-                                        </td>
-                                        <td>
-                                            <p>: @Model.ProductItem.Quantity</p>
-                                        </td>
-                                    </tr>
-                                }
-                            </table>
-                        </div>
+                    <h1 class="big-title title-product-detail">@Model.ProductItem.Name</h1>
+                    <div class="code">
+                        <p>@ResourceData.Resource("Ma", ViewBag.Lang): @Model.ProductItem.ProductCode</p>
                     </div>
-                    <div class="component-page">
-                        <div class="item">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="19px"
-                                     viewBox="0 0 512 512">
-                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
-                                </svg>
-                            </div>
-                            <h2 class="big-title title-item">@ResourceData.Resource("DiemNhanHanhTrinh", ViewBag.Lang)</h2>
-                        </div>
-                        <div class="item">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="21" viewBox="0 0 576 512">
-                                    <path d="M408 120c0 54.6-73.1 151.9-105.2 192c-7.7 9.6-22 9.6-29.6 0C241.1 271.9 168 174.6 168 120C168 53.7 221.7 0 288 0s120 53.7 120 120zm8 80.4c3.5-6.9 6.7-13.8 9.6-20.6c.5-1.2 1-2.5 1.5-3.7l116-46.4C558.9 123.4 576 135 576 152V422.8c0 9.8-6 18.6-15.1 22.3L416 503V200.4zM137.6 138.3c2.4 14.1 7.2 28.3 12.8 41.5c2.9 6.8 6.1 13.7 9.6 20.6V451.8L32.9 502.7C17.1 509 0 497.4 0 480.4V209.6c0-9.8 6-18.6 15.1-22.3l122.6-49zM327.8 332c13.9-17.4 35.7-45.7 56.2-77V504.3L192 449.4V255c20.5 31.3 42.3 59.6 56.2 77c20.5 25.6 59.1 25.6 79.6 0zM288 152a40 40 0 1 0 0-80 40 40 0 1 0 0 80z" />
-                                </svg>
-                            </div>
-                            <h2 class="big-title title-item">@ResourceData.Resource("LichTrinh", ViewBag.Lang)</h2>
-                        </div>
-                        <div class="item">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="21" viewBox="0 0 448 512">
-                                    <path d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z" />
-                                </svg>
-                            </div>
-                            <h2 class="big-title title-item">@ResourceData.Resource("DichVuBaoGomVaKhongBaoGom",ViewBag.Lang)</h2>
-                        </div>
-                        <div class="item">
-                            <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="21" viewBox="0 0 448 512">
-                                    <path d="M364.2 83.8c-24.4-24.4-64-24.4-88.4 0l-184 184c-42.1 42.1-42.1 110.3 0 152.4s110.3 42.1 152.4 0l152-152c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-152 152c-64 64-167.6 64-231.6 0s-64-167.6 0-231.6l184-184c46.3-46.3 121.3-46.3 167.6 0s46.3 121.3 0 167.6l-176 176c-28.6 28.6-75 28.6-103.6 0s-28.6-75 0-103.6l144-144c10.9-10.9 28.7-10.9 39.6 0s10.9 28.7 0 39.6l-144 144c-6.7 6.7-6.7 17.7 0 24.4s17.7 6.7 24.4 0l176-176c24.4-24.4 24.4-64 0-88.4z" />
-                                </svg>
-                            </div>
-                            <h2 class="big-title title-item">@ResourceData.Resource("GhiChu", ViewBag.Lang)</h2>
-                        </div>
+                    <div class="p-price">
+                        @if (Model.ProductItem.PriceOld.HasValue)
+                        {
+                            <p>@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
+                        }
+                        <p><strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                    </div>
+                    <div class="paragraph fs17 detail-content">
+                        @Html.Raw(Model.ProductItem.Description)
+                    </div>
+                    <div class="contact-order">
+                        <a href="@Utility.Link(Model.WebsiteModulesItem.NameAscii, string.Empty, Model.WebsiteModulesItem.LinkUrl)" title="@Model.WebsiteModulesItem.Name" class="item">@ResourceData.Resource("LienHeMuaHang", ViewBag.Lang)</a>
+                        @if (hotline.Any())
+                        {
+                            <a href="tel:@Utility.FormatPhone(hotline.FirstOrDefault())" title="hotline" target="_blank" rel="nofollow" class="item revert">Hotline: @hotline.FirstOrDefault()</a>
+                        }
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="related-tour">
-        <div class="container">
-            <h2 class="big-title uppercase border">@ResourceData.Resource("TourLienQuan",ViewBag.Lang)</h2>
-            <div class="slide-endow-tour owl-carousel owl-theme">
-                @foreach (var item in Model.ListProductItem)
+            <div class="intro @(Model.ListProductItem.Any() ? string.Empty : "full")">
+                <div class="left">
+                    @if (!string.IsNullOrEmpty(Model.ProductItem.Information))
+                    {
+                        <div class="item">
+                            <div class="title">
+                                <h2 class="big-title none title-main-page">@ResourceData.Resource("GioiThieuVe", ViewBag.Lang) @Model.ProductItem.Name_</h2>
+                                <div class="icon btn-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="18"
+                                         viewBox="0 0 320 512">
+                                        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="paragraph fs17 justify detail-content">
+                                    @Html.Raw(Model.ProductItem.Information)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ProductItem.Content))
+                    {
+                        <div class="item">
+                            <div class="title">
+                                <h2 class="big-title none title-main-page">@ResourceData.Resource("ThongSoKiThuat", ViewBag.Lang)</h2>
+                                <div class="icon btn-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="18"
+                                         viewBox="0 0 320 512">
+                                        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="paragraph fs17 justify detail-content">
+                                    @Html.Raw(Model.ProductItem.Content)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ProductItem.Document))
+                    {
+                        <div class="item">
+                            <div class="title">
+                                <h2 class="big-title none title-main-page">@ResourceData.Resource("DacDiemNoibat", ViewBag.Lang)</h2>
+                                <div class="icon btn-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="18"
+                                         viewBox="0 0 320 512">
+                                        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="paragraph fs17 justify detail-content">
+                                    @Html.Raw(Model.ProductItem.Document)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.ListSubItems.Any())
+                    {
+                        <div class="item">
+                            <div class="title">
+                                <h2 class="big-title none title-main-page">@ResourceData.Resource("CongTrinhTieuBieu", ViewBag.Lang)</h2>
+                                <div class="icon btn-down">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="18"
+                                         viewBox="0 0 320 512">
+                                        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="slide-construction owl-carousel owl-theme">
+                                    @foreach (SubItem item in Model.ListSubItems)
+                                    {
+                                        <div class="item item-construction-index">
+                                            <div class="img">
+                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                            </div>
+                                            <h3 class="big-title title-product color-white">@item.Name</h3>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (Model.ListProductItem.Any())
                 {
-                    <div class="item item-tour">
-                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img-tour">
-                            <div class="img">
-                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                            </div>
-                            <div class="info">
-                                <div class="time">
-                                    <p>@ResourceData.Resource("Tu", ViewBag.Lang) @item.Address</p>
-                                </div>
-                                <div class="price">
-                                    <p>@Utility.GetFormatPriceType(item.Price, 1, ResourceData.Resource("LienHe", ViewBag.Lang), true)</p>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="text">
-                            <h3 class="big-title title-item">
-                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                    @item.Name
-                                </a>
-                            </h3>
-                            <div class="info">
-                                @if (!string.IsNullOrEmpty(item.TimesValue))
-                                {
-                                    <div class="item-info">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                                            <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                                        </svg>
-                                        <p>@item.TimesValue</p>
-                                    </div>
-                                }
-                                @if (item.TimeStart.HasValue)
-                                {
-                                    <div class="item-info">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                            <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                                        </svg>
-                                        <p>@item.TimeStart.Value.ToString("dd/MM/yyyy")</p>
-                                    </div>
-                                }
-                                @if (item.Quantity > 0)
-                                {
-                                    <div class="item-info">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                            <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
-                                        </svg>
-                                        <p>
-                                            @if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]))
+                    <div class="right">
+                        <div class="big-title title-main-page none">@ResourceData.Resource("SanPhamTuongTu", ViewBag.Lang)</div>
+                        <div class="list">
+                            @foreach (WebsiteProductItemJson item in Model.ListProductItem)
+                            {
+                                <div class="item item-product-new">
+                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                    </a>
+                                    <div class="text">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
+                                            @item.Name
+                                        </a>
+                                        <div class="code">
+                                            <p>@ResourceData.Resource("Ma", ViewBag.Lang): @item.ProductCode</p>
+                                        </div>
+                                        <div class="p-price">
+                                            @if (item.PriceOld.HasValue)
                                             {
-                                                <span>@ResourceData.Resource("SoChoCon",ViewBag.Lang): </span>
+                                                <p>@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
                                             }
-                                            @item.Quantity
-                                        </p>
+                                            <p><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                                        </div>
                                     </div>
-                                }
-                            </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 }
             </div>
         </div>
     </div>
-    <input id="ProductId" type="hidden" value="@Model.ProductItem.ID" />
+    <div class="other-curtain">
+        <div class="container">
+            <div class="big-title title-extra center before">
+                <p>@ResourceData.Resource("CacLoaiRemKhac", ViewBag.Lang)</p>
+            </div>
+            <div class="slide-other-curtain owl-carousel owl-theme">
+                @foreach (WebsiteModulesItem item in Model.ListModulesItem)
+                {
+                    <div class="item item-collection">
+                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                        </a>
+                        <h3 class="big-title title-product color-white center"><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></h3>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
-    <script src="/html/process/ratestar.js"></script>
-    string breadcrum = string.Empty;
-    if (Model.BreadcrumbList.Any())
-    {
-        int b = 1;
-        foreach (var module in Model.BreadcrumbList.OrderByDescending(x => x.OrderTree))
-        {
-            if (string.IsNullOrEmpty(module.LinkUrl) || (!string.IsNullOrEmpty(module.LinkUrl) && !module.LinkUrl.Contains("http://") && !module.LinkUrl.Contains("https://")))
-            {
-                breadcrum += ",{\"@type\": \"ListItem\", \"position\": " + b + ", \"name\": \"" + Html.Raw(module.Name) + "\",\"item\": \"" + WebConfig.Website + Utility.Link(module.NameAscii, string.Empty, module.LinkUrl) + "\"}";
-            }
-            b++;
-        }
-    }
-    @if (Model.Schema != null && !string.IsNullOrEmpty(Model.Schema.Content))
-    {
-        Model.Schema.Content = Model.Schema.Content.Replace("[Breadcrumb]", breadcrum);
-        Model.Schema.Content = Model.Schema.Content.Replace("[TenSanPham]", Model.ProductItem.Name);
-        Model.Schema.Content = Model.Schema.Content.Replace("[ThuongHieu]", Model.WebsiteModulesItem != null ? ("\"" + Model.WebsiteModulesItem.Name + "\"") : "");
-        Model.Schema.Content = Model.Schema.Content.Replace("[Url]", url);
-        Model.Schema.Content = Model.Schema.Content.Replace("[Gia]", Model.ProductItem.Price.HasValue ? Model.ProductItem.Price.Value.ToString() : "0");
-        string sts = Model.ProductItem.Status == 1 ? "InStock" : (Model.ProductItem.Status == 0 ? "OutOfStock" : "Discontinued");
-        Model.Schema.Content = Model.Schema.Content.Replace("[TrangThai]", sts);
-        Model.Schema.Content = Model.Schema.Content.Replace("[MaSanPham]", !string.IsNullOrEmpty(Model.ProductItem.ProductCode) ? ("\"" + Model.ProductItem.ProductCode + "\"") : "");
-        Model.Schema.Content = Model.Schema.Content.Replace("[DanhGia]", Model.ProductItem.TotalStars == 0 ? "1" : Model.ProductItem.TotalStars.ToString());
-        Model.Schema.Content = Model.Schema.Content.Replace("[TongDanhGia]", TotalRate == 0 ? "1" : TotalRate.ToString());
-        Model.Schema.Content = Model.Schema.Content.Replace("[MoTaSanPham]", Model.ProductItem.SeoDescription);
-        //Ảnh sản phẩm
-        if (!string.IsNullOrEmpty(Model.ProductItem.UrlPicture))
-        {
-            Model.Schema.Content = Model.Schema.Content.Replace("[AnhSanPham]", "\"" + ((Model.ProductItem.UrlPicture.Contains("http://") || Model.ProductItem.UrlPicture.Contains("https://")) ? Model.ProductItem.UrlPicture : WebConfig.Website + Model.ProductItem.UrlPicture) + "\"");
-        }
-        else
-        {
-            Model.Schema.Content = Model.Schema.Content.Replace("[AnhSanPham]", "");
-        }
-        @Html.Raw(Model.Schema.Content)
-    }
-
 }

@@ -48,6 +48,7 @@ namespace Website.ViewModels
         public WebsiteModulesItem WebsiteModulesItem { get; set; }
         public WebsiteModulesItem moduleContactUs { get; set; }
         public List<FileDownloadAdmin> ListFileDownload { get; set; }
+        public List<ADCOnline.Simple.Item.SubItem> ListSubItems { get; set; }
         public WebsiteModulesItem ModuleItem { get; set; }
         public List<ProductItem> ListProductModels { get; set; }
         public IEnumerable<WebsiteModulesItem> ListModulesItem { get; set; }
