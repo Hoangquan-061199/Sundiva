@@ -66,6 +66,7 @@
     --width-container-2: 1470px;
     --width-container: 1300px;
     --width-logo: 235px;
+    --width-logo: 235px;
     //font-size
     --fs-text-min: 13px;
     --fs-text: 16px;
@@ -96,14 +97,13 @@
     --fs-more-border: 16px;
     --fs-more: 14px;
     --fs-page: 14px;
-    --fs-news-date: 12px; 
+    --fs-news-date: 12px;
     //fs title
     --fs-title-min: 26px;
     --fs-title-ft: 18px;
     --fs-title-product: 24px;
     --fs-title-product-min: 20px;
     --fs-14: 14px;
-
     --fs-title: 40px;
     --fs-title-extra: 34px;
     --fs-title-product-detail: 38px;
@@ -140,12 +140,59 @@
         --width-logo: 180px;
     }
 }
-//767px
-@media (max-width: 991px) {
+
+@media (max-width: 992px) {
     :root {
         --fs-text: 14px;
         --width-container: unset;
         --width-container-2: unset;
+        --width-logo: 123px;
+        //------------------------------------------------
+        //--fs-year: 22px;
+        //--fs-news-date-strong: 22px;
+        //--fs-catalog-index: 18px;
+        //--fs-header-top: 15px;
+        //--fs-menu: 15px;
+        //--fs-sub-menu: 15px;
+        //--fs-paragraph1: 15px;
+        //--fs-path: 15px;
+        //--fs-name: 15px;
+        //--fs-code: 15px;
+        //--fs-old-price: 14px;
+        //--fs-old-price: 14px;
+        //--fs-price: 20px;
+        //--fs-paragraph: 15px;
+        //--fs-more-item: 15px;
+        //--fs-more-border: 15px;
+        //--fs-more: 14px;
+        //--fs-page: 14px;
+        //--fs-news-date: 12px;
+        //fs title
+        //--fs-title-min: 22px;
+        //--fs-title-ft: 18px;
+        //--fs-title-product: 22px;
+        //--fs-title-product-min: 18px;
+        //--fs-14: 14px;
+        //--fs-title: 22px;
+        //--fs-title-extra: 22px;
+        //--fs-title-product-detail: 22px;
+        //--fs-title-form-contact: 22px;
+        //--fs-title-banner: 22px;
+        //--fs-title-main-page: 22px;
+        //--fs-title-item-flex: 22px;
+        //--fs-title-recruitment: 22px;
+        //--fs-title-form: 22px;
+        //--fs-title-item: 18px;
+        //--fs-title-product: 18px;
+    }
+}
+
+@media (max-width: 767px) {
+    :root {
+        --fs-text: 14px;
+        --width-container: unset;
+        --width-container-2: unset;
+        --width-logo: 96px;
         //------------------------------------------------
         --fs-year: 22px;
         --fs-news-date-strong: 22px;

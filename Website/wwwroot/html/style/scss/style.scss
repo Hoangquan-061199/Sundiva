@@ -8,7 +8,10 @@ body {
     background-size: 100% auto;
 
     @include maxWidth(992px) {
-        margin-top: 76.46px;
+        margin-top: 59.85px;
+        @include maxWidth(767px) {
+            margin-top: 53px;
+        }
     }
 }
 
@@ -1348,7 +1351,7 @@ header {
 
             @include maxWidth(992px) {
                 position: fixed;
-                top: 76.46px;
+                top: 59.85px;
                 right: 0;
                 background: var(--color-white);
                 width: 45%;
@@ -1365,6 +1368,7 @@ header {
 
                 @include maxWidth(767px) {
                     width: 100%;
+                    top: 53px;
                 }
             }
 
@@ -1663,7 +1667,7 @@ header {
             .bar1,
             .bar2,
             .bar3 {
-                width: 35px;
+                width: 30px;
                 height: 3px;
                 background-color: #333;
                 margin: 6px 0;
@@ -1679,7 +1683,7 @@ header {
             }
 
             &.change .bar3 {
-                transform: translate(0, -11px) rotate(45deg);
+                transform: translate(0, -7px) rotate(45deg);
             }
         }
     }
