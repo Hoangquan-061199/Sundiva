@@ -257,6 +257,14 @@ body {
         @include paddingBotTop(20px);
         border: 1px solid var(--color-main);
 
+        @include maxWidth(992px) {
+            padding: 20px;
+
+            @include maxWidth(767px) {
+                padding: 15px;
+            }
+        }
+
         &.square {
             border-radius: 10px;
             padding: 10px 15px 10px 25px;
@@ -265,6 +273,15 @@ body {
             .icon {
                 svg {
                     fill: var(--color-white);
+                }
+            }
+
+            @include maxWidth(992px) {
+                padding: 10px 15px 10px 20px;
+
+                @include maxWidth(767px) {
+                    padding: 10px 15px;
+                    gap: 15px;
                 }
             }
         }
@@ -281,12 +298,28 @@ body {
                     fill: var(--color-white);
                 }
             }
+
+            @include maxWidth(992px) {
+                padding: 10px 20px;
+
+                @include maxWidth(767px) {
+                    padding: 10px 15px;
+                }
+            }
         }
 
         &.regular {
             font-size: var(--fs-more-item);
             font-weight: 400;
             padding: 10px 25px;
+
+            @include maxWidth(992px) {
+                padding: 10px 20px;
+
+                @include maxWidth(767px) {
+                    padding: 10px 15px;
+                }
+            }
         }
 
         &.submit-form {
@@ -294,6 +327,14 @@ body {
             border-radius: 10px;
             padding: 10px 25px;
             text-transform: none;
+
+            @include maxWidth(992px) {
+                padding: 10px 20px;
+
+                @include maxWidth(767px) {
+                    padding: 10px 15px;
+                }
+            }
 
             &.revert {
                 background: var(--color-white);
@@ -523,9 +564,18 @@ body {
         position: absolute;
         left: 0;
         bottom: 0;
-        padding: 15px 0 15px 45px;
-        width: 50%;
+        padding: 15px 15px 15px 45px;
         border-radius: 0 30px 0 0;
+        white-space: nowrap;
+        width: 40%;
+
+        @include maxWidth(1420px) {
+            width: 50%;
+
+            @include maxWidth(992px) {
+                width: 60%;
+            }
+        }
 
         &::after {
             content: "";
@@ -588,6 +638,9 @@ body {
             top: -67.8px;
             left: 20px;
             border-radius: 5px 5px 0 0;
+            @include maxWidth(767px) {
+                top: -60.13px;
+            }
         }
 
         h3 {
@@ -1152,11 +1205,13 @@ body {
     padding: 10px;
     border-radius: 20px;
     background: var(--color-white);
-    & > a  {
-        width: 50%;
+
+    & > a {
+        width: 40%;
         aspect-ratio: 377/251;
         border-radius: 20px;
         display: block;
+
         img {
             border-radius: 20px;
             @include resizeImg();
@@ -1164,7 +1219,7 @@ body {
     }
 
     .info {
-        width: 50%;
+        width: 60%;
         padding-left: 50px;
 
         .name {
@@ -1221,6 +1276,9 @@ body {
                 fill: var(--color-text);
             }
         }
+    }
+    @include maxWidth(992px) {
+        padding: 0 15px !important;
     }
 }
 
@@ -1606,7 +1664,7 @@ header {
             .bar2,
             .bar3 {
                 width: 35px;
-                height: 5px;
+                height: 3px;
                 background-color: #333;
                 margin: 6px 0;
                 transition: 0.4s;
@@ -1857,7 +1915,7 @@ footer {
 
             .logo {
                 width: 151px;
-                align-items: 151/44;
+                aspect-ratio: 151/44;
             }
 
             .right {
@@ -2246,15 +2304,19 @@ footer {
         }
 
         .list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            @include flexCenter(1, 0);
+            flex-wrap: wrap;
             gap: 15px;
 
-            @include maxWidth(992px) {
-                grid-template-columns: repeat(2, 1fr);
+            .item {
+                width: calc(100%/3 - 10px);
 
-                @include maxWidth(767px) {
-                    grid-template-columns: repeat(1, 1fr);
+                @include maxWidth(992px) {
+                    width: calc(100%/2 - 10px);
+
+                    @include maxWidth(767px) {
+                        width: 100%;
+                    }
                 }
             }
         }
@@ -2692,6 +2754,9 @@ footer {
                 }
             }
 
+            &.full {
+                grid-template-columns: 100%;
+            }
             @include maxWidth(992px) {
                 grid-template-columns: 100%;
                 gap: 20px;
@@ -2782,11 +2847,9 @@ footer {
             @include marginBottom(40px);
 
             @include maxWidth(992px) {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
 
                 @include maxWidth(767px) {
-                    grid-template-columns: repeat(1, 1fr);
                     gap: 15px;
                 }
             }
