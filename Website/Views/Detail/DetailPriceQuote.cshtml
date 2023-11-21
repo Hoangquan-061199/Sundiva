@@ -68,7 +68,7 @@
     <div class="price">
         <div class="container">
             <div class="left">
-                @if (Model.WebsiteModulesItems.Any(x => x.ParentID == 0))
+                @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
                 {
                     @foreach (WebsiteModulesItem module in Model.WebsiteModulesItems.Where(x => x.ParentID == 0))
                     {

@@ -938,13 +938,20 @@ namespace Website.Areas.Admin.Controllers
             string moduleIds = _websiteModuleDa.GetModuleIds(role, userId);
             StringBuilder stbHtml = new();
             List<WebsiteModuleAdmin> ltsSourcewebsiteModule = new();
-            if (moduleIds != null)
+            string type = $"{StaticEnum.Product}";
+            if (role == "Admin")
             {
-                string type = $"{StaticEnum.Product}";
-                ltsSourcewebsiteModule = _websiteModuleDa.GetListByListModuleType(type, moduleIds, Lang());
-                List<int> ltsValues = Utility.StringToListInt(ValuesSelected);
-                _websiteModuleDa.BuildTreeViewNotCheckBox(ltsSourcewebsiteModule, 0, true, ltsValues, ref stbHtml);
+                ltsSourcewebsiteModule = _websiteModuleDa.GetListByListModuleType(type, "", Lang());
             }
+            else
+            {
+                if (moduleIds != null)
+                {
+                    ltsSourcewebsiteModule = _websiteModuleDa.GetListByListModuleType(type, moduleIds, Lang());
+                }
+            }
+            List<int> ltsValues = Utility.StringToListInt(ValuesSelected);
+            _websiteModuleDa.BuildTreeViewNotCheckBox(ltsSourcewebsiteModule, 0, true, ltsValues, ref stbHtml);
             WebsiteModuleViewModel model = new()
             {
                 SystemActionAdmin = SystemActionAdmin,
