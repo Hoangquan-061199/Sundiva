@@ -306,6 +306,11 @@
         @include resetInputBtnTextAreaSelect(0, 0, 0, 1);
     }
 
+    .no-image {
+        @include flexCenter;
+        @include widthHeight(100%);
+    }
+
     ul,
     ol,
     li {

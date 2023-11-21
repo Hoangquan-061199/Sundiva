@@ -81,56 +81,51 @@ namespace ADCOnline.Utils
             try
             {
                 SizeImages imageSize = new SizeImages();
-                string url = string.Empty;
-                if (!string.IsNullOrEmpty(imageUrl))
+                if (string.IsNullOrEmpty(imageUrl))
                 {
-                    if (!imageUrl.Contains("http"))
-                        url = pathServer + imageUrl;
-                    else
-                        url = imageUrl;
+                    imageSize.IsPicture = false;
+                    imageSize.Width = 600;
+                    imageSize.Height = 600;
+                    return imageSize;
+                }
+                if (!imageUrl.Contains("http"))
+                {
+                    string url = pathServer + imageUrl;
+                    if (!File.Exists(url))
+                    {
+                        imageSize.IsPicture = false;
+                        imageSize.Width = 600;
+                        imageSize.Height = 600;
+                        return imageSize;
+                    }
+                    using (Image filefrom = Image.Load(url))
+                    {
+                        imageSize.Width = filefrom.Width;
+                        imageSize.Height = filefrom.Height;
+                    };
                 }
                 else
                 {
-                    url = pathServer + "html/style/images/image-no-image.webp";
-                }
-                if (!url.Contains("http"))
-                {
-                    if (File.Exists(url))
+                    var ischeck = isImageUlr(imageUrl);
+                    if (!ischeck)
                     {
-                        using (Image filefrom = Image.Load(url))
-                        {
-                            imageSize.Width = filefrom.Width;
-                            imageSize.Height = filefrom.Height;
-                        };
-                    }
-                    else
-                    {
+                        imageSize.IsPicture = false;
                         imageSize.Width = 600;
                         imageSize.Height = 600;
+                        return imageSize;
                     }
-                }
-                else
-                {
-                    var ischeck = isImageUlr(url);
-                    if (ischeck)
+                    using (var httpClient = new WebClient())
+                    using (var imageStream = httpClient.OpenRead(imageUrl))
+                    using (var image = Image.Load(imageStream))
                     {
-                        using (var httpClient = new WebClient())
-                        using (var imageStream = httpClient.OpenRead(url))
-                        using (var image = Image.Load(imageStream))
-                        {
-                            imageSize.Width = image.Width;
-                            imageSize.Height = image.Height;
-                        }
-                    }
-                    else
-                    {
-                        imageSize.Width = 600;
-                        imageSize.Height = 600;
+
+                        imageSize.Width = image.Width;
+                        imageSize.Height = image.Height;
                     }
                 }
                 return imageSize;
             }
-            catch (Exception e)
+            catch
             {
             }
             return null;
@@ -164,9 +159,9 @@ namespace ADCOnline.Utils
 
         public static string GetImage(string pathServer, string imageUrl, string name)
         {
-            if (!string.IsNullOrEmpty(imageUrl))
+            SizeImages image = GetSizeImages(pathServer, imageUrl);
+            if (image.IsPicture)
             {
-                SizeImages image = GetSizeImages(pathServer, imageUrl);
                 return $"<img src=\"{imageUrl}\" alt=\"{name}\" width=\"{image.Width}\" height=\"{image.Height}\" loading=\"lazy\">";
             }
             else

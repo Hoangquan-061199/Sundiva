@@ -30,12 +30,34 @@
 
 @if (Model.ModuleItem != null)
 {
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            <div class="banner">
+                <div class="img-banner">
+                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ModuleItem.AlbumGalleryItems.FirstOrDefault(x => x.AlbumType == 3).AlbumUrl, Model.ModuleItem.Name))
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="banner">
+                <div class="slide-index owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        <div class="img-banner">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ModuleItem.Name))
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
     <div class="path">
         <div class="container">
             <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
-                <svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 0 576 512">
-                    <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
-                </svg>
+                @ResourceData.Resource("TrangChu", ViewBag.Lang)
             </a>
             <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
@@ -51,56 +73,95 @@
 
     <div class="news">
         <div class="container">
-            <h1 class="big-title uppercase border">@Model.ModuleItem.Name</h1>
-            @if (Model.ListContentItemAsync.Any())
+            <h2 class="big-title center before">@(!string.IsNullOrEmpty(Model.ModuleItem.Title) ? Model.ModuleItem.Title : Model.ModuleItem.Name)</h2>
+            @if (Model.ListContentItemHot.Any())
             {
-                int rest = Model.Total.Value - Model.ListContentItemAsync.Count();
-                <input type="hidden" name="moduleId" class="ModuleId" value="@Model.ModuleItem.ID" />
-                <div class="list-news" id="grid-load">
-                    @foreach (WebsiteContentItem item in Model.ListContentItemAsync)
+                <div class="slide-news owl-carousel owl-theme">
+                    @foreach (WebsiteContentItem item in Model.ListContentItemHot)
                     {
-                        <div class="item item-news">
+                        <div class="item item-news-index flex">
                             <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
                                 @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                             </a>
                             <div class="text">
-                                <div class="time">
-                                    <p>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
-                                </div>
-                                <h3 class="big-title title-item">
+                                @if (item.CreatedDate.HasValue)
+                                {
+                                    <div class="date">
+                                        <p><strong>@item.CreatedDate.Value.ToString("dd")</strong></p>
+                                        <p>@item.CreatedDate.Value.ToString("MM/yyyy")</p>
+                                    </div>
+                                }
+                                <h3>
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
                                         @item.Name
                                     </a>
                                 </h3>
-                            </div>
-                        </div>
-                    }
-                    @if (rest > 0)
-                    {
-                        <div class="btn-block">
-                            <div class="btn-page more other-padding" data-page="@(Model.Page + 1)">
-                                <p>@ResourceData.Resource("XemNhieuHon", ViewBag.Lang)</p>
-                                <div class="icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" fill="currentColor"
-                                         class="bi bi-chevron-right" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                                    </svg>
+                                <div class="paragraph fs17 detail">
+                                    @Html.Raw(item.Description)
                                 </div>
+                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="more">
+                                    @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             width="16" height="16" viewBox="0 0 24 24">
+                                            <path fill="currentColor"
+                                                  d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                        </svg>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-
                     }
                 </div>
             }
-            else
-            {
-                <p class="update center"> @ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
-            }
-
         </div>
     </div>
-    <input value="@Model.ModuleItem.NameAscii" id="seoUrl" type="hidden" />
-    <input type="hidden" id="page" value="@Model.Page" />
-    <script defer src="/html/process/content.js"></script>
+    <div class="list-news">
+        <div class="container">
+            <h2 class="big-title center before">@ResourceData.Resource("DanhSach", ViewBag.Lang) @Model.ModuleItem.Name</h2>
+            @if (Model.ListContentItemAsync.Any())
+            {
+                <div class="list">
+                    @foreach (WebsiteContentItem item in Model.ListContentItemAsync)
+                    {
+                        <div class="item item-news-index">
+                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                            </a>
+                            <div class="text">
+                                @if (item.CreatedDate.HasValue)
+                                {
+                                    <div class="date">
+                                        <p><strong>@item.CreatedDate.Value.ToString("dd")</strong></p>
+                                        <p>@item.CreatedDate.Value.ToString("MM/yyyy")</p>
+                                    </div>
+                                }
+                                <h3>
+                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                        @item.Name
+                                    </a>
+                                </h3>
+                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="more">
+                                    @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             width="16" height="16" viewBox="0 0 24 24">
+                                            <path fill="currentColor"
+                                                  d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (Model.Total > Model.PageSize)
+                {
+                    @Html.Raw(ViewBag.GridHtml)
+                }
+            }
+            else
+            {
+                <p class="update center">@ResourceData.Resource("DangCapnhat", ViewBag.Lang)</p>
+            }
+        </div>
+    </div>
 }

@@ -32,540 +32,166 @@
         switch (position.Code)
         {
             case StaticEnum.SlideHome:
+                if (position.AdvertisingItems.Any())
                 {
-                    @if (position.AdvertisingItems.Any())
-                    {
-                        <div class="banner index">
-                            <div class="slide-index owl-carousel owl-theme">
-                                @foreach (AdvertisingItem item in position.AdvertisingItems)
+                    <div class="banner index">
+                        <div class="slide-index owl-carousel owl-theme">
+                            @foreach (AdvertisingItem item in position.AdvertisingItems)
+                            {
+                                if (!string.IsNullOrEmpty(item.LinkUrl))
                                 {
-                                    if (!string.IsNullOrEmpty(item.LinkUrl))
-                                    {
-                                        <a href="@item.LinkUrl" title="@item.Name" target="_blank" rel="nofollow" class="item">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <div class="item">
+                                    <a href="@item.LinkUrl" title="@item.Name" class="item">
+                                        <div class="img">
                                             @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                         </div>
-                                    }
-                                }
-                            </div>
-                            <vc:search-component></vc:search-component>
-                        </div>
-                    }
-                    break;
-                }
-            case StaticEnum.TourIndex:
-                {
-                    if (position.AdvertisingItems.Any())
-                    {
-                        <div class="type-tour">
-                            <div class="container">
-                                @foreach (AdvertisingItem item in position.AdvertisingItems)
-                                {
-                                    if (!string.IsNullOrEmpty(item.LinkUrl))
-                                    {
-                                        <a href="@item.LinkUrl" title="@item.Name" class="item">
-                                            <div class="img">
-                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                            </div>
-                                            <h3 class="big-title title-item">@item.Name</h3>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <div class="item">
-                                            <div class="img">
-                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                            </div>
-                                            <h3 class="big-title title-item">@item.Name</h3>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    }
-                    break;
-                }
-            case StaticEnum.LastMinuteTourDeals:
-                {
-                    if (position.ProductItems.Any(x => x.TimeStart.Day > DateTime.Now.Day && x.TimeStart.Day <= (DateTime.Now.Day + 2)))
-                    {
-                        <div class="endow-tour-index">
-                            <div class="container">
-                                <h2 class="big-title center uppercase border bf-center">@position.Name</h2>
-                                <div class="slide-endow-tour owl-carousel owl-theme">
-                                    @foreach (ProductItem item in position.ProductItems.Where(x => x.TimeStart.Day > DateTime.Now.Day && x.TimeStart.Day <= (DateTime.Now.Day + 2)).OrderBy(x => x.TimeStart.Day))
-                                    {
-                                        var remainingTime = item.TimeStart.Day - DateTime.Now.Day;
-
-                                        <div class="item item-tour">
-                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img-tour">
-                                                <div class="img">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </div>
-                                                <div class="info">
-                                                    <div class="time">
-                                                        @if (remainingTime > 0)
-                                                        {
-                                                            <p>@ResourceData.Resource("Con", ViewBag.Lang) @remainingTime @ResourceData.Resource("Ngay", ViewBag.Lang) - @ResourceData.Resource("Tu", ViewBag.Lang) @item.Address</p>
-                                                        }
-                                                        else
-                                                        {
-                                                            <p>@ResourceData.Resource("Tu", ViewBag.Lang) @item.Address</p>
-                                                        }
-                                                    </div>
-                                                    <div class="price">
-                                                        <p>@Utility.GetFormatPriceType(item.Price, 1, ResourceData.Resource("LienHe", ViewBag.Lang), true)</p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <div class="text">
-                                                <h3 class="big-title title-item">
-                                                    <a hrefhref="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                                        @item.Name
-                                                    </a>
-                                                </h3>
-                                                <div class="info">
-                                                    <div class="item-info">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                                                            <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                                                        </svg>
-                                                        <p>@item.TimesValue</p>
-                                                    </div>
-                                                    <div class="item-info">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                            <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                                                        </svg>
-                                                        <p>@item.TimeStart.ToString("dd/MM/yyyy")</p>
-                                                    </div>
-                                                    <div class="item-info">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                            <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
-                                                        </svg>
-                                                        <p>
-                                                            @if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]) && !Utility.IsTablet(Context.Request.Headers["User-Agent"]))
-                                                            {
-                                                                <span>@ResourceData.Resource("SoChoCon",ViewBag.Lang): </span>
-                                                            }
-                                                            @item.Quantity
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    break;
-                }
-            case StaticEnum.TourInCountry:
-                {
-                    if (position.ProductItems.Any())
-                    {
-                        int i = 1;
-                        <div class="domestic-tour-index">
-                            <div class="container">
-                                <h2 class="big-title center uppercase border bf-center white">@position.Name</h2>
-                                @if (Utility.IsMobile(Context.Request.Headers["User-Agent"]))
-                                {
-                                    <div class="slide-domestic-tour owl-carousel owl-theme">
-                                        @while (position.ProductItems.Skip(2 * i - 2).Count() > 0)
-                                        {
-                                            <div class="group">
-                                                @foreach (ProductItem item in position.ProductItems.OrderBy(x => x.OrderDisplay).Skip(2 * i - 2).Take(2))
-                                                {
-                                                    <div class="item item-tour">
-                                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img-tour">
-                                                            <div class="img">
-                                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                            </div>
-                                                            <div class="info">
-                                                                <div class="time">
-                                                                    <p>@ResourceData.Resource("Tu", ViewBag.Lang) @item.Address</p>
-                                                                </div>
-                                                                <div class="price">
-                                                                    <p>@Utility.GetFormatPriceType(item.Price, 1, ResourceData.Resource("LienHe", ViewBag.Lang), true)</p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <div class="text">
-                                                            <h3 class="big-title title-item">
-                                                                <a hrefhref="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                                                    @item.Name
-                                                                </a>
-                                                            </h3>
-                                                            <div class="info">
-                                                                <div class="item-info">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                                                                        <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                                                                    </svg>
-                                                                    <p>@item.TimesValue</p>
-                                                                </div>
-                                                                <div class="item-info">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                                        <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                                                                    </svg>
-                                                                    <p>@item.TimeStart.ToString("dd/MM/yyyy")</p>
-                                                                </div>
-                                                                <div class="item-info">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                                        <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
-                                                                    </svg>
-                                                                    <p>
-                                                                        @if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]))
-                                                                        {
-                                                                            <span>@ResourceData.Resource("SoChoCon",ViewBag.Lang): </span>
-                                                                        }
-                                                                        @item.Quantity
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            </div>
-                                            i++;
-                                        }
-                                    </div>
+                                    </a>
                                 }
                                 else
                                 {
-                                    <div class="slide-domestic-tour owl-carousel owl-theme">
-                                        @while (position.ProductItems.Skip(4 * i - 4).Count() > 0)
-                                        {
-                                            <div class="group">
-                                                @foreach (ProductItem item in position.ProductItems.OrderBy(x => x.OrderDisplay).Skip(4 * i - 4).Take(4))
-                                                {
-                                                    <div class="item item-tour flex">
-                                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img-tour">
-                                                            <div class="img">
-                                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                            </div>
-                                                            <div class="info">
-                                                                <div class="time">
-                                                                    <p>@ResourceData.Resource("Tu", ViewBag.Lang) @item.Address</p>
-                                                                </div>
-                                                                <div class="price">
-                                                                    <p>@Utility.GetFormatPriceType(item.Price, 1, ResourceData.Resource("LienHe", ViewBag.Lang), true)</p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                        <div class="text">
-                                                            <h3 class="big-title title-item">
-                                                                <a hrefhref="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                                                    @item.Name
-                                                                </a>
-                                                            </h3>
-                                                            <div class="info">
-                                                                <div class="item-info">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                                                                        <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                                                                    </svg>
-                                                                    <p>@item.TimesValue</p>
-                                                                </div>
-                                                                <div class="item-info">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                                        <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                                                                    </svg>
-                                                                    <p>@item.TimeStart.ToString("dd/MM/yyyy")</p>
-                                                                </div>
-                                                                <div class="item-info">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                                        <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
-                                                                    </svg>
-                                                                    <p>
-                                                                        @if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]) && !Utility.IsTablet(Context.Request.Headers["User-Agent"]))
-                                                                        {
-                                                                            <span>@ResourceData.Resource("SoChoCon",ViewBag.Lang): </span>
-                                                                        }
-                                                                        @item.Quantity
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
+                                    <div class="item">
+                                        <div class="img">
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        @if (position.WebsiteModulesItems.Any())
+                        {
+                            <div class="container">
+                                @foreach (WebsiteModulesJson item in position.WebsiteModulesItems)
+                                {
+                                    <div class="item item-list-banner">
+                                        <div class="text">
+                                            <h2 class="big-title title-banner">@(!string.IsNullOrEmpty(item.Title) ? item.Title : item.Name)</h2>
+                                            <div class="paragaph detail-content">
+                                                @Html.Raw(item.Description)
                                             </div>
-                                            i++;
-                                        }
+                                        </div>
+                                        <div class="img-item">
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                break;
+            case StaticEnum.ProductIndex:
+                if (position.WebsiteModulesItems.Any(x => x.ParentID == 0))
+                {
+                    foreach (WebsiteModulesJson parent in position.WebsiteModulesItems.Where(x => x.ParentID == 0))
+                    {
+                        <div class="product-index">
+                            <h2 class="big-title center before">@(!string.IsNullOrEmpty(parent.Title) ? parent.Title : parent.Name)</h2>
+                            <div class="list">
+                                @foreach (WebsiteModulesJson item in position.WebsiteModulesItems.Where(x => x.ParentID == parent.ID))
+                                {
+                                    <div class="item item-product-index">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                        </a>
+                                        <h3 class="big-title title-product color-white"><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></h3>
                                     </div>
                                 }
                             </div>
                         </div>
                     }
-                    break;
                 }
-            case StaticEnum.TourOutCountry:
-                {
-                    if (position.ProductItems.Any())
-                    {
-                        <div class="endow-tour-index foreign-tour-index">
-                            <div class="container">
-                                <h2 class="big-title center uppercase border bf-center">@position.Name</h2>
-                                <div class="slide-endow-tour owl-carousel owl-theme">
-                                    @foreach (ProductItem item in position.ProductItems.OrderBy(x => x.TimeStart.Day))
-                                    {
-                                        var remainingTime = item.TimeStart.Day - DateTime.Now.Day;
-
-                                        <div class="item item-tour">
-                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img-tour">
-                                                <div class="img">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </div>
-                                                <div class="info">
-                                                    <div class="time">
-                                                        @if (remainingTime > 0)
-                                                        {
-                                                            <p>@ResourceData.Resource("Con", ViewBag.Lang) @remainingTime @ResourceData.Resource("Ngay", ViewBag.Lang) - @ResourceData.Resource("Tu", ViewBag.Lang) @item.Address</p>
-                                                        }
-                                                        else
-                                                        {
-                                                            <p>@ResourceData.Resource("Tu", ViewBag.Lang) @item.Address</p>
-                                                        }
-                                                    </div>
-                                                    <div class="price">
-                                                        <p>@Utility.GetFormatPriceType(item.Price, 1, ResourceData.Resource("LienHe", ViewBag.Lang), true)</p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <div class="text">
-                                                <h3 class="big-title title-item">
-                                                    <a hrefhref="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                                        @item.Name
-                                                    </a>
-                                                </h3>
-                                                <div class="info">
-                                                    <div class="item-info">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                                                            <path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                                                        </svg>
-                                                        <p>@item.TimesValue</p>
-                                                    </div>
-                                                    <div class="item-info">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                            <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128C0 92.7 28.7 64 64 64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                                                        </svg>
-                                                        <p>@item.TimeStart.ToString("dd/MM/yyyy")</p>
-                                                    </div>
-                                                    <div class="item-info">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-                                                            <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
-                                                        </svg>
-                                                        <p>
-                                                            @if (!Utility.IsMobile(Context.Request.Headers["User-Agent"]) && !Utility.IsTablet(Context.Request.Headers["User-Agent"]))
-                                                            {
-                                                                <span>@ResourceData.Resource("SoChoCon",ViewBag.Lang): </span>
-                                                            }
-                                                            @item.Quantity
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    break;
-                }
-            case StaticEnum.ServiceIndex:
-                {
-                    if (position.AdvertisingItems.Any())
-                    {
-                        <div class="service-index">
-                            <div class="container">
-                                <h2 class="big-title uppercase center border bf-center">@position.Name</h2>
-                                <div class="list-service">
-                                    @foreach (AdvertisingItem item in position.AdvertisingItems)
-                                    {
-                                        if (!string.IsNullOrEmpty(item.LinkUrl))
-                                        {
-                                            <a href="@item.LinkUrl" title="@item.Name" class="item">
-                                                <div class="img">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </div>
-                                                <div class="text">
-                                                    <div class="icon">
-                                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPictureMobile, item.Name))
-                                                    </div>
-                                                    <h3 class="big-title uppercase white title-item-service">@item.Name</h3>
-                                                </div>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <div class="item">
-                                                <div class="img">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </div>
-                                                <div class="text">
-                                                    <div class="icon">
-                                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPictureMobile, item.Name))
-                                                    </div>
-                                                    <h3 class="big-title uppercase white title-item-service">@item.Name</h3>
-                                                </div>
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    break;
-                }
-            case StaticEnum.AboutIndex:
-                {
-                    if (position.WebsiteModulesItems.Any())
-                    {
-                        foreach (WebsiteModulesJson item in position.WebsiteModulesItems)
-                        {
-                            <div class="about-index">
-                                <div class="container">
-                                    <div class="left">
-                                        <h2 class="big-title uppercase">@position.Name</h2>
-                                        <div class="paragraph justify detail-content">
-                                            @Html.Raw(item.Description)
-                                        </div>
-                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="more">
-                                            <p>@ResourceData.Resource("TimHieuThem", ViewBag.Lang)</p>
-                                            <div class="icon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="9px" viewBox="0 0 320 512">
-                                                    <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
-                                                </svg>
-                                            </div>
-                                        </a>
-                                        @if (position.AdvertisingItems.Any())
-                                        {
-                                            <div class="list-info">
-                                                @foreach (var itemchild in position.AdvertisingItems)
-                                                {
-                                                    if (!string.IsNullOrEmpty(itemchild.LinkUrl))
-                                                    {
-                                                        <a href="@itemchild.LinkUrl" title="@itemchild.Name" class="item">
-                                                            <div class="icon">
-                                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, itemchild.UrlPicture, itemchild.Name))
-                                                            </div>
-                                                            <div class="big-title title-item">
-                                                                <p>@itemchild.Name</p>
-                                                            </div>
-                                                        </a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <div class="item">
-                                                            <div class="icon">
-                                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, itemchild.UrlPicture, itemchild.Name))
-                                                            </div>
-                                                            <div class="big-title title-item">
-                                                                <p>@itemchild.Name</p>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                }
-                                            </div>
-                                        }
-                                    </div>
-                                    <div class="right">
-                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                    break;
-                }
+                break;
             case StaticEnum.NewsIndex:
+                if (position.WebsiteContentItems.Any())
                 {
-                    if (position.WebsiteContentItems.Any())
+                    foreach (WebsiteModulesJson parent in position.WebsiteModulesItems.Where(x => x.ParentID == 0))
                     {
                         <div class="news-index">
                             <div class="container">
-                                <h2 class="big-title uppercase center border bf-center">@position.Name</h2>
-                                <div class="list-news">
-                                    @foreach (var item in position.WebsiteContentItems.Take(1))
+                                <h2 class="big-title center before">@(!string.IsNullOrEmpty(parent.Title) ? parent.Title : parent.Name)</h2>
+                                <div class="slide-news-index owl-carousel owl-theme">
+                                    @foreach (WebsiteContentItem item in position.WebsiteContentItems)
                                     {
-                                        <div class="left">
-                                            <div class="item item-news index">
-                                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </a>
-                                                <div class="text">
-                                                    <div class="time">
-                                                        <p>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
+                                        <div class="item item-news-index">
+                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                            </a>
+                                            <div class="text">
+                                                @if (item.CreatedDate.HasValue)
+                                                {
+                                                    <div class="date">
+                                                        <p><strong>@item.CreatedDate.Value.ToString("dd")</strong></p>
+                                                        <p>@item.CreatedDate.Value.ToString("MM/yyyy")</p>
                                                     </div>
-                                                    <h3 class="big-title title-item">
-                                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                                            @item.Name
-                                                        </a>
-                                                    </h3>
-                                                </div>
+                                                }
+                                                <h3>
+                                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                                        @item.Name
+                                                    </a>
+                                                </h3>
+                                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="more">
+                                                    @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                             width="16" height="16" viewBox="0 0 24 24">
+                                                            <path fill="currentColor"
+                                                                  d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                                        </svg>
+                                                    </div>
+                                                </a>
                                             </div>
                                         </div>
                                     }
-                                    <div class="right">
-                                        @foreach (var item in position.WebsiteContentItems.Skip(1).Take(3))
-                                        {
-                                            <div class="item item-news flex">
-                                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </a>
-                                                <div class="text">
-                                                    <div class="time">
-                                                        <p>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
-                                                    </div>
-                                                    <h3 class="big-title title-item">
-                                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                                            @item.Name
-                                                        </a>
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     }
-                    break;
                 }
-            case StaticEnum.PartnerIndex:
+                break;
+            case StaticEnum.CatalogueIndex:
+                if (position.WebsiteModulesItems.Any())
                 {
-                    if (position.AdvertisingItems.Any())
+                    foreach (WebsiteModulesJson item in position.WebsiteModulesItems)
                     {
-                        <div class="partner-index">
+                        <div class="catalog-index">
                             <div class="container">
-                                <h2 class="big-title uppercase center border bf-center">@position.Name</h2>
-                                <div class="partner-scroll">
-                                    <div class="list-partner">
-                                        @foreach (var item in position.AdvertisingItems)
-                                        {
-                                            if (!string.IsNullOrEmpty(item.LinkUrl))
-                                            {
-                                                <a href="@item.LinkUrl" title="@item.Name" class="item">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <div class="item">
-                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                                </div>
-                                            }
-                                        }
-                                    </div>
+                                <h2 class="big-title center color-white">@(!string.IsNullOrEmpty(item.Title) ? item.Title : item.Name)</h2>
+                                <div class="paragraph  fs20  color-white detail-content">
+                                    @Html.Raw(item.Description)
                                 </div>
+                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="more border">@ResourceData.Resource("TaiCatalogueNgay", ViewBag.Lang)</a>
                             </div>
                         </div>
                     }
-                    break;
                 }
+                break;
+            case StaticEnum.ProjectHot:
+                if (position.WebsiteContentItems.Any() && position.WebsiteModulesItems.Any())
+                {
+                    foreach (WebsiteModulesJson module in position.WebsiteModulesItems)
+                    {
+                        <div class="construction-index">
+                            <div class="container">
+                                <h2 class="big-title before left">@module.Name</h2>
+                                <div class="paragraph detail-content fs17">
+                                    @Html.Raw(module.Description)
+                                </div>
+                            </div>
+                            <div class="slide-construction-index owl-carousel owl-theme">
+                                @foreach (WebsiteContentItem item in position.WebsiteContentItems)
+                                {
+                                    <div class="item item-construction-index">
+                                        <div class="img">
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                        </div>
+                                        <h3 class="big-title title-product color-white">@item.Name</h3>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                break;
         }
     }
 }
+
+

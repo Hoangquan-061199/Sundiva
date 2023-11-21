@@ -24,178 +24,206 @@
 }
 @if (Model.ContentItem != null)
 {
-    <div class="breadcrumb">
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            <div class="banner">
+                <div class="img-banner">
+                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ModuleItem.AlbumGalleryItems.FirstOrDefault(x => x.AlbumType == 3).AlbumUrl, Model.ModuleItem.Name))
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="banner">
+                <div class="slide-index owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        <div class="img-banner">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ModuleItem.Name))
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <div class="path">
         <div class="container">
-            <ul>
-                <li>
-                    <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">@ResourceData.Resource("TrangChu",ViewBag.Lang)</a><i class="fa-solid fa-angle-right"></i>
-                </li>
-                <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
-                <li><a href="/@Model.ModuleItem.NameAscii" title="@Model.ModuleItem.Name">@Model.ModuleItem.Name</a><i class="fa-solid fa-angle-right"></i></li>
-                <li>@Model.ContentItem.Name</li>
-            </ul>
+            <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                @ResourceData.Resource("TrangChu", ViewBag.Lang)
+            </a>
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
+                     class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+            </div>
+            <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+            <a href="@Utility.Link(Model.ModuleItem.NameAscii, string.Empty, Model.ModuleItem.LinkUrl)" title="@Model.ModuleItem.Name">@Model.ModuleItem.Name</a>
         </div>
     </div>
-    <div class="recruitment-detail container">
-        <div class="layout-2">
+    <div class="recruitment">
+        <div class="container">
             <div class="left">
-                <h1 class="title">@Model.ContentItem.Name</h1>
-                <div class="like-social">
-                    <div class="duration-box">
-                        <div class="duration">
-                            <p>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang): <strong>@(Model.ContentItem.EndDate.HasValue ? Model.ContentItem.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</strong></p>
-                        </div>
+                <div class="title">
+                    <div class="avatar">
+                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ContentItem.UrlPicture, Model.ContentItem.Name))
                     </div>
-                    <div class="social">
-                        <p>@ResourceData.Resource("ChiaSe", ViewBag.Lang):</p>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=@url" target="_blank" rel="nofollow" class="icon-fa">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="mailto:?subject=@Model.ContentItem.Name;body=@url" class="icon-email">
-                            <i class="fa-solid fa-envelope"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="table-review">
-                    @Html.Raw(Model.ContentItem.Content)
-                </div>
-                <div class="contact-form">
-                    <span class="title">@ResourceData.Resource("NopHoSoUngTuyen", ViewBag.Lang)</span>
-                    <form action="/ung-tuyen" method="post">
-                        <div class="input-group">
-                            <div class="w-50">
-                                <img src="/html/style/images/icon-user.webp" alt="" />
-                                <input type="text" name="" placeholder="@ResourceData.Resource("HoTen", ViewBag.Lang)*" />
-                            </div>
-                            <div class="w-50">
-                                <img src="/html/style/images/icon-phone.webp" alt="" />
-                                <input type="text" name="" placeholder="@ResourceData.Resource("SoDienThoai", ViewBag.Lang)*" />
-                            </div>
-                            <div class="w-50">
-                                <img src="/html/style/images/icon-email.webp" alt="" />
-                                <input type="text" name="" placeholder="Email *" />
-                            </div>
-                            <div class="w-100">
-                                <div class="top">
-                                    <img src="/html/style/images/icon-user-content.webp" alt="" />@ResourceData.Resource("NoiDung", ViewBag.Lang)
+                    <div class="text">
+                        <h1 class="big-title title-form">@Model.ContentItem.Name</h1>
+                        <div class="info">
+                            <div class="item">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20"
+                                         viewBox="0 0 384 512">
+                                        <path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" />
+                                    </svg>
                                 </div>
-                                <textarea name="" id="" cols="30" rows="5" placeholder="Vui lòng nhập không quá 300 kí tự"></textarea>
+                                <p>
+                                    <strong>@ResourceData.Resource("DiaDiemLamViec", ViewBag.Lang):</strong> @Model.ContentItem.Address
+                                </p>
+                            </div>
+                            <div class="item">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="19"
+                                         viewBox="0 0 24 24">
+                                        <g>
+                                            <path fill="none" d="M0 0h24v24H0z" />
+                                            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-3.5-8v2H11v2h2v-2h1a2.5 2.5 0 1 0 0-5h-4a.5.5 0 1 1 0-1h5.5V8H13V6h-2v2h-1a2.5 2.5 0 0 0 0 5h4a.5.5 0 1 1 0 1H8.5z" />
+                                        </g>
+                                    </svg>
+                                </div>
+                                <p><strong>@ResourceData.Resource("MucLuong", ViewBag.Lang):</strong> @(!string.IsNullOrEmpty(Model.ContentItem.Salary) ? Model.ContentItem.Salary : ResourceData.Resource("ThoaThuan", ViewBag.Lang))</p>
+                            </div>
+                            <div class="item">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="18"
+                                         viewBox="0 0 448 512">
+                                        <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z" />
+                                    </svg>
+                                </div>
+                                <p><strong>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang):</strong> @(Model.ContentItem.CreatedDate.HasValue ? Model.ContentItem.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
                             </div>
                         </div>
-                        <div class="btn-form">
-                            <div class="btn-submit-form type-1">
-                                <img src="/html/style/images/icon-send-form.webp" alt="" />Gửi liên hệ
-                            </div>
-                            <button type="submit" class="btn-submit-form">
-                                <img src="/html/style/images/icon-send-form.webp" alt="" />Gửi liên hệ
-                            </button>
+                        <div class="share color-text">
+                            <p>@ResourceData.Resource("ChiaSe", ViewBag.Lang):</p>
+                            <a href="https://www.facebook.com/sharer.php?u=@url" target="_blank" title="facebooke share" rel="nofollow" class="item">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 320 512">
+                                    <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
+                                </svg>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?url=@url" target="_blank" title="twitter share" rel="nofollow" class="item">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 512 512">
+                                    <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
+                                </svg>
+                            </a>
                         </div>
-                        <div class="note">
-                            <strong>Lưu ý:</strong>
-                            <p>
-                                - Hồ sơ đính kèm hỗ trợ định dạng *.doc, *.docx, *.pdf và
-                                không quá 2MB
-                            </p>
-                            <p>
-                                - Tệp tin được gửi trực tiếp vào hộp thư của Bộ phận Tuyển
-                                dụng, vì vậy vui lòng kiểm tra cẩn thận trước khi nhấp vào
-                                "Nộp hồ sơ ứng tuyển"
-                            </p>
-                        </div>
-                    </form>
+                    </div>
+                </div>
+                <div class="paragraph fs17 justify detail-content">
+                    @if (!string.IsNullOrEmpty(Model.ContentItem.Content))
+                    {
+                        @Html.Raw(Model.ContentItem.Content)
+                    }
+                    else
+                    {
+                        <p class="update">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
+                    }
                 </div>
             </div>
             <div class="right">
-                <div class="recruitment-relate-list type-1">
-                    <span class="title">@ResourceData.Resource("ThongTinViecLam", ViewBag.Lang)</span>
-                    <div class="list-item">
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Salary))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-dola.webp" alt="@ResourceData.Resource("MucLuong", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("MucLuong", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Salary</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Experience))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-kn.webp" alt="@ResourceData.Resource("KinhNghiemLamViec", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("KinhNghiemLamViec", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Experience</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Address))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-vitri.webp" alt="@ResourceData.Resource("NoiLamViec", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("NoiLamViec", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Address</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Rank))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-capbac.webp" alt="@ResourceData.Resource("CapBac", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("CapBac", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Rank</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Degree))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-bangcap.webp" alt="@ResourceData.Resource("BangCap", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("BangCap", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Degree</div>
-                                </div>
-                            </div>
-                        }
+                <form action="@Url.Action("SendApply","Home")">
+                    <div class="big-title title-form center">
+                        <p>@ResourceData.Resource("NopHoSoUngTuyen", ViewBag.Lang)</p>
                     </div>
-                </div>
-                @if (Model.ListContentItem.Any())
-                {
-                    <div class="recruitment-relate-list type-2">
-                        <span class="title">@ResourceData.Resource("TuyenDungKhac", ViewBag.Lang)</span>
-                        <div class="list-item">
-                            @foreach(var content in Model.ListContentItem)
-                            {
-                                <div class="item">
-                                    <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="item-img">
-                                        <img src="@(!string.IsNullOrEmpty(content.UrlPicture) ? content.UrlPicture : "/html/style/images/logo-tuyendung.webp")" alt="@content.Name" />
-                                    </a>
-                                    <div class="item-content">
-                                        <h3 class="text">
-                                            <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name">
-                                            @content.Name
-                                        </a>
-                                        </h3>
-                                        <div class="text-content">@(content.EndDate.HasValue ? content.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</div>
-                                    </div>
-                                </div>
-                            }
+                    <div class="form-input">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 448 512">
+                                <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
+                            </svg>
                         </div>
+                        <input type="text" name="FullName" placeholder="@ResourceData.Resource("HoTen",ViewBag.Lang)*" />
                     </div>
-                }
+                    <div class="form-input">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
+                                 fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                                <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                            </svg>
+                        </div>
+                        <input type="text" name="Phone" placeholder="@ResourceData.Resource("DienThoai",ViewBag.Lang)*" />
+                    </div>
+                    <div class="form-input">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 512 512">
+                                <path d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z" />
+                            </svg>
+                        </div>
+                        <input type="text" name="Email" placeholder="Email*" />
+                    </div>
+                    <div class="form-textarea">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 640 512">
+                                <path d="M223.1 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 223.1 256zM274.7 304H173.3C77.61 304 0 381.7 0 477.4C0 496.5 15.52 512 34.66 512h286.4c-1.246-5.531-1.43-11.31-.2832-17.04l14.28-71.41c1.943-9.723 6.676-18.56 13.68-25.56l45.72-45.72C363.3 322.4 321.2 304 274.7 304zM371.4 420.6c-2.514 2.512-4.227 5.715-4.924 9.203l-14.28 71.41c-1.258 6.289 4.293 11.84 10.59 10.59l71.42-14.29c3.482-.6992 6.682-2.406 9.195-4.922l125.3-125.3l-72.01-72.01L371.4 420.6zM629.5 255.7l-21.1-21.11c-14.06-14.06-36.85-14.06-50.91 0l-38.13 38.14l72.01 72.01l38.13-38.13C643.5 292.5 643.5 269.7 629.5 255.7z" />
+                            </svg>
+                        </div>
+                        <textarea name="Content" id="" cols="30" rows="5" placeholder="@ResourceData.Resource("NoiDung", ViewBag.Lang)"></textarea>
+                    </div>
+                    <div class="button">
+                        <button class="more border submit-form revert">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="22px"
+                                     viewBox="0 0 512 512">
+                                    <path d="M0 96C0 60.7 28.7 32 64 32H196.1c19.1 0 37.4 7.6 50.9 21.1L289.9 96H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V160c0-8.8-7.2-16-16-16H286.6c-10.6 0-20.8-4.2-28.3-11.7L213.1 87c-4.5-4.5-10.6-7-17-7H64z" />
+                                </svg>
+                            </div>
+                            @ResourceData.Resource("BanDinhKemHoSo", ViewBag.Lang)
+                        </button>
+                        <button type="submit" class="more border submit-form">@ResourceData.Resource("NopHoSo", ViewBag.Lang)</button>
+                    </div>
+                </form>
+                <div class="note">
+                    <vc:other-component code="NoteAplly"></vc:other-component>
+                </div>
             </div>
         </div>
-    </div>    
+    </div>
+    @if (Model.ListContentItem.Any())
+    {
+        int i = 1;
+        <div class="chance">
+            <div class="container">
+                <div class="big-title center before">@ResourceData.Resource("CoHoiViecLam", ViewBag.Lang)</div>
+                <div class="paragraph fs17 detail-content">
+                    <table class="table-chance">
+                        <thead>
+                            <tr>
+                                <th>@ResourceData.Resource("STT", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("ViTriTuyenDung", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("NoiLamViec", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (WebsiteContentItem item in Model.ListContentItem)
+                            {
+                                <tr>
+                                    <td>@i.ToString("D2")</td>
+                                    <td><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
+                                    <td>@item.Address</td>
+                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                    <td><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
 }

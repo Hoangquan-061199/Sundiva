@@ -1,0 +1,180 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Simple.Json
+@using ADCOnline.Utils
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        if (Model.Page == 1)
+        {
+            ViewBag.Title = Model.ModuleItem.SEOTitle;
+        }
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    ViewBag.IsSchema = false;
+    ViewBag.Banner = true;
+}
+@if (Model.ModuleItem != null)
+{
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            <div class="banner">
+                <div class="img-banner">
+                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ModuleItem.AlbumGalleryItems.FirstOrDefault(x => x.AlbumType == 3).AlbumUrl, Model.ModuleItem.Name))
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="banner">
+                <div class="slide-index owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        <div class="img-banner">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ModuleItem.Name))
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <div class="path">
+        <div class="container">
+            <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                @ResourceData.Resource("TrangChu", ViewBag.Lang)
+            </a>
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
+                     class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+            </div>
+            <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+            <div>@Model.ModuleItem.Name</div>
+        </div>
+    </div>
+
+    <div class="price product">
+        <div class="container">
+            <div class="left">
+                @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
+                {
+                    @foreach (WebsiteModulesItem module in Model.WebsiteModulesItems.Where(x => x.ParentID == 0))
+                    {
+                        <div class="quote">
+                            <div class="big-title title-main-page before left">
+                                <p>@module.Name</p>
+                            </div>
+                            @if (Model.WebsiteModulesItems.Any(x => x.ParentID == module.ID))
+                            {
+                                <div class="paragraph">
+                                    <ul>
+                                        @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.Where(x => x.ParentID == module.ID))
+                                        {
+                                            <li class="@(item.ID == Model.ModuleItem.ID ? "active" : string.Empty)">
+                                                <div class="icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="8"
+                                                         viewBox="0 0 320 512">
+                                                        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                                                    </svg>
+                                                </div><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                @if (Model.ListProductModels.Any())
+                {
+                    <div class="product-new">
+                        <div class="big-title title-main-page before left">
+                            <p>@ResourceData.Resource("SanPhamMoi", ViewBag.Lang)</p>
+                        </div>
+                        <div class="list">
+                            @foreach (ProductItem item in Model.ListProductModels)
+                            {
+                                <div class="item item-product-new">
+                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                    </a>
+                                    <div class="text">
+                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
+                                            @item.Name
+                                        </a>
+                                        @if (!string.IsNullOrEmpty(item.ProductCode))
+                                        {
+                                            <div class="code">
+                                                <p>@ResourceData.Resource("Ma", ViewBag.Lang): @item.ProductCode</p>
+                                            </div>
+                                        }
+                                        <div class="p-price">
+                                            @if (item.PriceOld.HasValue)
+                                            {
+                                                <p>@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
+                                            }
+                                            <p><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="right">
+                <h1 class="big-title title-main-page before left">@Model.ModuleItem.Name</h1>
+                <div class="paragraph justify fs17 detail-content">
+                    @Html.Raw(Model.ModuleItem.Description)
+                </div>
+                @if (Model.ListProductItem.Any())
+                {
+                    <div class="list-product">
+                        @foreach (ProductItem item in Model.ListProductItem)
+                        {
+                            <div class="item item-product-new main">
+                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                </a>
+                                <div class="text">
+                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
+                                        @item.Name
+                                    </a>
+                                    <div class="code">
+                                        <p>@ResourceData.Resource("Ma", ViewBag.Lang): @item.ProductCode</p>
+                                    </div>
+                                    <div class="p-price">
+                                        @if (item.PriceOld.HasValue)
+                                        {
+                                            <p>@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
+                                        }
+                                        <p><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                        @if (Model.Total > Model.PageSize)
+                        {
+                            @Html.Raw(ViewBag.GridHtml)
+                        }
+                }
+            </div>
+        </div>
+    </div>
+}

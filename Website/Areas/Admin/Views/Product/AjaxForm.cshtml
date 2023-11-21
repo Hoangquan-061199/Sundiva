@@ -50,7 +50,7 @@
                             <li role="presentation" class="@(ViewBag.Tab =="TabContent" ? "active" : string.Empty)"><a href="#TabContent" aria-controls="TabContent" role="tab" data-toggle="tab">Khuyến mại</a></li>
                         }
                         <li role="presentation" class="@(ViewBag.Tab =="TabContent1" ? "active" : string.Empty)"><a href="#TabContent1" aria-controls="TabContent1" role="tab" data-toggle="tab">Nội dung</a></li>
-                        <li role="presentation" class="@(ViewBag.Tab =="TabSubContent" ? "active" : string.Empty)"><a href="#TabSubContent" aria-controls="TabSubContent" role="tab" data-toggle="tab">Lịch trình</a></li>
+                        <li role="presentation" class="@(ViewBag.Tab =="TabSubContent" ? "active" : string.Empty)"><a href="#TabSubContent" aria-controls="TabSubContent" role="tab" data-toggle="tab">Công trình</a></li>
                         @if (isContentIds == true)
                         {
                             <li role="presentation" class="@(ViewBag.Tab =="TabRelate" ? "active" : string.Empty)"><a href="#TabRelate" aria-controls="TabRelate" role="tab" data-toggle="tab">Ấn phẩm</a></li>
@@ -70,45 +70,14 @@
                                 <div class="col-sm-1">
                                     <label>Tên</label>
                                 </div>
-                                <div class="col-sm-5">
+                                <div class="col-sm-8">
                                     <input type="text" class="form-control title count @(ViewBag.Action.Equals("Add") ? "autoPermalinkP" : "" )" name="Name" id="Name" value="@Model.Product.Name" placeholder="@Model.Product.Name " />
                                 </div>
                                 <div class="col-sm-1">
-                                    <label>Mã tour</label>
+                                    <label>Mã sản phẩm</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control notvalid" name="ProductCode" id="ProductCode" value="@Model.Product.ProductCode" />
-                                </div>
-                                <div class="col-sm-1">
-                                    <label>Xuất phát</label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <select name="AddressId" class="form-control">
-                                        @foreach (var item in Model.LitsItemAddressStart.OrderBy(x => x.OrderDisplay))
-                                        {
-                                            <option value="@item.ID" @(Model.Product.AddressId == item.ID.ToString() ? "selected" : string.Empty)>@item.Name</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-1">
-                                    <label>Vận chuyển</label>
-                                </div>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" name="Shipping" id="Shipping" value="@Model.Product.Shipping" />
-                                </div>
-                                <div class="col-sm-1">
-                                    <label>Giá</label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control maskPrice" name="Price" id="PriceView" value="@(Model.Product.Price.HasValue ? Model.Product.Price.Value : 0)" />
-                                </div>
-                                <div class="col-sm-1">
-                                    <label>Sỗ chỗ</label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="number" class="form-control " name="Quantity" id="Quantity" value="@Model.Product.Quantity" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -127,34 +96,24 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
-                                    <label>Link Redirect</label>
+                                    <label>Giá hiển thị</label>
                                 </div>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control link" name="LinkUrl" id="LinkUrl" value="@Model.Product.LinkUrl" />
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control maskPrice" name="Price" id="PriceView" value="@(Model.Product.Price.HasValue ? Model.Product.Price.Value : 0)" />
+                                </div>
+                                <div class="col-sm-1">
+                                    <label>Giá cũ</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control maskPrice" name="PriceOld" id="PriceOld" value="@Model.Product.PriceOld" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
-                                    <label>Khởi hành</label>
+                                    <label>Link Redirect</label>
                                 </div>
-                                <div class="col-sm-2">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control dateddmmyyy" autocomplete="off" name="TimeStart" id="TimeStart" value="@Utility.ConvertDateVi(Model.Product.TimeStart??DateTime.Now)" />
-                                        <div class="input-group-addon">
-                                            <span class="fa fa-calendar"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-1">
-                                    <label>Thời gian</label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <select name="Times" class="form-control">
-                                        @foreach (var item in Model.LitsItemTimeTours.OrderBy(x => x.OrderDisplay))
-                                        {
-                                            <option value="@item.ID" @(Model.Product.Times == item.ID.ToString() ? "selected" : string.Empty)>@item.Name</option>
-                                        }
-                                    </select>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control link" name="LinkUrl" id="LinkUrl" value="@Model.Product.LinkUrl" />
                                 </div>
                                 <div class="col-sm-1">
                                     <label>Ngày tạo</label>
@@ -180,6 +139,44 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Video</label>
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control link" id="Video" name="Video" placeholder="Link video" style="margin:0;" value="@Model.Product.Video" />
+                                        <span class="input-group-addon" style="padding:0 10px 0 0;background:transparent;">
+                                            <button type="button" onclick="SelectFileTyniMce('Video','Video',2);" class="btn btn-info btn-sm btn-bnl"><i class="lnr lnr-upload"></i>Chọn file</button>
+                                        </span>
+                                    </div>
+                                    <span>Hướng dẫn: Chọn file hoặc Copy link youtube (bHLG1RVt7Kw)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <label>Ảnh đại diện</label>
+                                </div>
+                                <div class="col-sm-5 changeUrlTinyMceParent">
+                                    <div class="input-group">
+                                        <input type="text" id="Avatar" placeholder="Link ảnh" class="changeUrlTinyMce link form-control" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="@Model.Product.UrlPicture" />
+                                        <span class="input-group-addon" style="background:transparent;padding-right:10px;">
+                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm btn-bnl"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
+                                        </span>
+                                    </div>
+                                    <div id="AddAvatar">
+                                        <table class="removeParent">
+                                            <tr>
+                                                <td>
+                                                    <img style="max-width:80px;max-height:80px;" src="@Model.Product.UrlPicture">
+                                                    <input type="hidden" name="UrlPicture" value="@Model.Product.UrlPicture">
+                                                    <a href="javascript:void(0);" class="removeObject">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="col-sm-1">
                                     <label>Đặc biệt</label>
                                 </div>
@@ -239,38 +236,6 @@
                                         </div>
                                     }
                                 }
-                                <div class="col-sm-1">
-                                    <label>Tags</label>
-                                </div>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" name="Tags" id="Tags" value="@Model.Product.Tags" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-1">
-                                    <label>Ảnh đại diện</label>
-                                </div>
-                                <div class="col-sm-11 changeUrlTinyMceParent">
-                                    <div class="input-group">
-                                        <input type="text" id="Avatar" placeholder="Link ảnh" class="changeUrlTinyMce link form-control" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="@Model.Product.UrlPicture" />
-                                        <span class="input-group-addon" style="background:transparent;padding-right:10px;">
-                                            <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm btn-bnl"><i class="lnr lnr-upload"></i>Chọn ảnh</button>
-                                        </span>
-                                    </div>
-                                    <div id="AddAvatar">
-                                        <table class="removeParent">
-                                            <tr>
-                                                <td>
-                                                    <img style="max-width:80px;max-height:80px;" src="@Model.Product.UrlPicture">
-                                                    <input type="hidden" name="UrlPicture" value="@Model.Product.UrlPicture">
-                                                    <a href="javascript:void(0);" class="removeObject">
-                                                        <i class="fa fa-trash"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
                             </div>
                             <div class="form-group" style="background: #ededed; padding: 15px 0">
                                 <div class="col-sm-12">
@@ -513,7 +478,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
-                                    Hành trình
+                                    Giới thiệu
                                 </div>
                                 <div class="col-sm-11">
                                     <textarea rows="10" id="Information" name="Information" class="form-control">@Model.Product.Information</textarea>
@@ -521,7 +486,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
-                                    Dịch vụ
+                                    Thông số
                                 </div>
                                 <div class="col-sm-11">
                                     <textarea rows="10" id="Content" name="Content" class="form-control">@Model.Product.Content</textarea>
@@ -529,7 +494,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
-                                    Ghi chú
+                                    Đặc điểm
                                 </div>
                                 <div class="col-sm-11">
                                     <textarea rows="10" id="Document" name="Document" class="form-control">@Model.Product.Document</textarea>
@@ -573,47 +538,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane @(ViewBag.Tab =="TabColorTable" ? "active" : string.Empty)" id="TabColorTable">
-                            <div class="input-group">
-                                <span class="input-group-addon" style="background:transparent;padding-right:10px;">
-                                    <button type="button" onclick="SelectFileTyniMce('AddColor','UrlPicture',5);" class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i>Ảnh</button>
-                                </span>
-                                <input type="text" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this), 'AddColor', 'ColorTableUrl',5)" value="" class="form-control" />
-                            </div>
-                            <div class="lst-gallery" id="AddColor">
-                                @if (Model.ListColorTableAdmin != null && Model.ListColorTableAdmin.Count > 0)
-                                {
-                                    foreach (var item in Model.ListColorTableAdmin)
-                                    {
-                                        <table class="table removeParent">
-                                            <tr>
-                                                <td rowspan="4" style="width:50px;">
-                                                    <img style="max-width: 50px; max-height: 50px;" src="@item.ColorTableUrl">
-                                                    <input type="hidden" name="ColorTableUrl" value="@item.ColorTableUrl">
-                                                    <a href="javascript:void(0);" class="removeObject">
-                                                        <i class="fa fa-trash"></i>
-                                                    </a>
-                                                </td>
-                                                <td style="width:100px;text-align:left;"><b>Tiêu đề</b></td>
-                                                <td><input class="form-control" type="text" name="ColorTableTitle" value="@item.ColorTableTitle"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="text-align:left;"><b>Link Ảnh</b></td>
-                                                <td><input type="text" class="form-control" value="@item.ColorTableUrl"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="text-align:left;"><b>Alt</b></td>
-                                                <td><input type="text" class="form-control" name="ColorTableAlt" value="@item.ColorTableAlt"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="text-align:left;"><b>Thứ tự</b></td>
-                                                <td><input type="text" style="text-align:center;width:70px;display: inline-block;" class="form-control" name="ColorTableOrderDisplay" value="@item.ColorTableOrderDisplay" placeholder="Thứ tự"></td>
-                                            </tr>
-                                        </table>
-                                    }
-                                }
-                            </div>
-                        </div>
+                        
                         <div role="tabpanel" class="tab-pane @(ViewBag.Tab =="TabRelate" ? "active" : string.Empty)" id="TabRelate">
                             <div class="form-group">
                                 <div class="col-xs-12">

@@ -81,6 +81,14 @@ namespace Website.Areas.Admin.Controllers
                 }
                 seach.ModuleIds = string.Join(",", _websiteModuleDa.GetListChidrent(seach.ModuleId.Value).Select(x => x.ID));
             }
+            else
+            {
+                SystemActionAdmin.View = false;
+            }
+            if(role == "Admin")
+            {
+                SystemActionAdmin.View = true;
+            }
             MembershipAdmin membership = _membershipDa.GetAdminId(ConvertUtil.ToGuid(userId));
             if (membership != null)
             {
@@ -282,7 +290,7 @@ namespace Website.Areas.Admin.Controllers
                 return View("AjaxFormSimple", module);
             }
             List<string> lstType = new() {
-                StaticEnum.ContactUs, StaticEnum.Doctorteam, StaticEnum.Specialist,StaticEnum.Video, StaticEnum.Contact, StaticEnum.Project, StaticEnum.DistributionSystem, StaticEnum.QA,StaticEnum.Gallery,
+                StaticEnum.Catalogue, StaticEnum.ContactUs, StaticEnum.Doctorteam, StaticEnum.Specialist,StaticEnum.Video, StaticEnum.Contact, StaticEnum.Project, StaticEnum.DistributionSystem, StaticEnum.QA,StaticEnum.Gallery,
                 StaticEnum.Document, StaticEnum.Recuitment, StaticEnum.Company, StaticEnum.Introduce, StaticEnum.Application, StaticEnum.Partner, StaticEnum.BusinessAreas
             };
             if (!string.IsNullOrEmpty(type) && lstType.Contains(type))

@@ -8,7 +8,7 @@ namespace ADCOnline.Utils
         public const string HeadTop = "HeadTop";//HeadTop
         public const string Logo = "Logo";
         public const string MainMenu = "MainMenu";
-        public const string Menu2 = "Menu2";
+        public const string MenuTop = "MenuTop";
         public const string MainTop = "MainTop";
         public const string AboutIndex = "AboutIndex";
         public const string PartnerIndex = "PartnerIndex";
@@ -49,12 +49,12 @@ namespace ADCOnline.Utils
         public const string TinTucNoiBat = "TinTucNoiBat";
         public const string TechnicalAdviceIndex = "TechnicalAdviceIndex";
         public const string Footer = "Footer";//Footer
-        public const string MenuFooterColumn = "MenuFooterColumn";
-        public const string MenuFooterColumn1 = "MenuFooterColumn1";
+        public const string CatalogueIndex = "CatalogueIndex";
         public const string GoogleMap = "GoogleMap";
         public const string LogoFooter = "LogoFooter";
         public const string FormContact = "FormContact";
-        public const string MenuFooterRow = "MenuFooterRow";
+        public const string MenuFooter = "MenuFooter";
+        public const string ContactFooter = "ContactFooter";
         public const string RightLayout = "RightLayout";//RightLayout
         public const string ModuleGuide = "ModuleGuide";
         public const string SpecialistIndex = "SpecialistIndex";
@@ -70,6 +70,7 @@ namespace ADCOnline.Utils
         public const string Doctorteam = "Doctorteam";
         public const string Specialist = "Specialist";
         public const string News = "News";
+        public const string CurtainCollection = "CurtainCollection";
         public const string BusinessAreas = "BusinessAreas";
         public const string Gallery = "Gallery";
         public const string QA = "QA";
@@ -95,6 +96,7 @@ namespace ADCOnline.Utils
         public const string Video = "Video";
         public const string Trademark = "Trademark";
         public const string Cart = "Cart";
+        public const string Catalogue = "Catalogue";
         public const string LogIn = "LogIn";
         public const string Register = "Register";
         public const string History = "History";
@@ -104,6 +106,7 @@ namespace ADCOnline.Utils
         public const string DistributionSystem = "DistributionSystem";
         public const string KeyCapcha = "KeyCapcha";
         public const string Search = "Search";
+        public const string PriceQuote = "PriceQuote";
         #endregion
         #region Thông tin fix
         public static string UnitDefault = "đ";
@@ -121,9 +124,13 @@ namespace ADCOnline.Utils
         #endregion
         #region loại hiển thị giới thiệu
         public const string ThuNgo = "ThuNgo";
-        public const string Quatrinh = "Quatrinh";
+        public const string GioiThieuChung = "GioiThieuChung";
         public const string TamNhin = "TamNhin";
-        public const string SoDo = "SoDo";
+        public const string GiaTri = "GiaTri";
+        public const string LichSu = "LichSu";
+        public const string NangLuc = "NangLuc";
+        public const string DoiNgu = "DoiNgu";
+        public const string ThanhTich = "ThanhTich";
         #endregion
         #region loại hiển thị thư viện
         public const string Videos = "Videos";
@@ -131,6 +138,11 @@ namespace ADCOnline.Utils
         public const string HoatDongXaHoi = "HoatDongXaHoi";
         public const string HoatDongTapThe = "HoatDongTapThe";
         public const string TaiLieuInox = "TaiLieuInox";
+        #endregion
+        #region loại hiển thị tuyển dụng
+        public const string Recuiment1 = "Recuiment1";
+        public const string Recuiment2 = "Recuiment2";
+        public const string Recuiment3 = "Recuiment3";
         #endregion
         #region loại hiển thị đối tác
 
@@ -264,7 +276,7 @@ namespace ADCOnline.Utils
         {
             News,Contact,Company,Project,Services,Gallery,Video,Introduce,Document,Updating,Recuitment,
             Library,Build,Application,ContactUs,
-            CompanyActivities,BusinessAreas,Video
+            CompanyActivities,BusinessAreas,Video,SimpleModule
         };
         public static List<string> ModuleContent = list;
         private static readonly List<string> listSitemap = new()

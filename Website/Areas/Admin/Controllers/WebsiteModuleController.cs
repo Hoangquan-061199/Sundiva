@@ -907,9 +907,20 @@ namespace Website.Areas.Admin.Controllers
             string role = HttpContext.Session.GetString("WebAdminRole");
             string userId = HttpContext.Session.GetString("WebAdminUserID");
             string moduleIds = _websiteModuleDa.GetModuleIds(role, userId);
-            string type = $"{StaticEnum.Product},{StaticEnum.Trademark},{StaticEnum.Sale},{StaticEnum.Cart}";
-            List<WebsiteModuleAdmin> ltsSourcewebsiteModule = _websiteModuleDa.GetListByNotListModuleType(type, moduleIds, Lang());
+            List<WebsiteModuleAdmin> ltsSourcewebsiteModule = new();
             StringBuilder stbHtml = new();
+            string type = $"{StaticEnum.Product},{StaticEnum.Trademark},{StaticEnum.Sale},{StaticEnum.Cart}";
+            if (role == "Admin")
+            {
+                ltsSourcewebsiteModule = _websiteModuleDa.GetListByNotListModuleType(type, "", Lang());
+            }
+            else
+            {
+                if (moduleIds != null)
+                {
+                    ltsSourcewebsiteModule = _websiteModuleDa.GetListByNotListModuleType(type, moduleIds, Lang());
+                }
+            }
             List<int> ltsValues = Utility.StringToListInt(ValuesSelected);
             _websiteModuleDa.BuildTreeViewNotCheckBox(ltsSourcewebsiteModule, 0, true, ltsValues, ref stbHtml);
             WebsiteModuleViewModel model = new()
@@ -925,9 +936,20 @@ namespace Website.Areas.Admin.Controllers
             string role = HttpContext.Session.GetString("WebAdminRole");
             string userId = HttpContext.Session.GetString("WebAdminUserID");
             string moduleIds = _websiteModuleDa.GetModuleIds(role, userId);
-            string type = $"{StaticEnum.Product}";
-            List<WebsiteModuleAdmin> ltsSourcewebsiteModule = _websiteModuleDa.GetListByListModuleType(type, moduleIds, Lang());
             StringBuilder stbHtml = new();
+            List<WebsiteModuleAdmin> ltsSourcewebsiteModule = new();
+            string type = $"{StaticEnum.Product}";
+            if (role == "Admin")
+            {
+                ltsSourcewebsiteModule = _websiteModuleDa.GetListByListModuleType(type, "", Lang());
+            }
+            else
+            {
+                if (moduleIds != null)
+                {
+                    ltsSourcewebsiteModule = _websiteModuleDa.GetListByListModuleType(type, moduleIds, Lang());
+                }
+            }
             List<int> ltsValues = Utility.StringToListInt(ValuesSelected);
             _websiteModuleDa.BuildTreeViewNotCheckBox(ltsSourcewebsiteModule, 0, true, ltsValues, ref stbHtml);
             WebsiteModuleViewModel model = new()

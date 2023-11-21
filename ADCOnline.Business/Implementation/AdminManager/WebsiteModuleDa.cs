@@ -724,26 +724,29 @@ namespace ADCOnline.Business.Implementation.AdminManager
         {
             using (SqlConnection connect = _dapperDa.GetOpenConnection())
             {
-                if (!string.IsNullOrEmpty(code))
+                if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(moduleIds))
+                {
+                    var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang AND ',' + @code +',' like N'%,' + ModuleTypeCode + ',%' AND ',' + @moduleids +',' like N'%,' + Convert(varchar,ID) + ',%'", new { lang, code, @moduleids = moduleIds.Trim(',') });
+                    connect.Close();
+                    return result.ToList();
+                }
+                else if (!string.IsNullOrEmpty(code))
                 {
                     var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang AND ',' + @code +',' like N'%,' + ModuleTypeCode + ',%'", new { lang, code });
                     connect.Close();
                     return result.ToList();
                 }
+                else if (!string.IsNullOrEmpty(moduleIds))
+                {
+                    var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = '" + lang + "' AND ',' + @code +',' like N'%,' + Convert(varchar,ID) + ',%'", new { lang, @code = moduleIds.Trim(',') });
+                    connect.Close();
+                    return result.ToList();
+                }
                 else
                 {
-                    if (!string.IsNullOrEmpty(moduleIds))
-                    {
-                        var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = '" + lang + "' AND ',' + @code +',' like N'%,' + Convert(varchar,ID) + ',%'", new { lang, @code = moduleIds.Trim(',') });
-                        connect.Close();
-                        return result.ToList();
-                    }
-                    else
-                    {
-                        var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang", new { lang });
-                        connect.Close();
-                        return result.ToList();
-                    }
+                    var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang", new { lang });
+                    connect.Close();
+                    return result.ToList();
                 }
             }
         }
@@ -751,26 +754,29 @@ namespace ADCOnline.Business.Implementation.AdminManager
         {
             using (SqlConnection connect = _dapperDa.GetOpenConnection())
             {
-                if (!string.IsNullOrEmpty(code))
+                if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(moduleIds))
+                {
+                    var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang AND ',' + @code +',' not like N'%,' + ModuleTypeCode + ',%' AND ',' + @moduleids +',' like N'%,' + Convert(varchar,ID) + ',%'", new { lang, code, @moduleids = moduleIds.Trim(',') });
+                    connect.Close();
+                    return result.ToList();
+                }
+                else if (!string.IsNullOrEmpty(code))
                 {
                     var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang AND ',' + @code +',' not like N'%,' + ModuleTypeCode + ',%'", new { lang, code });
                     connect.Close();
                     return result.ToList();
                 }
+                else if (!string.IsNullOrEmpty(moduleIds))
+                {
+                    var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = '" + lang + "' AND ',' + @code +',' like N'%,' + Convert(varchar,ID) + ',%'", new { lang, @code = moduleIds.Trim(',') });
+                    connect.Close();
+                    return result.ToList();
+                }
                 else
                 {
-                    if (!string.IsNullOrEmpty(moduleIds))
-                    {
-                        var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = '" + lang + "' AND ',' + @code +',' like N'%,' + Convert(varchar,ID) + ',%'", new { lang, @code = moduleIds.Trim(',') });
-                        connect.Close();
-                        return result.ToList();
-                    }
-                    else
-                    {
-                        var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang", new { lang });
-                        connect.Close();
-                        return result.ToList();
-                    }
+                    var result = connect.Query<WebsiteModuleAdmin>("SELECT * FROM WebsiteModule where IsDeleted = 0 AND IsShow =1 And Lang = @lang", new { lang });
+                    connect.Close();
+                    return result.ToList();
                 }
             }
         }

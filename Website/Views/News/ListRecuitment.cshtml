@@ -27,87 +27,107 @@
 
 @if (Model.ModuleItem != null)
 {
-    @if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
     {
-        <div class="banner-slide">
-            <div class="@(Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) > 1 ? "slide owl-carousel owl-theme" : "banner mt-top")">
-                @foreach (var item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3).OrderBy(x => x.AlbumOrderDisplay))
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            <div class="banner">
+                <div class="img-banner">
+                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ModuleItem.AlbumGalleryItems.FirstOrDefault(x => x.AlbumType == 3).AlbumUrl, Model.ModuleItem.Name))
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="banner">
+                <div class="slide-index owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        <div class="img-banner">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ModuleItem.Name))
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <div class="path">
+        <div class="container">
+            <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                @ResourceData.Resource("TrangChu", ViewBag.Lang)
+            </a>
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
+                     class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+            </div>
+            <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+            <div>@Model.ModuleItem.Name</div>
+        </div>
+    </div>
+    @if (Model.ListContentItem.Any())
+    {
+        <div class="list-recruitment">
+            <div class="container">
+                @foreach (WebsiteContentItem item in Model.ListContentItem)
                 {
-                    <div class="item">
-                        <img src="@item.AlbumUrl" alt="@item.AlbumTitle">
+                    <div class="item item-recruitment">
+                        <div class="icon">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                        </div>
+                        <h3 class="big-title title-recruitment color-main">@item.Name</h3>
+                        <div class="paragraph fs17 justify detail-content">
+                            @Html.Raw(item.Content)
+                        </div>
                     </div>
                 }
             </div>
         </div>
     }
-    @if (Model.WebsiteModulesItems.Any())
+    @if (Model.ListContentItemAsync.Any())
     {
-        <div class="intro-page-menu no-mb">
-            <div class="container-3 box">
-                @foreach (var module in Model.WebsiteModulesItems.Where(x => x.ParentID == Model.ModuleParentItem.ID).OrderBy(x => x.OrderDisplay))
-                {
-                    <a class="item@(module.ID == Model.ModuleItem.ID ? " active" : string.Empty)" href="@Utility.Link(module.NameAscii, string.Empty, module.LinkUrl)" title="@module.Name">@module.Name</a>
-                }
+        int i = 1;
+        <div class="chance">
+            <div class="container">
+                <div class="big-title center before">@ResourceData.Resource("CoHoiViecLam", ViewBag.Lang)</div>
+                <div class="paragraph fs17 detail-content">
+                    <table class="table-chance">
+                        <thead>
+                            <tr>
+                                <th>@ResourceData.Resource("STT", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("ViTriTuyenDung", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("NoiLamViec", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (WebsiteContentItem item in Model.ListContentItemAsync)
+                            {
+                                <tr>
+                                    <td>@i.ToString("D2")</td>
+                                    <td><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
+                                    <td>@item.Address</td>
+                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                    <td><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="more border square1 uppercase">
+                    @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                             class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
     }
-    <div class="recruitment">
-        <div class="container">
-            <h1 class="title">@Model.ModuleItem.Name</h1>
-            <div class="tb-scroll">
-                <table class="table-recruitment">
-                    <thead>
-                        <tr>
-                            <th>@Html.Raw(ResourceData.Resource("STT", ViewBag.Lang))</th>
-                            <th>@Html.Raw(ResourceData.Resource("ViTriTuyenDung", ViewBag.Lang))</th>
-                            <th>@Html.Raw(ResourceData.Resource("DiaDiemLamViec", ViewBag.Lang))</th>
-                            <th>@Html.Raw(ResourceData.Resource("NgayHetHan", ViewBag.Lang))</th>
-                            <th>@Html.Raw(ResourceData.Resource("XemChiTiet", ViewBag.Lang))</th>
-                            <th>@Html.Raw(ResourceData.Resource("ChiaSe", ViewBag.Lang))</th>
-                        </tr>
-                    </thead>
-                    @if (Model.ListContentItemAsync.Any())
-                    {
-                        int i = 1;
-                        <tbody>
-                            @foreach(var content in Model.ListContentItemAsync)
-                            {
-                                <tr>
-                                    <td>@i</td>
-                                    <td>
-                                        <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@Html.Raw(content.Name)">
-                                            @Html.Raw(content.Name)
-                                        </a>
-                                    </td>
-                                    <td>@content.Address</td>
-                                    <td>@(content.EndDate.HasValue ? content.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
-                                    <td><a href="href=" @Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)"" title="@Html.Raw(ResourceData.Resource("XemChiTiet", ViewBag.Lang))">@Html.Raw(ResourceData.Resource("XemChiTiet", ViewBag.Lang))</a></td>
-                                    <td>
-                                        <div class="share">
-                                            <a href="" title="Share">
-                                                <img alt="icon" src="/html/style/images/icon-share.webp" alt="Share" />
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                i++;
-                            }                            
-                        </tbody>
-                    }
-                    else
-                    {
-                        <tbody>
-                            <tr>
-                                <td colspan="6"></td>
-                            </tr>
-                        </tbody>
-                    }
-                </table>
-                @if (Model.Total > Model.PageSize)
-                {
-                    @Html.Raw(ViewBag.GridHtml)
-                }
-            </div>
-        </div>
-    </div>
 }

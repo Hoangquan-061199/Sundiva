@@ -29,6 +29,7 @@ namespace Website.ViewModels
         public List<ColorTableItem> ColorTableItems { get; set; }
         public IEnumerable<WebsiteProductItemJson> RelatedProduct { get; set; }
         public List<WebsiteProductItemJson> ListProductCompare { get; set; }
+        public List<WebsiteModulesJson> ListCurtainCollection { get; set; }
         public List<WebsiteProductItemJson> ListProductSeen { get; set; }
         public List<WebsiteModulesItem> ListModuleProducts { get; set; }
         public IEnumerable<ProductItem> ListProductGroup { get; set; }
@@ -40,7 +41,6 @@ namespace Website.ViewModels
         public IEnumerable<TagItem> TagItems { get; set; }
         public SystemConfigJson SystemConfigJson { get; set; }
         public List<WebsiteContentItem> ListQA { get; set; }
-
         // public CustomerItem CustomerItem { get; set; }
         public List<AttributeItem> AttributeItemsContent { get; set; }
         public List<ProductItem> ListProductSub { get; set; }
