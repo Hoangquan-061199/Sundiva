@@ -195,7 +195,8 @@ namespace Website.Controllers
                                 var childModule = cacheUtils.GetListModuleChidrentNotAsync(module.ID);
                                 List<ProductItem> listProduct = _productManager.GetListProduct(new SearchModel { page = search.page, lang = Lang(), sort = 5 }, pageSize, module.ID, string.Join(",", childModule.Select(x => x.ID)), "0");
                                 model.ListModulesItemTour = childModule;
-                                //model.WebsiteModulesItems = module.ParentID == 0 ? await cacheUtils.GetListModuleChildID(module.ID, Lang()) : childModule.Any(x => x.ParentID == module.ID) ? childModule.Where(x => x.ParentID == module.ID)?.ToList() : await cacheUtils.GetListModuleChildID(module.ParentID.Value, Lang());
+                                var moduleproduct = _webModuleManager.GetByModuleTypeCode(StaticEnum.Product, Lang());
+                                model.WebsiteModulesItems = moduleproduct != null ? moduleproduct : new();
 
                                 #region check khuyen mai (Ẩn)
 
@@ -229,32 +230,6 @@ namespace Website.Controllers
                                 #endregion check khuyen mai (Ẩn)
 
                                 model.ListProductItem = listProduct;
-                                List<CommonJsonItem> listItem = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("TimeTour.json", "DataJson"));
-                                List<CommonJsonItem> listItem2 = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("AddressStart.json", "DataJson"));
-
-                                if (model.ListModuleItems.Any())
-                                {
-                                    foreach (var item in model.ListModuleItems)
-                                    {
-                                        item.ListProductItem = _productManager.GetListProduct(new SearchModel { page = search.page, lang = Lang(), sort = 5 }, 0, item.ID, "0", "0");
-                                    }
-                                }
-
-                                if (model.ListProductItem.Any())
-                                {
-                                    foreach (var item in model.ListProductItem)
-                                    {
-                                        if (!string.IsNullOrEmpty(item.Times) && module.TypeView != StaticEnum.TypeProductI)
-                                            item.TimesValue = listItem.FirstOrDefault(y => y.ID == Convert.ToInt32(item.Times)).Name;
-                                        if (!string.IsNullOrEmpty(item.AddressId) && module.TypeView != StaticEnum.TypeProductI)
-                                            item.Address = listItem2.FirstOrDefault(y => y.ID == Convert.ToInt32(item.AddressId)).Name;
-                                    }
-                                }
-                                if (module.TypeView == StaticEnum.TypeProductI)
-                                {
-                                    List<CommonJsonItem> listservicecars = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("ServiceCarJson.json", "DataJson"));
-                                    model.ListServiceCars = listservicecars != null ? listservicecars : null;
-                                }
 
                                 #region module thương hiệu
 
@@ -274,13 +249,13 @@ namespace Website.Controllers
                                 //IEnumerable<int> idsProduct = await _productManager.GetListIdsProduct(searchproduct, module.ID, string.Join(",", AllModule.Select(x => x.ID)));
                                 //model.RateItems = idsProduct != null && idsProduct.Count() > 0 ? await _commentManager.GetAllCommentCategory(string.Join(",", idsProduct)) : new List<CommentItem>();
                                 //model.ListModuleItem = cacheUtils.GetByModuleTypeCode(moduleType, Lang());
-
+                                model.ListProductModels = _productManager.GetListProduct(new SearchModel { page = search.page, lang = Lang(), sort = 5 }, 5, moduleproduct.FirstOrDefault().ID, string.Join(",", moduleproduct.Select(x => x.ID)), "0");
                                 total = listProduct.Any() ? listProduct.FirstOrDefault().TotalRecord : 0;
                                 model.Total = total;
                                 model.PageSize = pageSize;
                                 model.Page = p ?? 1;
                                 model.SearchModel = search;
-                                //ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
+                                ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
 
                                 //ViewBag.GridHtml = Common.GetAjaxPage(search.page, model.Total.Value, pageSize);
                                 //if(model.ListProductItem.Count() == 1)
@@ -288,13 +263,8 @@ namespace Website.Controllers
                                 //    return RedirectPermanent(model.ListProductItem.FirstOrDefault().NameAscii);
                                 //}
                                 await _webModuleManager.UpdateTotalViews(module.ID);
-                                if (module.TypeView == StaticEnum.TypeProductI) return View(@"~/Views/Product/CarRental.cshtml", model);
-                                if (module.TypeView == StaticEnum.TypeProduct)
-                                {
-                                    model.ListSystemTags = _systemTagManager.GetListSystemTag();
-                                    return View(@"~/Views/Product/ListProductTour.cshtml", model);
-                                }
-                                if (module.TypeView == StaticEnum.TypeProductII) return View(@"~/Views/Product/ListProductHotel.cshtml", model);
+                                if(module.ParentID == 0)
+                                    return View(@"~/Views/Product/ListGroupProduct.cshtml", model);
                                 return View(@"~/Views/Product/ListGridProduct.cshtml", model);
                             }
 
@@ -467,6 +437,7 @@ namespace Website.Controllers
                         #endregion
                         #region Báo giá
                         case StaticEnum.PriceQuote:
+                        case StaticEnum.Album:
                             {
                                 ModuleViewModels model = new()
                                 {
@@ -475,7 +446,7 @@ namespace Website.Controllers
                                 };
 
                                 IEnumerable<WebsiteModulesItem> childmodule = await cacheUtils.GetListModuleChidrentAsync(module.ID);
-                                model.WebsiteModulesItems = _webModuleManager.GetByModuleTypeCode(StaticEnum.PriceQuote, Lang());
+                                model.WebsiteModulesItems = _webModuleManager.GetByModuleTypeCode(module.ModuleTypeCode, Lang());
                                 var moduleProduct = _webModuleManager.GetByModuleTypeCode(StaticEnum.Product, Lang());
                                 int pageSize = 6;
                                 IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, string.Join(",", childmodule.Select(x => x.ID)), "0");
@@ -490,6 +461,12 @@ namespace Website.Controllers
                                 await _webModuleManager.UpdateTotalViews(module.ID);
                                 if (listContent.Count() == 1)
                                     return RedirectPermanent(Utility.Link(listContent.FirstOrDefault().NameAscii, string.Empty, listContent.FirstOrDefault().LinkUrl));
+                                if (module.ParentID == 0)
+                                {
+                                    if (model.WebsiteModulesItems.Count() == 1)
+                                        return View(@"~/Views/News/ListPriceQuote.cshtml", model);
+                                    return View(@"~/Views/News/ListGroupPriceQuote.cshtml", model);
+                                }
                                 return View(@"~/Views/News/ListPriceQuote.cshtml", model);
                             }
                         #endregion
@@ -763,6 +740,7 @@ namespace Website.Controllers
                             #endregion Tin tức chi tiết
                             #region Báo giá chi tiết
                             case StaticEnum.PriceQuote:
+                            case StaticEnum.Album:
                                 {
                                     content.AlbumGalleryItems = !string.IsNullOrEmpty(content.AlbumPictureJson) ? JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(content.AlbumPictureJson) : new List<AlbumGalleryItem>();
                                     search.sort = 1;
@@ -776,7 +754,7 @@ namespace Website.Controllers
                                         ListContentItemNew = await _webContentManager.GetListContent(search, 5, moduleNews != null ? moduleNews.ID : 0, "", content.ID.ToString()), //Bài viết mới nhất 
                                         ListSystemTags = _systemTagManager.GetListSystemTag(),
                                     };
-                                    model.WebsiteModulesItems = _webModuleManager.GetByModuleTypeCode(StaticEnum.PriceQuote, Lang());
+                                    model.WebsiteModulesItems = _webModuleManager.GetByModuleTypeCode(module.ModuleTypeCode, Lang());
                                     var moduleProduct = _webModuleManager.GetByModuleTypeCode(StaticEnum.Product, Lang());
                                     model.ListProductModels = _productManager.GetListProduct(new SearchModel { page = search.page, lang = Lang(), sort = 5 }, 5, moduleProduct.FirstOrDefault().ID, string.Join(",", moduleProduct.Select(x => x.ID)), "0");
                                     await _webContentManager.UpdateTotalViews(content.ID);
