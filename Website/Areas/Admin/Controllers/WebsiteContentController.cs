@@ -81,6 +81,14 @@ namespace Website.Areas.Admin.Controllers
                 }
                 seach.ModuleIds = string.Join(",", _websiteModuleDa.GetListChidrent(seach.ModuleId.Value).Select(x => x.ID));
             }
+            else
+            {
+                SystemActionAdmin.View = false;
+            }
+            if(role == "Admin")
+            {
+                SystemActionAdmin.View = true;
+            }
             MembershipAdmin membership = _membershipDa.GetAdminId(ConvertUtil.ToGuid(userId));
             if (membership != null)
             {

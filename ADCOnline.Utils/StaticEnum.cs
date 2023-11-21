@@ -70,6 +70,7 @@ namespace ADCOnline.Utils
         public const string Doctorteam = "Doctorteam";
         public const string Specialist = "Specialist";
         public const string News = "News";
+        public const string CurtainCollection = "CurtainCollection";
         public const string BusinessAreas = "BusinessAreas";
         public const string Gallery = "Gallery";
         public const string QA = "QA";
@@ -105,6 +106,7 @@ namespace ADCOnline.Utils
         public const string DistributionSystem = "DistributionSystem";
         public const string KeyCapcha = "KeyCapcha";
         public const string Search = "Search";
+        public const string PriceQuote = "PriceQuote";
         #endregion
         #region Thông tin fix
         public static string UnitDefault = "đ";
@@ -136,6 +138,11 @@ namespace ADCOnline.Utils
         public const string HoatDongXaHoi = "HoatDongXaHoi";
         public const string HoatDongTapThe = "HoatDongTapThe";
         public const string TaiLieuInox = "TaiLieuInox";
+        #endregion
+        #region loại hiển thị tuyển dụng
+        public const string Recuiment1 = "Recuiment1";
+        public const string Recuiment2 = "Recuiment2";
+        public const string Recuiment3 = "Recuiment3";
         #endregion
         #region loại hiển thị đối tác
 
@@ -269,7 +276,7 @@ namespace ADCOnline.Utils
         {
             News,Contact,Company,Project,Services,Gallery,Video,Introduce,Document,Updating,Recuitment,
             Library,Build,Application,ContactUs,
-            CompanyActivities,BusinessAreas,Video
+            CompanyActivities,BusinessAreas,Video,SimpleModule
         };
         public static List<string> ModuleContent = list;
         private static readonly List<string> listSitemap = new()

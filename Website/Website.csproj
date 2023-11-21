@@ -191,6 +191,7 @@
     <Content Remove="bundleconfig.json" />
     <Content Remove="Views\Content\Apply.cshtml" />
     <Content Remove="Views\Content\Award.cshtml" />
+    <Content Remove="Views\Content\BookTour.cshtml" />
     <Content Remove="Views\Content\Catalog.cshtml" />
     <Content Remove="Views\Content\Compare.cshtml" />
     <Content Remove="Views\Content\ContentIntroduce.cshtml" />
@@ -201,6 +202,7 @@
     <Content Remove="Views\Content\ProductByListIds.cshtml" />
     <Content Remove="Views\Content\SearchDoctor.cshtml" />
     <Content Remove="Views\Content\SearchNews.cshtml" />
+    <Content Remove="Views\Content\SearchTour.cshtml" />
     <Content Remove="Views\Content\Services.cshtml" />
     <Content Remove="Views\Content\TradeMark.cshtml" />
     <Content Remove="Views\Content\VanHoaCongTy.cshtml" />
@@ -209,7 +211,6 @@
     <Content Remove="Views\Detail\DetailDoctor.cshtml" />
     <Content Remove="Views\Detail\DetailGallery.cshtml" />
     <Content Remove="Views\Detail\DetailProject.cshtml" />
-    <Content Remove="Views\Detail\DetailRecuitment.cshtml" />
     <Content Remove="Views\Detail\DetailServices.cshtml" />
     <Content Remove="Views\Detail\DetailSpecialist.cshtml" />
     <Content Remove="Views\Detail\DetailTechnicalAdvices.cshtml" />
@@ -235,7 +236,6 @@
     <Content Remove="Views\News\ListProject.cshtml" />
     <Content Remove="Views\News\ListPromotionNews.cshtml" />
     <Content Remove="Views\News\ListQA.cshtml" />
-    <Content Remove="Views\News\ListRecuitment.cshtml" />
     <Content Remove="Views\News\ListServices.cshtml" />
     <Content Remove="Views\News\ListSpecialist.cshtml" />
     <Content Remove="Views\News\ListTechnicalAdvice.cshtml" />

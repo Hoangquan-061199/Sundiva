@@ -79,9 +79,10 @@ namespace Website.Areas.Admin.Controllers
                             var userAdminLogin = userDa.GetMembership(session.GetAdminUserId());
                             if (userAdminLogin != null)
                             {
-                                List<ModuleAdmin> listModuleItem = JsonConvert.DeserializeObject<List<ModuleAdmin>>(userAdminLogin.DataJson);
-                                if (listModuleItem != null && listModuleItem.Count > 0)
+                                List<ModuleAdmin> listModuleItem = new();
+                                try
                                 {
+                                    listModuleItem = JsonConvert.DeserializeObject<List<ModuleAdmin>>(userAdminLogin.DataJson);
                                     ModuleAdmin moduleItem = listModuleItem.Find(c => c.Tag != null && (c.Tag.ToLower() == CtrCode || c.Tag.ToLower().StartsWith(CtrCode)));
                                     if (moduleItem != null)
                                     {
@@ -107,6 +108,11 @@ namespace Website.Areas.Admin.Controllers
                                                 SystemActionAdmin.Sitemap = true;
                                         }
                                     }
+                                }
+                                catch
+                                {
+                                    HttpContext.Session.Clear();
+                                    Redirect("/" + WebConfig.AdminAlias + "/HomeAdmin/Index");
                                 }
                             }
                         }

@@ -140,18 +140,16 @@
                                         </label>
                                     </div>
                                 }
-                                @if (Model.WebsiteModule.ModuleTypeCode == StaticEnum.Gallery)
+                                @if (Model.WebsiteModule.ModuleTypeCode == StaticEnum.Recuitment)
                                 {
                                     <div class="col-sm-1">
                                         <label>Kiểu</label>
                                     </div>
                                     <div class="col-sm-2">
                                         <select name="TypeView" id="TypeView" class="form-control">
-                                            <option value="@StaticEnum.Videos" @(Model.WebsiteModule.TypeView == StaticEnum.Videos ? "selected" : string.Empty)>Video</option>
-                                            <option value="@StaticEnum.Picture" @(Model.WebsiteModule.TypeView == StaticEnum.Picture ? "selected" : string.Empty)>Hình ảnh tập đoàn</option>
-                                            <option value="@StaticEnum.HoatDongXaHoi" @(Model.WebsiteModule.TypeView == StaticEnum.HoatDongXaHoi ? "selected" : string.Empty)>Hoạt động xã hội từ thiện</option>
-                                            <option value="@StaticEnum.HoatDongTapThe" @(Model.WebsiteModule.TypeView == StaticEnum.HoatDongTapThe ? "selected" : string.Empty)>Hoạt động tập thể</option>
-                                            <option value="@StaticEnum.TaiLieuInox" @(Model.WebsiteModule.TypeView == StaticEnum.TaiLieuInox ? "selected" : string.Empty)>Tài liệu kiến thức inox</option>
+                                            <option value="@StaticEnum.Recuiment1" @(Model.WebsiteModule.TypeView == StaticEnum.Recuiment1 ? "selected" : string.Empty)>Nhà phân phối</option>
+                                            <option value="@StaticEnum.Recuiment2" @(Model.WebsiteModule.TypeView == StaticEnum.Recuiment2 ? "selected" : string.Empty)>Nhân sự</option>
+                                            <option value="@StaticEnum.Recuiment3" @(Model.WebsiteModule.TypeView == StaticEnum.Recuiment3 ? "selected" : string.Empty)>Cơ hội việc làm</option>
                                         </select>
                                     </div>
                                 }
@@ -214,7 +212,7 @@
                                         <span>Hướng dẫn: Chọn file hoặc Copy link youtube (bHLG1RVt7Kw)</span>
                                     </div>
                                 }
-                                else
+                                @*else
                                 {
                                     <div class="col-sm-1">
                                         <label>Catalog</label>
@@ -227,7 +225,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                }
+                                }*@
 
                             </div>
                             <div class="form-group">

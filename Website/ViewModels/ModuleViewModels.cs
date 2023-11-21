@@ -44,7 +44,6 @@ namespace Website.ViewModels
         public CustomerItem CustomerItem { get; set; }
         public IEnumerable<WebsiteContentItem> ListContentItem { get; set; }
         public IEnumerable<WebsiteContentItem> ListContentItemAsync { get; set; }
-        public IEnumerable<WebsiteContentItem> ListContentItemView { get; set; }
         public IEnumerable<WebsiteContentItem> ListContentItemVideo { get; set; }
         public List<WebsiteContentItem> ListContentItemHot { get; set; }
         public IEnumerable<WebsiteContentItem> Items { get; set; }

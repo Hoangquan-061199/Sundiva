@@ -19,7 +19,7 @@
                 <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
                 @if (!string.IsNullOrEmpty(Model.WebsiteContent.NameAscii) || !string.IsNullOrEmpty(Model.WebsiteContent.LinkUrl))
                 {
-                    <a style="@(ViewBag.Action == "Edit" ? "display:inline;" : "display:none;")" href="@Utility.Link(string.Empty,Model.WebsiteContent.NameAscii,Model.WebsiteContent.LinkUrl)" target="_blank" class="primaryAction btn btn-info btn-sm">Xem nhanh</a>
+                    <a style="@(ViewBag.Action == "Edit" ? "display:inline;" : "display:none;")" href="@Utility.Link(Model.WebsiteContent.ModuleNameAscii,Model.WebsiteContent.NameAscii,Model.WebsiteContent.LinkUrl)" target="_blank" class="primaryAction btn btn-info btn-sm">Xem nhanh</a>
                 }
                 <div class="btn btn-info back-grid-view">Quay lại</div>
             </div>
@@ -195,7 +195,7 @@
                                 <div class="col-sm-11 changeUrlTinyMceParent">
                                     <div class="input-group">
                                         <input type="text" class="changeUrlTinyMce link form-control" id="Avatar" placeholder="Link ảnh" onchange="ChangeUrlTinyMce($(this),'AddAvatar', 'UrlPicture',0)" value="@Model.WebsiteContent.UrlPicture" />
-                                        <span class="input-group-addon" style="background:transparent;padding-right:10px;">
+                                        <span class="input-group-addon" style="background:transchild;padding-right:10px;">
                                             <button type="button" onclick="SelectFileTyniMce('AddAvatar','UrlPicture',0);" class="btn btn-info btn-sm btn-bnl"><span class="lnr lnr-upload" style="margin-right:5px;"></span>Chọn ảnh</button>
                                         </span>
                                     </div>
@@ -322,13 +322,13 @@
                                         {
                                             foreach (var parent in Model.ListWebsiteModule.Where(x => x.ParentID == 0 && x.ModuleTypeCode != StaticEnum.Trademark).OrderBy(x => x.OrderDisplay))
                                             {
-                                                <option data-id="@parent.ID" value="@parent.NameAscii" @(!string.IsNullOrEmpty(parent.NameAscii) && string.IsNullOrEmpty(parent.LinkUrl) && Model.WebsiteContent.ModuleNameAscii == parent.NameAscii ? "selected" : string.Empty)>@parent.Name - @parent.ModuleTypeCode</option>
+                                                <option @(!string.IsNullOrEmpty(parent.NameAscii) ? string.Empty : "disabled") data-id="@parent.ID" value="@parent.NameAscii" @(!string.IsNullOrEmpty(parent.NameAscii) && string.IsNullOrEmpty(parent.LinkUrl) && Model.WebsiteContent.ModuleNameAscii == parent.NameAscii ? "selected" : string.Empty)>@parent.Name - @parent.ModuleTypeCode</option>
                                                 foreach (var child in Model.ListWebsiteModule.Where(x => x.ParentID == parent.ID).OrderBy(x => x.OrderDisplay))
                                                 {
-                                                    <option data-id="@child.ID" value="@child.NameAscii" @(!string.IsNullOrEmpty(child.NameAscii) && string.IsNullOrEmpty(child.LinkUrl) && Model.WebsiteContent.ModuleNameAscii == child.NameAscii ? "selected" : string.Empty)>- @child.Name - @child.ModuleTypeCode</option>
+                                                    <option @(!string.IsNullOrEmpty(child.NameAscii) ? string.Empty : "disabled") data-id="@child.ID" value="@child.NameAscii" @(!string.IsNullOrEmpty(child.NameAscii) && string.IsNullOrEmpty(child.LinkUrl) && Model.WebsiteContent.ModuleNameAscii == child.NameAscii ? "selected" : string.Empty)>- @child.Name - @child.ModuleTypeCode</option>
                                                     foreach (var module in Model.ListWebsiteModule.Where(x => x.ParentID == child.ID).OrderBy(x => x.OrderDisplay))
                                                     {
-                                                        <option data-id="@module.ID" value="@module.NameAscii" @(!string.IsNullOrEmpty(module.NameAscii) && string.IsNullOrEmpty(module.LinkUrl) && Model.WebsiteContent.ModuleNameAscii == module.NameAscii ? "selected" : string.Empty)>-- @module.Name - @module.ModuleTypeCode</option>
+                                                        <option @(!string.IsNullOrEmpty(module.NameAscii) ? string.Empty : "disabled") data-id="@module.ID" value="@module.NameAscii" @(!string.IsNullOrEmpty(module.NameAscii) && string.IsNullOrEmpty(module.LinkUrl) && Model.WebsiteContent.ModuleNameAscii == module.NameAscii ? "selected" : string.Empty)>-- @module.Name - @module.ModuleTypeCode</option>
                                                     }
                                                 }
                                             }
