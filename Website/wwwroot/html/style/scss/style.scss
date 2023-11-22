@@ -8,7 +8,11 @@ body {
     background-size: 100% auto;
 
     @include maxWidth(992px) {
-        margin-top: 76.46px;
+        margin-top: 59.85px;
+
+        @include maxWidth(767px) {
+            margin-top: 53px;
+        }
     }
 }
 
@@ -638,6 +642,7 @@ body {
             top: -67.8px;
             left: 20px;
             border-radius: 5px 5px 0 0;
+
             @include maxWidth(767px) {
                 top: -60.13px;
             }
@@ -1277,6 +1282,7 @@ body {
             }
         }
     }
+
     @include maxWidth(992px) {
         padding: 0 15px !important;
     }
@@ -1348,7 +1354,7 @@ header {
 
             @include maxWidth(992px) {
                 position: fixed;
-                top: 76.46px;
+                top: 59.85px;
                 right: 0;
                 background: var(--color-white);
                 width: 45%;
@@ -1365,6 +1371,7 @@ header {
 
                 @include maxWidth(767px) {
                     width: 100%;
+                    top: 53px;
                 }
             }
 
@@ -1663,7 +1670,7 @@ header {
             .bar1,
             .bar2,
             .bar3 {
-                width: 35px;
+                width: 30px;
                 height: 3px;
                 background-color: #333;
                 margin: 6px 0;
@@ -1679,7 +1686,7 @@ header {
             }
 
             &.change .bar3 {
-                transform: translate(0, -11px) rotate(45deg);
+                transform: translate(0, -7px) rotate(45deg);
             }
         }
     }
@@ -1706,6 +1713,22 @@ header {
     .slide-index {
         .item {
             padding: 15px;
+
+            .text {
+                .paragraph {
+                    ul {
+                        display: flex;
+                        align-items: flex-start;
+                        flex-wrap: wrap;
+                        column-gap: 35px;
+                        row-gap: 15px;
+
+                        li {
+                            width: calc(50% - 35px / 2);
+                        }
+                    }
+                }
+            }
 
             .img {
                 img {
@@ -1914,7 +1937,7 @@ footer {
             }
 
             .logo {
-                width: 151px;
+                width: var(--width-logo-ft);
                 aspect-ratio: 151/44;
             }
 
@@ -2757,6 +2780,7 @@ footer {
             &.full {
                 grid-template-columns: 100%;
             }
+
             @include maxWidth(992px) {
                 grid-template-columns: 100%;
                 gap: 20px;

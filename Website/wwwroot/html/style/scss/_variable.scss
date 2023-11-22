@@ -66,6 +66,7 @@
     --width-container-2: 1470px;
     --width-container: 1300px;
     --width-logo: 235px;
+    --width-logo-ft: 160px;
     //font-size
     --fs-text-min: 13px;
     --fs-text: 16px;
@@ -96,14 +97,13 @@
     --fs-more-border: 16px;
     --fs-more: 14px;
     --fs-page: 14px;
-    --fs-news-date: 12px; 
+    --fs-news-date: 12px;
     //fs title
     --fs-title-min: 26px;
     --fs-title-ft: 18px;
     --fs-title-product: 24px;
     --fs-title-product-min: 20px;
     --fs-14: 14px;
-
     --fs-title: 40px;
     --fs-title-extra: 34px;
     --fs-title-product-detail: 38px;
@@ -121,6 +121,7 @@
         --width-container: 1300px;
         --width-container-2: 1470px;
         --width-logo: 235px;
+        --width-logo-ft: 160px;
     }
 }
 // 1199px
@@ -129,6 +130,7 @@
         --width-container: 1130px;
         --width-container-2: 1280px;
         --width-logo: 205px;
+        --width-logo-ft: 140px;
     }
 }
 //991px
@@ -138,14 +140,25 @@
         --width-container-2: 1100px;
         --fs-title: 22px;
         --width-logo: 180px;
+        --width-logo-ft: 120px;
     }
 }
-//767px
-@media (max-width: 991px) {
+
+@media (max-width: 992px) {
     :root {
         --fs-text: 14px;
         --width-container: unset;
         --width-container-2: unset;
+        --width-logo: 123px;
+        --width-logo-ft: unset;
+    }
+}
+@media (max-width: 767px) {
+    :root {
+        --fs-text: 14px;
+        --width-container: unset;
+        --width-container-2: unset;
+        --width-logo: 96px;
         //------------------------------------------------
         --fs-year: 22px;
         --fs-news-date-strong: 22px;
