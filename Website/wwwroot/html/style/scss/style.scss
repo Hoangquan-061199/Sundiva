@@ -526,7 +526,7 @@ body {
             @include marginBottom(25px);
         }
 
-        .paragraph {
+        .detail-content {
             ul {
                 display: flex;
                 align-items: flex-start;
@@ -1939,6 +1939,10 @@ footer {
             .logo {
                 width: var(--width-logo-ft);
                 aspect-ratio: 151/44;
+
+                img {
+                    max-height: 100%;
+                }
             }
 
             .right {

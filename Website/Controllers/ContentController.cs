@@ -1054,47 +1054,27 @@ namespace Website.Controllers
                                             //CommentItems = comments.Where(x => x.IsApproved == true),
                                             //TotalComment = comments.Count() > 0 ? comments.FirstOrDefault().TotalRecord : 0,
                                             //RateItems = rate.Where(x => x.IsApproved == true),
-                                            ListProductSub = _subItemManager.GetProductByParentID(Lang(), product.ID)
+                                            ListSubItems = _subItemManager.GetAll(Lang(), product.ID),
+                                            ListModulesItem = ModuleProduct.Where(x => x.ID != module.ID && x.ParentID != 0)
                                         };
 
-                                        if (model.ListProductSub != null)
-                                        {
-                                            model.ListProductSub.ForEach(x =>
-                                            {
-                                                if (!string.IsNullOrEmpty(x.AttributeProductIds))
-                                                {
-                                                    search.lang = Lang();
-                                                    string rs = Regex.Replace(x.AttributeProductIds, "^,", "");
-                                                    rs = Regex.Replace(rs, ",$", "");
-                                                    string[] arr = rs.Split(",");
-                                                    List<string> lstattr = new List<string>(arr);
-                                                    search.ListAttr = lstattr;
-                                                    x.ListColorItems = _productManager.GetListColorProductSub(search);
-                                                }
-                                                x.ListSubItems = _subItemManager.GetAll(Lang(), x.ID);
-                                            });
-                                        }
-
-                                        List<CommonJsonItem> listItem = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("TimeTour.json", "DataJson"));
-                                        List<CommonJsonItem> listItem2 = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("AddressStart.json", "DataJson"));
-                                        if (model.ProductItem != null)
-                                        {
-                                            model.ProductItem.ListSubItems = _subItemManager.GetAll(Lang(), model.ProductItem.ID);
-                                            if (!string.IsNullOrEmpty(model.ProductItem.Times))
-                                            {
-                                                model.ProductItem.TimesValue = listItem != null ? listItem.FirstOrDefault(y => y.ID == Convert.ToInt32(model.ProductItem.Times)).Name : null;
-                                            }
-                                        }
-                                        if (model.ListProductItem.Any())
-                                        {
-                                            foreach (var item in model.ListProductItem)
-                                            {
-                                                if (!string.IsNullOrEmpty(item.Times))
-                                                    item.TimesValue = listItem != null ? listItem.FirstOrDefault(y => y.ID == Convert.ToInt32(item.Times)).Name : null;
-                                                if (!string.IsNullOrEmpty(item.AddressId))
-                                                    item.Address = listItem2.FirstOrDefault(y => y.ID == Convert.ToInt32(item.AddressId)).Name;
-                                            }
-                                        }
+                                        //if (model.ListProductSub != null)
+                                        //{
+                                        //    model.ListProductSub.ForEach(x =>
+                                        //    {
+                                        //        if (!string.IsNullOrEmpty(x.AttributeProductIds))
+                                        //        {
+                                        //            search.lang = Lang();
+                                        //            string rs = Regex.Replace(x.AttributeProductIds, "^,", "");
+                                        //            rs = Regex.Replace(rs, ",$", "");
+                                        //            string[] arr = rs.Split(",");
+                                        //            List<string> lstattr = new List<string>(arr);
+                                        //            search.ListAttr = lstattr;
+                                        //            x.ListColorItems = _productManager.GetListColorProductSub(search);
+                                        //        }
+                                        //        x.ListSubItems = _subItemManager.GetAll(Lang(), x.ID);
+                                        //    });
+                                        //}
 
                                         var listAds = cacheUtils.GetListAdvertisingItemByCode("ADSProductDetail", Lang());
                                         model.ListAds = listAds;

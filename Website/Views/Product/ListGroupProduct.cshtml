@@ -78,9 +78,9 @@
                 </div>
             }
             <div class="list">
-                @if (Model.WebsiteModulesItems.Any())
+                @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
                 {
-                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems)
+                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.Where(x => x.ParentID > 0))
                     {
                         <div class="item item-collection">
                             <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
