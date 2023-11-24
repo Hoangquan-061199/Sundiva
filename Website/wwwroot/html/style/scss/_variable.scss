@@ -31,7 +31,8 @@
 :root {
     //color
     --color-main: #54a34c;
-    --color-main1: #5a3d2a;
+    --color-main1: #a9815f;
+    --color-big-title: #5a3d2a;
     --color-red: #ec282f;
     --color-white: #fff;
     --color-text: #393939;
@@ -44,7 +45,7 @@
     --color-old-price: #727272;
     --color-border-dot: #a3a3a3;
     --color-border-product-new: #c7c7c7;
-    --color-border-table: #ececec;
+    --color-border-table: #cecece;
     --color-border-map: #cacaca;
     --color-border-input: #b9bbb7;
     --color-border-page: #c5c5c5;
@@ -90,7 +91,7 @@
     --fs-name: 17px;
     --fs-code: 15px;
     --fs-old-price: 14px;
-    --fs-old-price: 14px;
+    --fs-new-price: 17px;
     --fs-price: 28px;
     --fs-paragraph: 16px;
     --fs-more-item: 17px;

@@ -238,9 +238,9 @@ $(document).ready(function () {
         sync1.data('owl.carousel').to(number, 300, true);
     });
 
-    $('.product-detail .item .btn-down').click(function() {
+    $('.product-detail .item .title').click(function() {
         $(this).toggleClass('active');
-        $(this).parent('.title').siblings(".content").slideToggle();
+        $(this).siblings(".content").slideToggle();
     });
 
     $('.slide-other-curtain').owlCarousel({
@@ -417,4 +417,10 @@ $(document).ready(function () {
             },
         }
     });
+
+    $('.scroll-top').click(() => {
+        let body = $("html, body");
+        body.stop().animate({ scrollTop: 0 }, 500, 'swing', function () {
+        });
+    })
 });
