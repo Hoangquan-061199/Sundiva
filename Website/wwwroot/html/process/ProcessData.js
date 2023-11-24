@@ -14,13 +14,11 @@ function ProcessData() {
                 FullName: { required: true },
                 Phone: { required: true, minlength: 10, maxlength: 12 },
                 Email: { required: true, email: true },
-                Title: { required: true }
             },
             messages: {
                 FullName: { required: GetSource("NhapHoTen") },
                 Phone: { required: GetSource("NhapSoDienThoai"), minlength: GetSource("Tu10Den12KyTu"), maxlength: GetSource("Tu10Den12KyTu") },
                 Email: { required: GetSource("NhapEmail"), email: GetSource("EmailKhongChinhXac") },
-                Title: { required: GetSource("NhapTieuDe") }
             },
             submitHandler: function () {
                 let d = $formContact.serialize();

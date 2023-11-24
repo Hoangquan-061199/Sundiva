@@ -341,7 +341,7 @@ namespace Website.Controllers
             {
                 SendContactModels model = new();
                 await TryUpdateModelAsync(model);
-                if (string.IsNullOrEmpty(model.FullName) || string.IsNullOrEmpty(model.Phone) || string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Title))
+                if (string.IsNullOrEmpty(model.FullName) || string.IsNullOrEmpty(model.Phone) || string.IsNullOrEmpty(model.Email))
                 {
                     msg = new JsonMessage { Errors = true, Message = ResourceData.Resource("VuiLongNhapCacTruongBatBuoc", Lang()) };
                     return Ok(msg);
@@ -386,14 +386,12 @@ namespace Website.Controllers
                 model.FullName = Utility.ValidString(model.FullName, string.Empty, true);
                 model.Phone = Utility.RemoveHTMLTag(model.Phone);
                 model.Email = Utility.RemoveHTMLTag(model.Email);
-                model.Title = Utility.RemoveHTMLTag(model.Title);
                 model.Content = Utility.RemoveHTMLTag(model.Content);
                 #endregion
                 str = str.Replace("[Main]", mainTemplate.Content);
                 str = str.Replace("[HoTen]", model.FullName);
                 str = str.Replace("[SoDienThoai]", model.Phone);
                 str = str.Replace("[Email]", model.Email);
-                str = str.Replace("[TieuDe]", model.Title);
                 str = str.Replace("[NoiDung]", model.Content);
                 #region Send mail
                 try
@@ -420,7 +418,6 @@ namespace Website.Controllers
                     {
                         FullName = model.FullName,
                         Phone = model.Phone,
-                        Title = model.Title,
                         Email = model.Email,
                         Content = model.Content,
                         Code = "Contact"
