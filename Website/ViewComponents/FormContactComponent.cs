@@ -18,9 +18,10 @@ namespace Website.ViewComponents
 {                       
     public class FormContactComponent : BaseComponent
     {
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string code)
         {
             List<CommonJsonItem> Positions = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("Area.json", "DataJson"));
+            ViewBag.Code = code;
             return View(Positions);
         }
     }

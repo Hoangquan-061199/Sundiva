@@ -68,7 +68,7 @@
         <div class="container">
             <div class="left">
                 <div class="title">
-                    <div class="avatar">
+                    <div class="avatar img">
                         @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ContentItem.UrlPicture, Model.ContentItem.Name))
                     </div>
                     <div class="text">
@@ -104,7 +104,7 @@
                                         <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z" />
                                     </svg>
                                 </div>
-                                <p><strong>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang):</strong> @(Model.ContentItem.CreatedDate.HasValue ? Model.ContentItem.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
+                                <p><strong>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang):</strong> @(Model.ContentItem.EndDate.HasValue ? Model.ContentItem.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</p>
                             </div>
                         </div>
                         <div class="share color-text">
@@ -133,61 +133,64 @@
                     }
                 </div>
             </div>
-            <div class="right">
-                <form action="@Url.Action("SendApply","Home")">
-                    <div class="big-title title-form center">
-                        <p>@ResourceData.Resource("NopHoSoUngTuyen", ViewBag.Lang)</p>
-                    </div>
-                    <div class="form-input">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 448 512">
-                                <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
-                            </svg>
+            @if (Model.ContentItem.EndDate.HasValue && Model.ContentItem.EndDate >= DateTime.Now)
+            {
+                <div class="right">
+                    <form action="@Url.Action("SendApply","Home")">
+                        <div class="big-title title-form center">
+                            <p>@ResourceData.Resource("NopHoSoUngTuyen", ViewBag.Lang)</p>
                         </div>
-                        <input type="text" name="FullName" placeholder="@ResourceData.Resource("HoTen",ViewBag.Lang)*" />
-                    </div>
-                    <div class="form-input">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
-                                 fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
-                                <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
-                            </svg>
-                        </div>
-                        <input type="text" name="Phone" placeholder="@ResourceData.Resource("DienThoai",ViewBag.Lang)*" />
-                    </div>
-                    <div class="form-input">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 512 512">
-                                <path d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z" />
-                            </svg>
-                        </div>
-                        <input type="text" name="Email" placeholder="Email*" />
-                    </div>
-                    <div class="form-textarea">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 640 512">
-                                <path d="M223.1 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 223.1 256zM274.7 304H173.3C77.61 304 0 381.7 0 477.4C0 496.5 15.52 512 34.66 512h286.4c-1.246-5.531-1.43-11.31-.2832-17.04l14.28-71.41c1.943-9.723 6.676-18.56 13.68-25.56l45.72-45.72C363.3 322.4 321.2 304 274.7 304zM371.4 420.6c-2.514 2.512-4.227 5.715-4.924 9.203l-14.28 71.41c-1.258 6.289 4.293 11.84 10.59 10.59l71.42-14.29c3.482-.6992 6.682-2.406 9.195-4.922l125.3-125.3l-72.01-72.01L371.4 420.6zM629.5 255.7l-21.1-21.11c-14.06-14.06-36.85-14.06-50.91 0l-38.13 38.14l72.01 72.01l38.13-38.13C643.5 292.5 643.5 269.7 629.5 255.7z" />
-                            </svg>
-                        </div>
-                        <textarea name="Content" id="" cols="30" rows="5" placeholder="@ResourceData.Resource("NoiDung", ViewBag.Lang)"></textarea>
-                    </div>
-                    <div class="button">
-                        <button class="more border submit-form revert">
+                        <div class="form-input">
                             <div class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="22px"
-                                     viewBox="0 0 512 512">
-                                    <path d="M0 96C0 60.7 28.7 32 64 32H196.1c19.1 0 37.4 7.6 50.9 21.1L289.9 96H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V160c0-8.8-7.2-16-16-16H286.6c-10.6 0-20.8-4.2-28.3-11.7L213.1 87c-4.5-4.5-10.6-7-17-7H64z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 448 512">
+                                    <path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z" />
                                 </svg>
                             </div>
-                            @ResourceData.Resource("BanDinhKemHoSo", ViewBag.Lang)
-                        </button>
-                        <button type="submit" class="more border submit-form">@ResourceData.Resource("NopHoSo", ViewBag.Lang)</button>
+                            <input type="text" name="FullName" placeholder="@ResourceData.Resource("HoTen",ViewBag.Lang)*" />
+                        </div>
+                        <div class="form-input">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
+                                     fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                                    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="Phone" placeholder="@ResourceData.Resource("DienThoai",ViewBag.Lang)*" />
+                        </div>
+                        <div class="form-input">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 512 512">
+                                    <path d="M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z" />
+                                </svg>
+                            </div>
+                            <input type="text" name="Email" placeholder="Email*" />
+                        </div>
+                        <div class="form-textarea">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 0 640 512">
+                                    <path d="M223.1 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 223.1 256zM274.7 304H173.3C77.61 304 0 381.7 0 477.4C0 496.5 15.52 512 34.66 512h286.4c-1.246-5.531-1.43-11.31-.2832-17.04l14.28-71.41c1.943-9.723 6.676-18.56 13.68-25.56l45.72-45.72C363.3 322.4 321.2 304 274.7 304zM371.4 420.6c-2.514 2.512-4.227 5.715-4.924 9.203l-14.28 71.41c-1.258 6.289 4.293 11.84 10.59 10.59l71.42-14.29c3.482-.6992 6.682-2.406 9.195-4.922l125.3-125.3l-72.01-72.01L371.4 420.6zM629.5 255.7l-21.1-21.11c-14.06-14.06-36.85-14.06-50.91 0l-38.13 38.14l72.01 72.01l38.13-38.13C643.5 292.5 643.5 269.7 629.5 255.7z" />
+                                </svg>
+                            </div>
+                            <textarea name="Content" id="" cols="30" rows="5" placeholder="@ResourceData.Resource("NoiDung", ViewBag.Lang)"></textarea>
+                        </div>
+                        <div class="button">
+                            <button class="more border submit-form revert">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="22px"
+                                         viewBox="0 0 512 512">
+                                        <path d="M0 96C0 60.7 28.7 32 64 32H196.1c19.1 0 37.4 7.6 50.9 21.1L289.9 96H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V160c0-8.8-7.2-16-16-16H286.6c-10.6 0-20.8-4.2-28.3-11.7L213.1 87c-4.5-4.5-10.6-7-17-7H64z" />
+                                    </svg>
+                                </div>
+                                @ResourceData.Resource("BanDinhKemHoSo", ViewBag.Lang)
+                            </button>
+                            <button type="submit" class="more border submit-form">@ResourceData.Resource("NopHoSo", ViewBag.Lang)</button>
+                        </div>
+                    </form>
+                    <div class="note">
+                        <vc:other-component code="NoteAplly"></vc:other-component>
                     </div>
-                </form>
-                <div class="note">
-                    <vc:other-component code="NoteAplly"></vc:other-component>
                 </div>
-            </div>
+            }
         </div>
     </div>
     @if (Model.ListContentItem.Any())

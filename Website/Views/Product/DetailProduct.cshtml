@@ -97,12 +97,13 @@
                         {
                             <p>@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
                         }
+                        <p><strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
                     </div>
                     <div class="paragraph fs17 detail-content">
                         @Html.Raw(Model.ProductItem.Description)
                     </div>
                     <div class="contact-order">
-                        <a href="@Utility.Link(Model.WebsiteModulesItem.NameAscii, string.Empty, Model.WebsiteModulesItem.LinkUrl)" title="@Model.WebsiteModulesItem.Name" class="item">@ResourceData.Resource("LienHeMuaHang", ViewBag.Lang)</a>
+                        <div class="item pop-upform">@ResourceData.Resource("DatHangNgay", ViewBag.Lang)</div>
                         @if (hotline.Any())
                         {
                             <a href="tel:@Utility.FormatPhone(hotline.FirstOrDefault())" title="hotline" target="_blank" rel="nofollow" class="item revert">Hotline: @hotline.FirstOrDefault()</a>

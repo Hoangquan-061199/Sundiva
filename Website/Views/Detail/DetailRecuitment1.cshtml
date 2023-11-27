@@ -24,178 +24,66 @@
 }
 @if (Model.ContentItem != null)
 {
-    <div class="breadcrumb">
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            <div class="banner">
+                <div class="img-banner">
+                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ModuleItem.AlbumGalleryItems.FirstOrDefault(x => x.AlbumType == 3).AlbumUrl, Model.ModuleItem.Name))
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="banner">
+                <div class="slide-index owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        <div class="img-banner">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ModuleItem.Name))
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <div class="path">
         <div class="container">
-            <ul>
-                <li>
-                    <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">@ResourceData.Resource("TrangChu",ViewBag.Lang)</a><i class="fa-solid fa-angle-right"></i>
-                </li>
-                <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
-                <li><a href="/@Model.ModuleItem.NameAscii" title="@Model.ModuleItem.Name">@Model.ModuleItem.Name</a><i class="fa-solid fa-angle-right"></i></li>
-                <li>@Model.ContentItem.Name</li>
-            </ul>
+            <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                @ResourceData.Resource("TrangChu", ViewBag.Lang)
+            </a>
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
+                     class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+            </div>
+            <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+            <a href="@Utility.Link(Model.ModuleItem.NameAscii, string.Empty, Model.ModuleItem.LinkUrl)" title="@Model.ModuleItem.Name">@Model.ModuleItem.Name</a>
         </div>
     </div>
-    <div class="recruitment-detail container">
-        <div class="layout-2">
+    <div class="recruitment">
+        <div class="container">
             <div class="left">
-                <h1 class="title">@Model.ContentItem.Name</h1>
-                <div class="like-social">
-                    <div class="duration-box">
-                        <div class="duration">
-                            <p>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang): <strong>@(Model.ContentItem.EndDate.HasValue ? Model.ContentItem.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</strong></p>
-                        </div>
-                    </div>
-                    <div class="social">
-                        <p>@ResourceData.Resource("ChiaSe", ViewBag.Lang):</p>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=@url" target="_blank" rel="nofollow" class="icon-fa">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="mailto:?subject=@Model.ContentItem.Name;body=@url" class="icon-email">
-                            <i class="fa-solid fa-envelope"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="table-review">
-                    @Html.Raw(Model.ContentItem.Content)
-                </div>
-                <div class="contact-form">
-                    <span class="title">@ResourceData.Resource("NopHoSoUngTuyen", ViewBag.Lang)</span>
-                    <form action="/ung-tuyen" method="post">
-                        <div class="input-group">
-                            <div class="w-50">
-                                <img src="/html/style/images/icon-user.webp" alt="" />
-                                <input type="text" name="" placeholder="@ResourceData.Resource("HoTen", ViewBag.Lang)*" />
-                            </div>
-                            <div class="w-50">
-                                <img src="/html/style/images/icon-phone.webp" alt="" />
-                                <input type="text" name="" placeholder="@ResourceData.Resource("SoDienThoai", ViewBag.Lang)*" />
-                            </div>
-                            <div class="w-50">
-                                <img src="/html/style/images/icon-email.webp" alt="" />
-                                <input type="text" name="" placeholder="Email *" />
-                            </div>
-                            <div class="w-100">
-                                <div class="top">
-                                    <img src="/html/style/images/icon-user-content.webp" alt="" />@ResourceData.Resource("NoiDung", ViewBag.Lang)
-                                </div>
-                                <textarea name="" id="" cols="30" rows="5" placeholder="Vui lòng nhập không quá 300 kí tự"></textarea>
-                            </div>
-                        </div>
-                        <div class="btn-form">
-                            <div class="btn-submit-form type-1">
-                                <img src="/html/style/images/icon-send-form.webp" alt="" />Gửi liên hệ
-                            </div>
-                            <button type="submit" class="btn-submit-form">
-                                <img src="/html/style/images/icon-send-form.webp" alt="" />Gửi liên hệ
-                            </button>
-                        </div>
-                        <div class="note">
-                            <strong>Lưu ý:</strong>
-                            <p>
-                                - Hồ sơ đính kèm hỗ trợ định dạng *.doc, *.docx, *.pdf và
-                                không quá 2MB
-                            </p>
-                            <p>
-                                - Tệp tin được gửi trực tiếp vào hộp thư của Bộ phận Tuyển
-                                dụng, vì vậy vui lòng kiểm tra cẩn thận trước khi nhấp vào
-                                "Nộp hồ sơ ứng tuyển"
-                            </p>
-                        </div>
-                    </form>
+                <div class="paragraph fs17 justify detail-content">
+                    @if (!string.IsNullOrEmpty(Model.ContentItem.Content))
+                    {
+                        @Html.Raw(Model.ContentItem.Content)
+                    }
+                    else
+                    {
+                        <p class="update">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
+                    }
                 </div>
             </div>
-            <div class="right">
-                <div class="recruitment-relate-list type-1">
-                    <span class="title">@ResourceData.Resource("ThongTinViecLam", ViewBag.Lang)</span>
-                    <div class="list-item">
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Salary))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-dola.webp" alt="@ResourceData.Resource("MucLuong", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("MucLuong", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Salary</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Experience))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-kn.webp" alt="@ResourceData.Resource("KinhNghiemLamViec", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("KinhNghiemLamViec", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Experience</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Address))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-vitri.webp" alt="@ResourceData.Resource("NoiLamViec", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("NoiLamViec", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Address</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Rank))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-capbac.webp" alt="@ResourceData.Resource("CapBac", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("CapBac", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Rank</div>
-                                </div>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.ContentItem.Degree))
-                        {
-                            <div class="item">
-                                <div class="item-img">
-                                    <img src="/html/style/images/icon-tuyendung-bangcap.webp" alt="@ResourceData.Resource("BangCap", ViewBag.Lang)" />
-                                </div>
-                                <div class="item-content">
-                                    <div class="text">@ResourceData.Resource("BangCap", ViewBag.Lang)</div>
-                                    <div class="text-content">@Model.ContentItem.Degree</div>
-                                </div>
-                            </div>
-                        }
+                <div class="right">
+                    <div class="big-title title-form-contact">
+                        <p>@ResourceData.Resource("LienHeVoiChungToi", ViewBag.Lang)</p>
                     </div>
+                    <vc:form-contact-component code="content"></vc:form-contact-component>
                 </div>
-                @if (Model.ListContentItem.Any())
-                {
-                    <div class="recruitment-relate-list type-2">
-                        <span class="title">@ResourceData.Resource("TuyenDungKhac", ViewBag.Lang)</span>
-                        <div class="list-item">
-                            @foreach(var content in Model.ListContentItem)
-                            {
-                                <div class="item">
-                                    <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name" class="item-img">
-                                        <img src="@(!string.IsNullOrEmpty(content.UrlPicture) ? content.UrlPicture : "/html/style/images/logo-tuyendung.webp")" alt="@content.Name" />
-                                    </a>
-                                    <div class="item-content">
-                                        <h3 class="text">
-                                            <a href="@Utility.Link(content.NameAscii, string.Empty, content.LinkUrl)" title="@content.Name">
-                                            @content.Name
-                                        </a>
-                                        </h3>
-                                        <div class="text-content">@(content.EndDate.HasValue ? content.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
-            </div>
         </div>
-    </div>    
+    </div>
 }

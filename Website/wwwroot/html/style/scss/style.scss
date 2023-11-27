@@ -242,6 +242,7 @@ body {
     display: flex;
     gap: 10px;
     cursor: pointer;
+
     .icon {
         @include flexCenter(1, 1);
 
@@ -331,6 +332,8 @@ body {
             border-radius: 10px;
             padding: 10px 25px;
             text-transform: none;
+            display: block;
+            width: 100%;
 
             @include maxWidth(992px) {
                 padding: 10px 20px;
@@ -523,9 +526,11 @@ body {
         left: 0;
         width: 100%;
         padding: 35px 30px;
+
         @include maxWidth(1650px) {
             padding: 35px 20px;
         }
+
         border-radius: 20px 20px 0px 0px;
 
         .big-title {
@@ -795,27 +800,6 @@ body {
                 font-size: var(--fs-code);
             }
         }
-
-        .p-price {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-
-            p {
-                color: var(--color-old-price);
-                font-size: var(--fs-old-price);
-
-                strong {
-                    font-weight: 400;
-                    font-size: var(--fs-new-price);
-                    color: var(--color-main);
-                }
-
-                &:first-child {
-                    text-decoration: line-through;
-                }
-            }
-        }
     }
 
     &:last-child {
@@ -861,6 +845,26 @@ body {
 
     &.flex-start {
         align-items: flex-start;
+    }
+}
+
+.p-price {
+    display: flex;
+    gap: 10px;
+
+    p {
+        color: var(--color-old-price);
+        font-size: var(--fs-old-price);
+
+        strong {
+            font-weight: 400;
+            font-size: var(--fs-new-price);
+            color: var(--color-main);
+        }
+
+        &:first-child {
+            text-decoration: line-through;
+        }
     }
 }
 
@@ -1408,6 +1412,10 @@ header {
 
                 svg {
                     fill: var(--color-big-title);
+
+                    &:hover {
+                        fill: var(--color-main);
+                    }
                 }
 
                 .menu-top {
@@ -1524,6 +1532,10 @@ header {
                             }
                         }
                     }
+                }
+
+                .cart {
+                    margin-left: 15px;
                 }
             }
 
@@ -1778,9 +1790,11 @@ header {
         @include flexCenter(0, 1);
         gap: 20px;
         z-index: 1;
+
         .item {
             width: calc(100%/3);
         }
+
         @include maxWidth(992px) {
             position: unset;
             transform: unset;
@@ -2567,7 +2581,8 @@ footer {
                             background: rgba(0, 0, 0, 0.3);
                             @include flexCenter(1, 1);
                             transform: rotate(90deg);
-                            cursor:pointer;
+                            cursor: pointer;
+
                             svg {
                                 fill: var(--color-white);
                             }
@@ -2643,11 +2658,11 @@ footer {
 
             .right {
                 h1.big-title {
-                    @include marginBottom(25px);
+                    margin-bottom: 15px;
                 }
 
                 .code {
-                    @include marginBottom(30px);
+                    margin-bottom: 15px;
 
                     p {
                         font-size: var(--fs-paragraph1);
@@ -2655,16 +2670,16 @@ footer {
                 }
 
                 .p-price {
-                    @include marginBottom(25px);
-
-                    p {
-                        font-size: var(--fs-price);
-                        color: var(--color-main);
-                    }
+                    margin-bottom: 15px;
+                    @include flexCenter(0,1);
                 }
 
-                .paragraph {
-                    @include marginBottom(45px);
+                .detail-content {
+                    @include marginBottom(30px);
+
+                    ul {
+                        margin-bottom: 0;
+                    }
 
                     .table-ingredient {
                         tr {
@@ -2751,6 +2766,7 @@ footer {
                         padding: 15px 0;
                         border-bottom: 1px solid var(--color-border-table);
                         cursor: pointer;
+
                         .icon {
                             transform: rotate(0);
                             transition: all linear 0.3s;
@@ -3040,6 +3056,7 @@ footer {
 
                             a {
                                 color: var(--color-table1);
+
                                 &:hover {
                                     color: var(--color-main);
                                 }
@@ -3644,5 +3661,70 @@ footer {
     .owl-nav,
     .owl-dots {
         display: none !important;
+    }
+}
+
+.wrapper_cart {
+    @include marginBottom(50px);
+
+    h1 {
+        @include marginBottom(30px);
+    }
+
+    .grid_cart {
+        display: flex;
+
+
+        .left {
+            width: 70%;
+            padding-right: 30px;
+
+            .content {
+                padding: 15px;
+                background: var(--color-white);
+                border-radius: 15px;
+                min-height: 400px;
+                width: 100%;
+                margin-right: 30px;
+
+                .thead {
+                    display: grid;
+                    grid-template-columns: 45% 20% 15% 20%;
+                    border-bottom: 1px solid var(--color-border);
+                    margin-bottom: 15px;
+
+                    .th {
+                        padding: 10px 0;
+                    }
+                }
+            }
+        }
+
+        .right {
+            width: 30%;
+            padding: 15px;
+            background: var(--color-white);
+            border-radius: 15px;
+
+            p {
+                font-size: var(--fs-h2);
+                text-transform: uppercase;
+                padding-bottom: 10px;
+                border-bottom: 1px solid var(--color-border);
+                margin-bottom: 15px;
+            }
+
+            .area-total {
+            }
+        }
+
+        &.full {
+            .left {
+                width: 100%;
+                padding-right: 0;
+                @include flexCenter;
+                flex-direction: column;
+            }
+        }
     }
 }
