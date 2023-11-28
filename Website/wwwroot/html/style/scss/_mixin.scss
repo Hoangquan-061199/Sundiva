@@ -262,7 +262,6 @@
     * {
         margin: 0;
         padding: 0;
-        color: var(--color-text);
         box-sizing: border-box;
         font-family: "default";
     }
@@ -273,6 +272,8 @@
         font-size: var(--fs-text);
         margin-top: var(--h-header);
         top: 0 !important;
+        color: var(--color-text);
+        min-height: unset !important;
 
         &.no-scroll {
             overflow: hidden;
@@ -309,6 +310,8 @@
     .no-image {
         @include flexCenter;
         @include widthHeight(100%);
+        background: #ccc;
+        overflow: hidden;
     }
 
     ul,
@@ -323,6 +326,7 @@
         padding: 0px;
         text-decoration: none;
         cursor: pointer;
+        color: var(--color-text);
 
         &:hover {
             color: var(--color-main);
@@ -408,6 +412,16 @@
         //        margin-left: 10px;
         //    }
         //}
+    }
+
+    form {
+        label.error {
+            display: none !important;
+        }
+
+        input.error {
+            border-color: red !important;
+        }
     }
 
     .detail-content {
@@ -659,6 +673,8 @@
             width: 320px;
             border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+
 
             .main {
                 padding: 15px;
@@ -1224,15 +1240,29 @@
             .item {
                 padding: 20px 0;
                 border-bottom: 1px solid var(--color-border);
-                display: flex;
+                @include flexCenter;
+
+                .img {
+                    width: 30%;
+                    aspect-ratio: 16/9;
+
+                    img {
+                        @include resizeImg;
+                    }
+                }
+
+                .right {
+                    width: 70%;
+                    padding-left: 50px;
+                }
 
                 &:last-child {
                     border-bottom: 0;
                 }
 
                 > p {
-                    //display: flex;
-                    //align-items: center;
+                    display: flex;
+                    align-items: center;
                 }
 
                 > p a {
@@ -1247,20 +1277,18 @@
                     margin-right: 10px;
                     margin-bottom: 5px;
                     display: inline-block;
+                    font-size: 12px;
                 }
 
                 .item-name {
-                    display: flex;
-                    flex-direction: row-reverse;
-                    align-items: center;
-                    justify-content: flex-end;
-
                     .time {
                         margin-right: 10px;
                     }
                 }
 
                 h3 {
+                    margin-bottom: 5px;
+
                     a {
                         font-weight: 700;
                         @include _max-text(2);
@@ -1278,10 +1306,19 @@
                     color: var(--color-main);
                     font-style: italic;
                     margin: 5px 0;
+                    @include flexCenter(0,1);
 
-                    i {
+                    svg {
                         margin-right: 10px;
-                        color: var(--color-main);
+                        fill: var(--color-main);
+                    }
+                }
+
+                ._desc {
+                    @include _max-text(3);
+
+                    table {
+                        display: none;
                     }
                 }
             }

@@ -18,7 +18,6 @@
   <ItemGroup>
     <Compile Remove="Areas\Admin\Data\**" />
     <Compile Remove="Logs\**" />
-    <Compile Remove="Views\Cart\**" />
     <Compile Remove="Views\Comment\**" />
     <Compile Remove="Views\Member\**" />
     <Compile Remove="Views\Mobile\**" />
@@ -53,7 +52,6 @@
     <Compile Remove="wwwroot\upload\**" />
     <Content Remove="Areas\Admin\Data\**" />
     <Content Remove="Logs\**" />
-    <Content Remove="Views\Cart\**" />
     <Content Remove="Views\Comment\**" />
     <Content Remove="Views\Member\**" />
     <Content Remove="Views\Mobile\**" />
@@ -93,7 +91,6 @@
     <Content Remove="wwwroot\upload\**" />
     <EmbeddedResource Remove="Areas\Admin\Data\**" />
     <EmbeddedResource Remove="Logs\**" />
-    <EmbeddedResource Remove="Views\Cart\**" />
     <EmbeddedResource Remove="Views\Comment\**" />
     <EmbeddedResource Remove="Views\Member\**" />
     <EmbeddedResource Remove="Views\Mobile\**" />
@@ -131,7 +128,6 @@
     <EmbeddedResource Remove="wwwroot\upload\**" />
     <None Remove="Areas\Admin\Data\**" />
     <None Remove="Logs\**" />
-    <None Remove="Views\Cart\**" />
     <None Remove="Views\Comment\**" />
     <None Remove="Views\Member\**" />
     <None Remove="Views\Mobile\**" />
@@ -329,7 +325,7 @@
     <Content Update="Areas\Admin\Views\Campaign\ListVorcherByIdCampain.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Areas\Admin\Views\ContactUsBookTour\ListItems.cshtml">
+    <Content Update="Areas\Admin\Views\ContactUsOrderProduct\ListItems.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Admin\Views\ContactUsCarRental\ListItems.cshtml">
@@ -691,6 +687,7 @@
     <None Include="bundleconfig.json" />
     <None Include="Views\PartialContent\PartialSearchTour.cshtml" />
     <None Include="Views\PartialContent\PartialProduct.cshtml" />
+    <None Include="Views\Shared\Components\BlockDevtoolComponent\Default.cshtml" />
     <None Include="Views\Shared\Components\SendInfomation\Default.cshtml" />
     <None Include="Views\Shared\Components\TextHeadComponent\Default.cshtml" />
     <None Include="Views\Sitemap\Rss.cshtml" />

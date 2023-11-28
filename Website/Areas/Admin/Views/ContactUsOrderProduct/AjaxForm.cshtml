@@ -60,50 +60,26 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-1">Tour du lịch:</label>
+                                <label class="col-sm-1">Sản phẩm:</label>
                                 <div class="col-sm-5">
                                     <a href="@Model.ContactUs.ProductLink" title="@Model.ContactUs.ProductName" target="_blank">@Model.ContactUs.ProductName</a>
                                 </div>
-                                <label class="col-sm-1">Số người lớn:</label>
+                                <label class="col-sm-1">Giá:</label>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control-readonly notvalid" readonly
-                                           value="@Model.ContactUs.NumberElder" />
+                                           value="@Model.ContactUs.Price" />
                                 </div>
-                                <label class="col-sm-1">Số trẻ em (5-11):</label>
+                                <label class="col-sm-1">Số lượng:</label>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control-readonly notvalid" readonly
-                                           value="@Model.ContactUs.NumberChildren" />
+                                           value="@Model.ContactUs.Number" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-1">Số trẻ nhỏ(2-5):</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control-readonly notvalid" readonly
-                                           value="@Model.ContactUs.NumberChildren2" />
-                                </div>
-                                <label class="col-sm-1">Số trẻ sơ sinh:</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control-readonly notvalid" readonly
-                                           value="@Model.ContactUs.NumberChildren3" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1">Email:</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control-readonly notvalid" readonly
-                                           value="@Model.ContactUs.Email" placeholder="@Model.ContactUs.Email" />
-                                </div>
                                 <label class="col-sm-1">Số điện thoại:</label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control-readonly notvalid" readonly
                                            value="@Model.ContactUs.Phone" placeholder="@Model.ContactUs.Phone" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1">Nội dung:</label>
-                                <div class="col-sm-5">
-                                    <textarea rows="5" class="form-control-readonly notvalid"
-                                              readonly>@Model.ContactUs.Content</textarea>
                                 </div>
                                 <label class="col-sm-1">Trạng thái</label>
                                 <div class="col-sm-5">
@@ -116,6 +92,13 @@
                                             Đã đọc
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-1">Nội dung:</label>
+                                <div class="col-sm-11">
+                                    <textarea rows="5" class="form-control-readonly notvalid"
+                                              readonly>@Model.ContactUs.Content</textarea>
                                 </div>
                             </div>
                         </div>

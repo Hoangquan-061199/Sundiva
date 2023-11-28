@@ -148,29 +148,31 @@ function ProcessData() {
             }
         });
     };
-    this.SendBookTour = function () {
-        let $formContact = $("#BookTour");
+    this.SendOrder = function () {
+        let $formContact = $("#SendCOrder");
         $formContact.validate({
             rules: {
                 FullName: { required: true },
                 Phone: { required: true, minlength: 10, maxlength: 12 },
-                Email: { required: true, email: true },
+                Number: { required: true },
+                Address: { required: true },
             },
             messages: {
                 FullName: { required: GetSource("NhapHoTen") },
                 Phone: { required: GetSource("NhapSoDienThoai"), minlength: GetSource("Tu10Den12KyTu"), maxlength: GetSource("Tu10Den12KyTu") },
-                Email: { required: GetSource("NhapEmail"), email: GetSource("EmailKhongChinhXac") },
+                Number: { required: '' },
+                Address: { required: '' },
             },
             submitHandler: function () {
                 updateDateDDMMYYYY();
                 let d = $formContact.serialize();
-                $(".book-tour-submit").prop("disabled", true).hide();
+                $("#SendCOrder .submit-contact").prop("disabled", true).hide();
                 $(".load").addClass('show');
                 $("body").addClass('disable');
                 let action = $formContact.attr('action');
                 $.post(action, d, function (data) {
                     if (data.errors) {
-                        $(".book-tour-submit").prop("disabled", false).show();
+                        $("#SendCOrder .submit-contact").prop("disabled", false).show();
                         $(".load").removeClass('show');
                         $("body").removeClass('disable');
                         OpenAlert(data.message, false);
@@ -180,10 +182,10 @@ function ProcessData() {
                         setInterval(function () { window.location.reload(); }, 3000);
                         $(".load").removeClass('show');
                         $("body").removeClass('disable');
-                        $(".book-tour-submit").show();
+                        $("#SendCOrder .submit-contact").show();
                     }
                 }).fail(function () {
-                    $(".book-tour-submit").prop("disabled", false).show();
+                    $("#SendCOrder .submit-contact").prop("disabled", false).show();
                     $(".load").removeClass('show');
                     $("body").removeClass('disable');
                     OpenAlert(GetSource("GuiThatBai"), false);

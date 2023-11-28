@@ -18,12 +18,12 @@ using System.Linq;
 
 namespace Website.Areas.Admin.Controllers
 {
-    public class ContactUsBookTourController : BaseController
+    public class ContactUsOrderProductController : BaseController
     {
         private readonly ContactUsDa _contactUsDa;
         private readonly ModuleAdminDa _moduleAdminDa;
         private string _systemRootPath;
-        public ContactUsBookTourController(IWebHostEnvironment env)
+        public ContactUsOrderProductController(IWebHostEnvironment env)
         {
             _systemRootPath = env.ContentRootPath;
             _contactUsDa = new ContactUsDa(WebConfig.ConnectionString);
@@ -35,7 +35,7 @@ namespace Website.Areas.Admin.Controllers
             {
                 return Redirect("/" + WebConfig.AdminAlias);
             }
-            Module module = _moduleAdminDa.GetTag("ContactUsBookTour");
+            Module module = _moduleAdminDa.GetTag("ContactUsOrderProduct");
             string role = HttpContext.Session.GetString("WebAdminRole");
             string userId = HttpContext.Session.GetString("WebAdminUserID");
             HomeAdminViewModel model = new()
@@ -51,7 +51,7 @@ namespace Website.Areas.Admin.Controllers
             SearchModel seach = new();
             TryUpdateModelAsync(seach);
             seach.keyword = Utility.ValidString(seach.keyword, "", true);
-            seach.type = "BookTour";
+            seach.type = "OrderProduct";
             ViewBag.IsExport = false;
             if (seach.IsExcel == true || seach.IsPdf == true || seach.IsCsv == true)
             {
@@ -181,9 +181,9 @@ namespace Website.Areas.Admin.Controllers
             SearchModel seach = new();
             TryUpdateModelAsync(seach);
             seach.lang = Lang();
-            seach.type = "BookTour";
+            seach.type = "ContactUsOrderProduct";
             List<ContactUsAdmin> ltsList = _contactUsDa.ListSearch(seach, seach.page, 50, true);
-            string fileName = string.Format("dat-tour_{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            string fileName = string.Format("dat-hang_{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             string filePath = Path.Combine(_systemRootPath + "/wwwroot/files/ExportImport", fileName);
             string folder = _systemRootPath + "/wwwroot/files/ExportImport";
             if (!Directory.Exists(folder))
@@ -200,20 +200,14 @@ namespace Website.Areas.Admin.Controllers
             int dem = 0;
             using (ExcelPackage xlPackage = new(newFile))
             {
-                ExcelWorksheet worksheet = xlPackage.Workbook.Worksheets.Add("DatTour");
+                ExcelWorksheet worksheet = xlPackage.Workbook.Worksheets.Add("DatHang");
                 xlPackage.Workbook.CalcMode = ExcelCalcMode.Manual;
                 //Create Headers and format them
                 string[] properties = new string[100];
                 properties[0] = "ID";
                 properties[1] = "Tên khách hàng";
-                properties[2] = "Email";
                 properties[3] = "Số điện thoại";
                 properties[4] = "Địa chỉ";
-                properties[5] = "Tour du lịch";
-                properties[6] = "Số người lớn";
-                properties[7] = "Số trẻ em (5 - 11 tuổi)";
-                properties[8] = "Số trẻ nhỏ (2 - 5 tuổi)";
-                properties[9] = "Số trẻ sơ sinh";
                 properties[10] = "Nội dung";
                 properties[11] = "Ngày gửi";
                 for (int i = 0; i < properties.Length; i++)

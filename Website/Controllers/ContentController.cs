@@ -263,7 +263,7 @@ namespace Website.Controllers
                                 //    return RedirectPermanent(model.ListProductItem.FirstOrDefault().NameAscii);
                                 //}
                                 await _webModuleManager.UpdateTotalViews(module.ID);
-                                if(module.ParentID == 0)
+                                if (module.ParentID == 0)
                                     return View(@"~/Views/Product/ListGroupProduct.cshtml", model);
                                 return View(@"~/Views/Product/ListGridProduct.cshtml", model);
                             }
@@ -392,9 +392,7 @@ namespace Website.Controllers
                                 int pageSize = 10;
                                 search.sort = 1;
                                 search.start = (search.page - 1) * pageSize;
-                                IEnumerable<WebsiteContentItem> listContentNoUrl = await _webContentManager.GetListContent(search, 0, model.WebsiteModulesItems.FirstOrDefault(x => x.ModuleTypeCode == StaticEnum.SimpleModule).ID, "0", "0");
-                                IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, string.Join(",", model.WebsiteModulesItems.Where(x => x.TypeView == StaticEnum.Recuiment2).Select(x => x.ID)), "0");
-                                model.ListContentItem = listContentNoUrl;
+                                IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, "0", "0");
                                 model.ListContentItemAsync = listContent;
                                 model.Total = listContent.Any() ? listContent.FirstOrDefault().TotalRecord : 0;
                                 model.PageSize = pageSize;
@@ -402,6 +400,12 @@ namespace Website.Controllers
                                 model.SearchModel = search;
                                 ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
                                 await _webModuleManager.UpdateTotalViews(module.ID);
+                                if (model.ListContentItemAsync.Count() == 1)
+                                    return RedirectPermanent(Utility.Link(model.ListContentItemAsync.FirstOrDefault().NameAscii, string.Empty, model.ListContentItemAsync.FirstOrDefault().LinkUrl));
+                                if (module.TypeView == StaticEnum.Recuiment1)
+                                    return View(@"~/Views/News/ListRecuitment1.cshtml", model);
+                                IEnumerable<WebsiteContentItem> listContentNoUrl = await _webContentManager.GetListContent(search, 0, model.WebsiteModulesItems.FirstOrDefault(x => x.ModuleTypeCode == StaticEnum.SimpleModule).ID, "0", "0");
+                                model.ListContentItem = listContentNoUrl != null ? listContentNoUrl : null;
                                 return View(@"~/Views/News/ListRecuitment.cshtml", model);
                             }
                         #endregion Tuyển dụng

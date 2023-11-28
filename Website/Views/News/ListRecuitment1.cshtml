@@ -21,11 +21,8 @@
     string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
     ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
     ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
-    ViewBag.LangModule = Model.ModuleItem.Lang;
     ViewBag.IsSchema = true;
     ViewBag.ShowDichVu = true;
-    ViewBag.CodeSchema = "SchemaCategoryNews";
-    SizeImages image = new SizeImages();
 }
 
 @if (Model.ModuleItem != null)
@@ -71,29 +68,48 @@
         </div>
     </div>
 
-    <div class="collection">
-        <div class="container">
-            <h1 class="big-title center before">@Model.ModuleItem.Name</h1>
-            @if (!string.IsNullOrEmpty(Model.ModuleItem.Description))
-            {
-                <div class="paragraph fs17 justify detail-content">
-                    @Html.Raw(Model.ModuleItem.Description)
+    @if (Model.ListContentItemAsync.Any())
+    {
+        int i = 1;
+        <div class="chance">
+            <div class="container">
+                <div class="big-title center before">@ResourceData.Resource("CoHoiViecLam", ViewBag.Lang)</div>
+                <div class="paragraph fs17 detail-content">
+                    <table class="table-chance">
+                        <thead>
+                            <tr>
+                                <th>@ResourceData.Resource("STT", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("ViTriTuyenDung", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("NoiLamViec", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (WebsiteContentItem item in Model.ListContentItemAsync)
+                            {
+                                <tr>
+                                    <td>@i.ToString("D2")</td>
+                                    <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
+                                    <td>@item.Address</td>
+                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                    <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
                 </div>
-            }
-            <div class="list">
-                @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
-                {
-                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.Where(x => x.ParentID > 0))
-                    {
-                        <div class="item item-collection">
-                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                            </a>
-                            <h3 class="big-title title-product color-white center"><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></h3>
-                        </div>
-                    }
-                }
+                <div class="more border square1 uppercase">
+                    @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                             class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    }
 }

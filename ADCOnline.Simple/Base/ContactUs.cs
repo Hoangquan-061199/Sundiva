@@ -8,7 +8,7 @@ namespace ADCOnline.Simple.Base
         public string Email { get; set; }
         public string Size { get; set; }
         public string Weight { get; set; }
-        public string Speed { get; set; }
+        public string Price { get; set; }
         public string Number { get; set; }
         public string Address { get; set; }
         public string Mobile { get; set; }
