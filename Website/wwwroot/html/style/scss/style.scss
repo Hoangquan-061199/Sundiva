@@ -2435,108 +2435,161 @@ footer {
                 }
             }
         }
+    }
+}
 
-        .form-contact {
-            @include flexCenter(0, 1);
+.form-contact {
+    @include flexCenter(0, 1);
 
-            .left {
-                width: 50%;
+    .left {
+        width: 50%;
 
-                iframe {
-                    @include widthHeight(100%, 415px);
-                    border-radius: 20px;
-                    border: 1px solid var(--color-border-map);
+        iframe {
+            @include widthHeight(100%, 415px);
+            border-radius: 20px;
+            border: 1px solid var(--color-border-map);
+        }
+    }
+
+    .right {
+        width: 50%;
+        padding-left: 50px;
+
+        .big-title {
+            @include marginBottom(25px);
+        }
+
+        form {
+            width: 100%;
+
+            .form-input,
+            .form-textarea {
+                position: relative;
+                width: 100%;
+
+                .icon {
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 45px;
+                    @include flexCenter(1, 1);
+
+                    svg {
+                        fill: var(--color-icon-form);
+                    }
                 }
-            }
 
-            .right {
-                width: 50%;
-                padding-left: 50px;
-
-                .big-title {
-                    @include marginBottom(25px);
-                }
-
-                form {
+                input,
+                textarea {
+                    position: relative;
                     width: 100%;
+                    padding: 10px 15px 10px 60px;
+                    border-radius: 10px;
+                    border: 1px solid var(--color-border-input);
+                }
 
-                    .form-input,
-                    .form-textarea {
-                        position: relative;
-                        width: 100%;
-
-                        .icon {
-                            position: absolute;
-                            left: 0;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            width: 45px;
-                            @include flexCenter(1, 1);
-
-                            svg {
-                                fill: var(--color-icon-form);
-                            }
-                        }
-
-                        input,
-                        textarea {
-                            position: relative;
-                            width: 100%;
-                            padding: 10px 15px 10px 60px;
-                            border-radius: 10px;
-                            border: 1px solid var(--color-border-input);
-                        }
-
-                        &::before {
-                            content: "";
-                            position: absolute;
-                            top: 50%;
-                            left: 46px;
-                            transform: translateY(-50%);
-                            @include widthHeight(1px, 23px);
-                            background: var(--color-before-input);
-                        }
-                    }
-
-                    .form-input {
-                        margin-bottom: 10px;
-                    }
-
-                    .form-textarea {
-                        margin-bottom: 15px;
-
-                        .icon {
-                            top: 10px;
-                            transform: unset;
-                        }
-
-                        textarea {
-                            height: 105px;
-                            resize: none;
-                        }
-
-                        &::before {
-                            top: 8px;
-                            transform: unset;
-                        }
-                    }
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    left: 46px;
+                    transform: translateY(-50%);
+                    @include widthHeight(1px, 23px);
+                    background: var(--color-before-input);
                 }
             }
 
-            @include maxWidth(992px) {
-                flex-direction: column-reverse;
-                gap: 20px;
+            .form-input {
+                margin-bottom: 10px;
+            }
 
-                @include maxWidth(767px) {
-                    gap: 15px;
+            .form-textarea {
+                margin-bottom: 15px;
+
+                .icon {
+                    top: 10px;
+                    transform: unset;
                 }
 
-                .left,
-                .right {
-                    width: 100%;
-                    padding-left: 0;
+                textarea {
+                    height: 105px;
+                    resize: none;
+                }
+
+                &::before {
+                    top: 8px;
+                    transform: unset;
                 }
             }
+        }
+    }
+
+    &.form-popup-order {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        z-index: 991;
+        background: var(--color-white);
+        padding: 50px;
+        border-radius: 15px;
+        opacity: 0;
+        pointer-events: none;
+        top: 55%;
+        transition: top 0.3s linear, opacity 0.3s linear;
+
+        &.active {
+            top: 50%;
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .left {
+
+            .img {
+                aspect-ratio: 16/10;
+                margin-bottom: 15px;
+
+                img {
+                    @include resizeImg;
+                }
+            }
+        }
+
+        .exit-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+
+            svg {
+                width: 24px;
+                cursor: pointer;
+                fill: var(--color-share);
+                height: 24px;
+            }
+
+            &:hover {
+                svg {
+                    fill: var(--color-main);
+                }
+            }
+        }
+    }
+
+    @include maxWidth(991px) {
+        flex-direction: column-reverse;
+        gap: 20px;
+
+        @include maxWidth(767px) {
+            gap: 15px;
+        }
+
+        .left,
+        .right {
+            width: 100%;
+            padding-left: 0;
         }
     }
 }
@@ -2720,6 +2773,7 @@ footer {
                         text-transform: uppercase;
                         color: var(--color-white);
                         background: var(--color-main);
+                        cursor: pointer;
 
                         &:hover {
                             background: var(--color-white);
@@ -3192,8 +3246,50 @@ footer {
             form {
                 @include marginBottom(25px);
 
-                .form-input,
-                .form-textarea {
+                .file {
+                    padding: 10px 20px;
+                    background: var(--color-main);
+                    border-radius: 10px;
+                    border: 1px solid var(--color-main);
+                    flex: 1;
+
+                    label {
+                        @include flexCenter;
+                        gap: 5px;
+                        color: var(--color-white);
+                        cursor: pointer;
+
+                        #text {
+                            @include _max-text(1);
+                        }
+                    }
+
+                    .icon {
+                        width: 22px;
+                        @include flexCenter;
+
+                        svg {
+                            fill: var(--color-white);
+                        }
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        background: var(--color-white);
+
+                        label {
+                            color: var(--color-main);
+                        }
+
+                        .icon {
+                            svg {
+                                fill: var(--color-main);
+                            }
+                        }
+                    }
+                }
+
+                .form-input, .form-textarea {
                     width: 100%;
                     position: relative;
 

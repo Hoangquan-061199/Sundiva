@@ -706,14 +706,14 @@ namespace Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public async Task<ActionResult> BookTour()
+        public async Task<ActionResult> SendOrder()
         {
             JsonMessage msg = new();
             try
             {
                 SendContactModels model = new();
                 await TryUpdateModelAsync(model);
-                if (string.IsNullOrEmpty(model.FullName) || string.IsNullOrEmpty(model.Phone) || string.IsNullOrEmpty(model.Email))
+                if (string.IsNullOrEmpty(model.FullName) || string.IsNullOrEmpty(model.Phone) || string.IsNullOrEmpty(model.Number) || string.IsNullOrEmpty(model.Address))
                 {
                     msg = new JsonMessage { Errors = true, Message = ResourceData.Resource("VuiLongNhapCacTruongBatBuoc", Lang()) };
                     return Ok(msg);
@@ -748,7 +748,7 @@ namespace Website.Controllers
                     msg = new JsonMessage { Errors = true, Message = ResourceData.Resource("GuiThatBai", Lang()) };
                     return Ok(msg);
                 }
-                mainTemplate = list.Any(x => x.Code == "TemplateBookTour") ? list.FirstOrDefault(x => x.Code == "TemplateBookTour") : new CommonJsonItem();
+                mainTemplate = list.Any(x => x.Code == "TemplateOrder") ? list.FirstOrDefault(x => x.Code == "TemplateOrder") : new CommonJsonItem();
                 if (string.IsNullOrEmpty(mainTemplate.Content))
                 {
                     msg = new JsonMessage { Errors = true, Message = ResourceData.Resource("GuiThatBai", Lang()) };
@@ -757,30 +757,24 @@ namespace Website.Controllers
                 #region Valid Input
                 model.FullName = Utility.ValidString(model.FullName, string.Empty, true);
                 model.Phone = Utility.RemoveHTMLTag(model.Phone);
-                model.Email = Utility.RemoveHTMLTag(model.Email);
                 model.Address = Utility.RemoveHTMLTag(model.Address);
-                model.NumberElder = model.NumberElder;
-                model.NumberChildren = model.NumberChildren;
-                model.NumberChildren2 = model.NumberChildren2;
-                model.NumberChildren3 = model.NumberChildren3;
+                model.Number = model.Number;
                 model.Content = Utility.RemoveHTMLTag(model.Content);
                 model.ProductID = model.ProductID;
                 var product = _productManager.GetId(model.ProductID);
                 model.ProductName = product.Name;
                 model.ProductLink = Utility.Link(product._NameAscii, string.Empty, product.LinkUrl);
+                model.Price = Utility.GetFormatPriceType(product.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang), true);
                 #endregion
                 str = str.Replace("[Main]", mainTemplate.Content);
                 str = str.Replace("[HoTen]", model.FullName);
                 str = str.Replace("[SoDienThoai]", model.Phone);
-                str = str.Replace("[Email]", model.Email);
                 str = str.Replace("[DiaChi]", model.Address);
-                str = str.Replace("[NumberElder]", model.NumberElder.ToString());
-                str = str.Replace("[NumberChildren]", model.NumberChildren.ToString());
-                str = str.Replace("[NumberChildren2]", model.NumberChildren2.ToString());
-                str = str.Replace("[NumberChildren3]", model.NumberChildren3.ToString());
+                str = str.Replace("[Number]", model.Number.ToString());
                 str = str.Replace("[NoiDung]", model.Content);
-                str = str.Replace("[Tour]", Utility.ReplaceHttpToHttps(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + model.ProductLink, WebConfig.EnableHttps));
-                str = str.Replace("[TenTour]", model.ProductName);
+                str = str.Replace("[SanphamLink]", Utility.ReplaceHttpToHttps(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + model.ProductLink, WebConfig.EnableHttps));
+                str = str.Replace("[Gia]", model.Price);
+                str = str.Replace("[TenSanPham]", model.ProductName);
                 #region Send mail
                 try
                 {
@@ -808,14 +802,12 @@ namespace Website.Controllers
                         Phone = model.Phone,
                         Email = model.Email,
                         Address = model.Address,
-                        NumberElder = model.NumberElder,
-                        NumberChildren = model.NumberChildren,
-                        NumberChildren2 = model.NumberChildren2,
-                        NumberChildren3 = model.NumberChildren3,
+                        Number = model.Number,
                         ProductName = model.ProductName,
                         ProductLink = model.ProductLink,
                         Content = model.Content,
-                        Code = "BookTour"
+                        Price = model.Price,
+                        Code = "OrderProduct"
                     };
                     int result = _contactUsManager.Insert(contact);
                     if (result > 0)
@@ -1130,7 +1122,7 @@ namespace Website.Controllers
                 model.Email = Utility.RemoveHTMLTag(model.Email);
                 model.Content = Utility.RemoveHTMLTag(model.Content);
                 #endregion
-                var content = _webContentManager.GetContentById(model.ProductID);
+                var content = _webContentManager.GetContentById(model.ContentID);
                 if (content != null)
                 {
                     #region CV
@@ -1244,7 +1236,7 @@ namespace Website.Controllers
                             Email = model.Email,
                             Phone = model.Phone,
                             Content = model.Content,
-                            ProductID = model.ProductID,
+                            ProductID = model.ContentID,
                             ProductName = content.Name,
                             ProductLink = Utility.Link(content.ModuleNameAscii, content._NameAscii, content.LinkUrl),
                             //ProductCode = content.Description,

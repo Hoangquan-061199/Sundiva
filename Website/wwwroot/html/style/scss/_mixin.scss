@@ -414,6 +414,16 @@
         //}
     }
 
+    form {
+        label.error {
+            display: none !important;
+        }
+
+        input.error {
+            border-color: red !important;
+        }
+    }
+
     .detail-content {
         h2,
         h3,
@@ -663,6 +673,8 @@
             width: 320px;
             border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+
 
             .main {
                 padding: 15px;

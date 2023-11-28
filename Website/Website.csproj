@@ -325,7 +325,7 @@
     <Content Update="Areas\Admin\Views\Campaign\ListVorcherByIdCampain.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Areas\Admin\Views\ContactUsBookTour\ListItems.cshtml">
+    <Content Update="Areas\Admin\Views\ContactUsOrderProduct\ListItems.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Admin\Views\ContactUsCarRental\ListItems.cshtml">

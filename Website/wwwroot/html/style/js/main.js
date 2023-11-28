@@ -423,4 +423,14 @@ $(document).ready(function () {
         body.stop().animate({ scrollTop: 0 }, 500, 'swing', function () {
         });
     })
+
+    $('.pop-upform').click(function () {
+        $('.form-popup-order').addClass('active');
+        $('.overlay').addClass('show');
+    })
+
+    $('.form-popup-order .exit-popup, .overlay').click(function () {
+        $('.form-popup-order').removeClass('active');
+        $('.overlay').removeClass('show');
+    })
 });
