@@ -1,0 +1,23 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Utils
+@using ADCOnline.Simple.Item
+@{
+    Layout = null;
+}
+@if (Model.ListContentItem.Any())
+{
+    int i = Model.Number + 1;
+    int rest = Model.Total.Value - 4 - ((Model.Page.Value - 2) * Model.PageSize.Value) - Model.ListContentItem.Count();
+
+    @foreach (WebsiteContentItem item in Model.ListContentItem)
+    {
+        <tr>
+            <td>@i.ToString("D2")</td>
+            <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
+            <td>@item.Address</td>
+            <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+            <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
+        </tr>
+        i++;
+    }
+}

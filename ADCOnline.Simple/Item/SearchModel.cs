@@ -64,6 +64,7 @@ namespace ADCOnline.Simple.Item
         public string TourType { get; set; }
         public string AddressStart { get; set; }
         public string Times { get; set; }
+        public int number { get; set; }
 
     }
 }

@@ -389,7 +389,7 @@ namespace Website.Controllers
                                 IEnumerable<WebsiteModulesItem> childmodule = await cacheUtils.GetListModuleChidrentAsync(module.ID);
                                 model.WebsiteModulesItems = module.ParentID == 0 ? await cacheUtils.GetListModuleChildID(module.ID, Lang()) : childmodule.Any(x => x.ParentID == module.ID) ? childmodule.Where(x => x.ParentID == module.ID)?.ToList() : await cacheUtils.GetListModuleChildID(module.ParentID.Value, Lang());
                                 model.ModuleParentItem = childmodule.Any(x => x.ParentID == module.ID) ? module : cacheUtils.GetModuleById(module.ParentID.HasValue && module.ParentID.Value > 0 ? module.ParentID.Value : module.ID);
-                                int pageSize = 10;
+                                int pageSize = 4;
                                 search.sort = 1;
                                 search.start = (search.page - 1) * pageSize;
                                 IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, "0", "0");
@@ -1986,6 +1986,60 @@ namespace Website.Controllers
                 model.PageSize = pageSize;
                 model.Page = search.page > 1 ? search.page : 1;
                 return View(@"~/Views/PartialContent/PartialDocument.cshtml", model);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PartialRecuitment()
+        {
+            try
+            {
+                ModuleViewModels model = new();
+                Response.Headers.Add("AMP-Access-Control-Allow-Source-Origin", Request.Scheme + "://" + Request.Host);
+                Response.Headers.Add("Access-Control-Expose-Headers", "AMP-Redirect-To, AMP-Access-Control-Allow-Source-Origin");
+                SearchModel search = new()
+                {
+                    lang = Lang()
+                };
+                await TryUpdateModelAsync(search);
+                //foreach (var prop in search.GetType().GetProperties())
+                //{
+                //    if (prop.PropertyType == typeof(string))
+                //    {
+                //        var val = search.GetType().GetProperty(prop.Name).GetValue(search, null);
+                //        if (val != null)
+                //        {
+                //            prop.SetValue(search, Utility.RemoveSpecialCharacterSQLInjection2(val.ToString()));
+                //        }
+                //    }
+                //}
+                var module =  cacheUtils.GetModuleById(search.moduleId);
+                if (module != null)
+                {
+                    int pageSize = 4;
+                    if (search.page == 1)
+                    {
+                        search.start = 0;
+                    }
+                    else
+                    {
+                        search.start = module.ModuleTypeCode == StaticEnum.Video ? (4 + (search.page - 2) * pageSize) : (4 + (search.page - 2) * pageSize);
+                    }
+                    
+                    IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, "0", "0");
+                    model.ListContentItem = listContent;
+                    model.Total = listContent.Any() ? listContent.FirstOrDefault().TotalRecord : 0;
+                    model.PageSize = pageSize;
+                    model.Page = search.page > 1 ? search.page : 1;
+                    model.ModuleItem = module;
+                    model.Number = search.number;
+                    return View(@"~/Views/PartialContent/PartialRecuitment.cshtml", model);
+                }
+                return NotFound();
             }
             catch
             {

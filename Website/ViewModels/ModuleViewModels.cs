@@ -60,6 +60,7 @@ namespace Website.ViewModels
         public int NumberMenu { get; set; }
         public int? Total { get; set; }
         public int? Page { get; set; }
+        public int Number { get; set; }
         public int? PageSize { get; set; }
         public List<int> Active { get; set; }
         public StringBuilder GridHtml { get; set; }
