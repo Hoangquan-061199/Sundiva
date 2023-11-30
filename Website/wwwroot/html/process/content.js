@@ -50,7 +50,7 @@ function more(p) {
 
 function moreR(p) {
     seo = $('#seoUrl').val();
-    moduleId = $('.ModuleId').val();
+    moduleId = $('#moduleId').val();
     number = $('#number').val();
     var url = '/Ajax/Content/PartialRecuitment?page=' + p + '&moduleId=' + moduleId + '&number=' + number;
     var container = '#grid-load';
