@@ -2652,7 +2652,7 @@ footer {
                         }
                     }
 
-                    .owl-nav {
+                    .slide-nav {
                         position: absolute;
                         top: 50%;
                         left: 50%;
@@ -2660,9 +2660,10 @@ footer {
                         width: 100%;
                         @include flexCenter(0, 1);
                         justify-content: space-between;
+                        z-index: 98;
 
-                        .owl-prev,
-                        .owl-next {
+                        .slide-prev,
+                        .slide-next {
                             margin: 0;
                             @include widthHeight(50px);
                             @include flexCenter(1, 1);
@@ -2683,6 +2684,7 @@ footer {
 
                     .slide-product-detail1 {
                         width: calc(100% - 126px);
+                        margin: 0;
 
                         .item {
                             border-radius: 10px;
@@ -2699,14 +2701,81 @@ footer {
                         }
                     }
 
+                    .btn-close-video {
+                        position: fixed;
+                        top: 30px;
+                        right: 50px;
+                        display: none;
+                        z-index: 99999;
+                        cursor: pointer;
+
+                        svg {
+                            fill: var(--color-white);
+                        }
+
+                        &.active {
+                            display: block;
+                        }
+                    }
+
                     .video {
-                        .img {
-                            @include widthHeight(126px, 70px);
+                        @include widthHeight(126px, 100%);
+                        cursor: pointer;
+
+                        .video-img {
+                            @include widthHeight(100%);
+                            aspect-ratio: 16/9;
                             margin-bottom: 10px;
                             border-radius: 10px;
+                            overflow: hidden;
+                            position: relative;
 
-                            img {
-                                @include resizeImg();
+                            .icon {
+                                @include widthHeight(27px, 19px);
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                img {
+                                    @include resizeImg();
+                                }
+                            }
+
+                            .img {
+                                @include widthHeight(100%);
+
+                                img {
+                                    @include resizeImg();
+                                }
+                            }
+                        }
+
+                        .video-popup {
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            @include widthHeight(100%);
+                            z-index: 999;
+                            border-radius: 0;
+                            margin-bottom: 0;
+                            display: none;
+
+                            video, iframe {
+                                @include widthHeight(60%, auto);
+                                aspect-ratio: 16/9;
+                            }
+
+                            &::after {
+                                content: '';
+                                position: absolute;
+                                @include widthHeight(100%);
+                                background: rgba(0, 0, 0, 0.7);
+                                z-index: -1;
+                            }
+
+                            &.active {
+                                @include flexCenter(1, 1);
                             }
                         }
 
