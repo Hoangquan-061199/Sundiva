@@ -52,7 +52,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
-                                    <label>Trụ sở</label>
+                                    <label>VPGD</label>
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="input-group">
@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
-                                    <label>TT giao dịch</label>
+                                    <label>Nhà máy 1</label>
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="input-group">
@@ -74,12 +74,14 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
-                                    <label>Copyright</label>
+                                    <label>Nhà máy 2</label>
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-copyright"></i></span>
-                                        <input type="text" class="form-control valid" name="Copyright" id="Copyright" value="@Model.SystemConfig.Copyright" placeholder="@Model.SystemConfig.Copyright" />
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        </span>
+                                        <input type="text" class="form-control" name="Address3" id="Address3" value="@Model.SystemConfig.Address3" placeholder="@Model.SystemConfig.Address3" />
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
@@ -190,6 +192,17 @@
                                         <input type="text" class="form-control" name="Website" id="Website" value="@Model.SystemConfig.Website" placeholder="@Model.SystemConfig.Website" />
                                     </div>
                                 </div>
+                                <div class="col-sm-1">
+                                    <label>Copyright</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-copyright"></i></span>
+                                        <input type="text" class="form-control valid" name="Copyright" id="Copyright" value="@Model.SystemConfig.Copyright" placeholder="@Model.SystemConfig.Copyright" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="col-sm-1 col-sm-offset-1">
                                     <label>
                                         <input type="checkbox" name="IsShow" id="IsShow" value="True" @((Model.SystemConfig.IsShow == false) ? "" : "checked") />
