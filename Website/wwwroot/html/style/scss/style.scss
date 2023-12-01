@@ -2679,7 +2679,7 @@ footer {
 
                 .bot {
                     display: flex;
-                    align-items: flex-start;
+                    align-items: stretch;
                     justify-content: space-between;
 
                     .slide-product-detail1 {
@@ -2690,6 +2690,7 @@ footer {
                             border-radius: 10px;
                             aspect-ratio: 1;
                             width: 70px;
+                            overflow: hidden;
 
                             img {
                                 @include resizeImg();
@@ -2719,13 +2720,14 @@ footer {
                     }
 
                     .video {
-                        @include widthHeight(126px, 100%);
+                        width: 126px;
+                        aspect-ratio: 16/9;
                         cursor: pointer;
+                        position: relative;
 
                         .video-img {
                             @include widthHeight(100%);
                             aspect-ratio: 16/9;
-                            margin-bottom: 10px;
                             border-radius: 10px;
                             overflow: hidden;
                             position: relative;
@@ -2736,6 +2738,7 @@ footer {
                                 top: 50%;
                                 left: 50%;
                                 transform: translate(-50%, -50%);
+
                                 img {
                                     @include resizeImg();
                                 }
@@ -2780,6 +2783,10 @@ footer {
                         }
 
                         p {
+                            position: absolute;
+                            top: calc(100% + 10px);
+                            left: 50%;
+                            transform: translateX(-50%);
                             font-size: var(--fs-more);
                             text-align: center;
                             text-transform: uppercase;
