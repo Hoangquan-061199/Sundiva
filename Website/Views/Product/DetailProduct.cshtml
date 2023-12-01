@@ -86,14 +86,25 @@
                                     }
                                 </div>
                             </div>
+                            <div class="btn-close-video"><svg xmlns="http://www.w3.org/2000/svg" height="30" width="26" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg></div>
                             @if (!string.IsNullOrEmpty(Model.ProductItem.Video))
                             {
                                 <div class="video">
+                                    <div class="video-img">
+                                        <div class="icon"><img src="./html/style/images/icon-youtube.webp"></div>
+                                        <div class="img"><img src="https://img.youtube.com/vi/@Model.ProductItem.Video/0.jpg"></div>
+                                    </div>
                                     <div class="video-popup">
-                                        <video controls>
-                                            <source src="@Model.ProductItem.Video" type="video/mp4">
-                                        </video>
-                                        <div class="btn-close-video"><svg xmlns="http://www.w3.org/2000/svg" height="30" width="26" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg></div>
+                                        @if (Model.ProductItem.Video.Contains("Upload"))
+                                        {
+                                            <video id="video-upload" controls>
+                                                <source data-src="@Model.ProductItem.Video" src="@Model.ProductItem.Video" type="video/mp4">
+                                            </video>
+                                        }
+                                        else
+                                        {
+                                            <iframe class="yotube-video" data-src="https://www.youtube.com/embed/@Model.ProductItem.Video" src="https://www.youtube.com/embed/@Model.ProductItem.Video" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                        }
                                     </div>
                                     <p>Video</p>
                                 </div>

@@ -2701,57 +2701,81 @@ footer {
                         }
                     }
 
+                    .btn-close-video {
+                        position: fixed;
+                        top: 30px;
+                        right: 50px;
+                        display: none;
+                        z-index: 99999;
+                        cursor: pointer;
+
+                        svg {
+                            fill: var(--color-white);
+                        }
+
+                        &.active {
+                            display: block;
+                        }
+                    }
+
                     .video {
                         @include widthHeight(126px, 100%);
+                        cursor: pointer;
 
-                        .video-popup {
-                            @include widthHeight(100%, 100%);
+                        .video-img {
+                            @include widthHeight(100%);
+                            aspect-ratio: 16/9;
                             margin-bottom: 10px;
                             border-radius: 10px;
                             overflow: hidden;
+                            position: relative;
 
-                            video {
-                                width: 100%;
-                                height: 100%;
-                            }
-
-                            .btn-close-video {
-                                position: fixed;
-                                top: 30px;
-                                right: 50px;
-                                display: none;
-                                z-index: 999;
-                                cursor: pointer;
-                                svg {
-                                    fill: var(--color-white);
-                                }
-                            }
-
-                            &.active {
-                                position: fixed;
+                            .icon {
+                                @include widthHeight(27px, 19px);
+                                position: absolute;
                                 top: 50%;
                                 left: 50%;
                                 transform: translate(-50%, -50%);
+                                img {
+                                    @include resizeImg();
+                                }
+                            }
+
+                            .img {
                                 @include widthHeight(100%);
-                                z-index: 999;
-                                border-radius: 0;
-                                margin-bottom: 0;
+
+                                img {
+                                    @include resizeImg();
+                                }
+                            }
+                        }
+
+                        .video-popup {
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            @include widthHeight(100%);
+                            z-index: 999;
+                            border-radius: 0;
+                            margin-bottom: 0;
+                            display: none;
+
+                            video, iframe {
+                                @include widthHeight(60%, auto);
+                                aspect-ratio: 16/9;
+                            }
+
+                            &::after {
+                                content: '';
+                                position: absolute;
+                                @include widthHeight(100%);
+                                background: rgba(0, 0, 0, 0.7);
+                                z-index: -1;
+                            }
+
+                            &.active {
                                 @include flexCenter(1, 1);
-
-                                video {
-                                    @include widthHeight(60%, auto);
-                                }
-
-                                .btn-close-video {
-                                    display: block;
-                                } 
-
-                                &::before {
-                                    content: '';
-                                    position: absolute;
-                                    @include widthHeight(100%);
-                                    background: rgba(0, 0, 0, 0.7);
-                                }
                             }
                         }
 

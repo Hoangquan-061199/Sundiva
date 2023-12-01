@@ -1,4 +1,4 @@
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $('.menu-icon').click(function () {
         $(this).toggleClass('change');
         $('header .container .right').toggleClass('active');
@@ -356,12 +356,22 @@ $(document).ready(function () {
         $('.overlay').removeClass('show');
     });
 
-    $('.video, .video .video-popup').click(function () {
+    var dataSrcValue = $('.video-popup iframe').data('src');
+    var dataSrcValue1 = $('.video-popup video source').data('src');
+    var videoUpload = document.getElementById("video-upload");
+    $('.video').click(function () {
+        $('.video-popup iframe').attr("src", dataSrcValue);
+        //$('.video-popup video source').attr("src", dataSrcValue1);
         $('.video .video-popup').addClass('active');
+        $('.btn-close-video').addClass('active');
     });
 
-    $('.video .video-popup .btn-close-video').click(function () {
+    $('.btn-close-video').click(function () {
+        $('.video-popup iframe').attr("src", "");
+        videoUpload.pause();
+        videoUpload.currentTime = 0;
         $('.video .video-popup').removeClass('active');
+        $('.btn-close-video').removeClass('active');
     });
 });
 
