@@ -39,9 +39,9 @@
             </a>
             <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
-                 class="bi bi-chevron-right" viewBox="0 0 16 16">
+                     class="bi bi-chevron-right" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
-                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
                 </svg>
             </div>
             <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
@@ -92,14 +92,24 @@
                                 <div class="video">
                                     <div class="video-img">
                                         <div class="icon"><img src="./html/style/images/icon-youtube.webp"></div>
-                                        <div class="img"><img src="https://img.youtube.com/vi/@Model.ProductItem.Video/0.jpg"></div>
-                                    </div>
-                                    <div class="video-popup">
                                         @if (Model.ProductItem.Video.Contains("Upload"))
                                         {
-                                            <video id="video-upload" controls>
-                                                <source data-src="@Model.ProductItem.Video" src="@Model.ProductItem.Video" type="video/mp4">
-                                            </video>
+                                            <div class="img">
+                                                <canvas id="canvas"></canvas>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="img"><img src="https://img.youtube.com/vi/@Model.ProductItem.Video/0.jpg"></div>
+                                        }
+                                    </div>
+                                    <div class="video-popup @(Model.ProductItem.Video.Contains("Upload") ? "video" : string.Empty)">
+                                        @if (Model.ProductItem.Video.Contains("Upload"))
+                                        {
+                                            @*<video id="video-upload" controls>
+                                                <source src="@Model.ProductItem.Video" type="video/mp4">
+                                            </video>*@
+                                            <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video>
                                         }
                                         else
                                         {
@@ -145,7 +155,7 @@
                                 <h2 class="big-title none title-main-page">@ResourceData.Resource("GioiThieuVe", ViewBag.Lang) @Model.ProductItem.Name_</h2>
                                 <div class="icon btn-down">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                 viewBox="0 0 320 512">
+                                         viewBox="0 0 320 512">
                                         <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
                                     </svg>
                                 </div>
@@ -164,7 +174,7 @@
                                 <h2 class="big-title none title-main-page">@ResourceData.Resource("ThongSoKiThuat", ViewBag.Lang)</h2>
                                 <div class="icon btn-down">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                 viewBox="0 0 320 512">
+                                         viewBox="0 0 320 512">
                                         <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
                                     </svg>
                                 </div>
@@ -183,7 +193,7 @@
                                 <h2 class="big-title none title-main-page">@ResourceData.Resource("DacDiemNoibat", ViewBag.Lang)</h2>
                                 <div class="icon btn-down">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                 viewBox="0 0 320 512">
+                                         viewBox="0 0 320 512">
                                         <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
                                     </svg>
                                 </div>
@@ -202,7 +212,7 @@
                                 <h2 class="big-title none title-main-page">@ResourceData.Resource("CongTrinhTieuBieu", ViewBag.Lang)</h2>
                                 <div class="icon btn-down">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                 viewBox="0 0 320 512">
+                                         viewBox="0 0 320 512">
                                         <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
                                     </svg>
                                 </div>

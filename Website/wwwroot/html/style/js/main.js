@@ -357,7 +357,7 @@
     });
 
     var dataSrcValue = $('.video-popup iframe').data('src');
-    var dataSrcValue1 = $('.video-popup video source').data('src');
+    //var dataSrcValue1 = $('.video-popup video source').data('src');
     var videoUpload = document.getElementById("video-upload");
     $('.video').click(function () {
         $('.video-popup iframe').attr("src", dataSrcValue);
@@ -366,10 +366,25 @@
         $('.btn-close-video').addClass('active');
     });
 
+    if ($('.video-popup').hasClass('video')) {
+        //getImageForVideo("video-upload", "canvas")
+        //let video = $('#video-upload');
+        //getScreenshot(video[0])
+        capture()
+        function capture() {
+            var canvas = document.getElementById('canvas');
+            var video = document.getElementById('video');
+            canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        }
+    }
+
     $('.btn-close-video').click(function () {
-        $('.video-popup iframe').attr("src", "");
-        videoUpload.pause();
-        videoUpload.currentTime = 0;
+        if ($('.video-popup').hasClass('video')) {
+            videoUpload.pause();
+            videoUpload.currentTime = 0;
+        } else {
+            $('.video-popup iframe').attr("src", "");
+        }
         $('.video .video-popup').removeClass('active');
         $('.btn-close-video').removeClass('active');
     });
@@ -378,7 +393,7 @@
 var swiper = new Swiper(".mySwiper", {
     loop: true,
     spaceBetween: 10,
-    slidesPerView: 4,
+    slidesPerView: 5,
     freeMode: true,
     watchSlidesProgress: true,
 });

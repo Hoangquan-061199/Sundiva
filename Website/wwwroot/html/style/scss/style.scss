@@ -2684,12 +2684,12 @@ footer {
 
                     .slide-product-detail1 {
                         width: calc(100% - 126px);
-                        margin: 0;
+                        margin-right: 15px;
 
                         .item {
-                            border-radius: 10px;
-                            aspect-ratio: 1;
-                            width: 70px;
+                            border-radius: 15px;
+                            overflow: hidden;
+                            height: 70px;
 
                             img {
                                 @include resizeImg();
@@ -2721,14 +2721,15 @@ footer {
                     .video {
                         @include widthHeight(126px, 100%);
                         cursor: pointer;
+                        position: relative;
 
                         .video-img {
                             @include widthHeight(100%);
-                            aspect-ratio: 16/9;
                             margin-bottom: 10px;
                             border-radius: 10px;
                             overflow: hidden;
                             position: relative;
+                            aspect-ratio: 16/9;
 
                             .icon {
                                 @include widthHeight(27px, 19px);
@@ -2736,6 +2737,7 @@ footer {
                                 top: 50%;
                                 left: 50%;
                                 transform: translate(-50%, -50%);
+
                                 img {
                                     @include resizeImg();
                                 }
@@ -2783,6 +2785,10 @@ footer {
                             font-size: var(--fs-more);
                             text-align: center;
                             text-transform: uppercase;
+                            position: absolute;
+                            bottom: -15px;
+                            left: 0;
+                            right: 0;
                         }
                     }
                 }
