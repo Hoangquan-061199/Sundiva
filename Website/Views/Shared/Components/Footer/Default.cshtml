@@ -91,6 +91,28 @@
                         </div>
                     </div>
                 }
+                @if (!string.IsNullOrEmpty(Model.SystemConfig.Address2))
+                {
+                    <div class="info">
+                        <div class="item">
+                            <div class="icon">
+                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, "/html/style/images/icon-location.webp", "icon"))
+                            </div>
+                            <p>@Model.SystemConfig.Address2</p>
+                        </div>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.SystemConfig.Address3))
+                {
+                    <div class="info">
+                        <div class="item">
+                            <div class="icon">
+                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, "/html/style/images/icon-location.webp", "icon"))
+                            </div>
+                            <p>@Model.SystemConfig.Address3</p>
+                        </div>
+                    </div>
+                }
                 <div class="info">
                     @if (hotline.Any())
                     {

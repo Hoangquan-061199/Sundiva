@@ -13,6 +13,7 @@ namespace ADCOnline.Simple.Json
         public string Copyright { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
+        public string Address3 { get; set; }
         public string Website { get; set; }
         public string KeyApiMap { get; set; }
         public string Facebook { get; set; }

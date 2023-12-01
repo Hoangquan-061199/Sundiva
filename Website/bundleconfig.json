@@ -10,5 +10,11 @@
     "inputFiles": [
       "wwwroot/lib/tinymce/js/custom.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/html/style/js/main.min.js",
+    "inputFiles": [
+      "wwwroot/html/style/js/main.js"
+    ]
   }
 ]

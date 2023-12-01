@@ -859,3 +859,26 @@ function updateDateDDMMYYYY() {
 }
 
 function DateViNow(id) { $(id).datetimepicker({ format: 'd/m/Y', timepicker: false, minDate: 0 }); }
+
+/**
+ * Takes a screenshot from video.
+ * @param videoEl {Element} Video element
+ * @param scale {Number} Screenshot scale (default = 1)
+ * @returns {Element} Screenshot image element
+ */
+function getScreenshot(videoEl, scale) {
+    scale = scale || 1;
+    const video = videoEl;
+
+    const canvas = document.createElement("canvas");
+    // scale the canvas accordingly
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    // draw the video at that frame
+    canvas.getContext('2d')
+        .drawImage(video, 0, 0, canvas.width, canvas.height);
+    // convert it to a usable data URL
+    const dataURL = canvas.toDataURL();
+    var img = document.querySelector(".video-img");
+    img.setAttribute("src", dataURL)
+}
