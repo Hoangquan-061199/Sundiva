@@ -1,10 +1,10 @@
-$(document).ready(function () {
-    $('.menu-icon').click(function() {
+﻿$(document).ready(function () {
+    $('.menu-icon').click(function () {
         $(this).toggleClass('change');
         $('header .container .right').toggleClass('active');
     });
 
-    $('.menu ul li .btn-down').click(function() {
+    $('.menu ul li .btn-down').click(function () {
         $('.menu ul li .btn-down').not(this).siblings('.sub-menu').slideUp();
         $(this).siblings('.sub-menu').slideToggle();
     });
@@ -159,86 +159,7 @@ $(document).ready(function () {
         }
     });
 
-
-    var sync1 = $(".slide-product-detail");
-    var sync2 = $(".slide-product-detail1");
-    var slidesPerPage = 3; //globaly define number of elements per page
-    var syncedSecondary = true;
-
-    sync1.owlCarousel({
-        items: 1,
-        slideSpeed: 2000,
-        nav: 1,
-        autoplay: 0,
-        dots: 0,
-        loop: 1,
-        responsiveRefreshRate: 200,
-        navText: ['<svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 0 320 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>', '<svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>'],
-    }).on('changed.owl.carousel', syncPosition);
-
-    sync2
-        .on('initialized.owl.carousel', function () {
-            sync2.find(".owl-item").eq(0).addClass("current");
-        })
-        .owlCarousel({
-            items: slidesPerPage,
-            dots: 0,
-            nav: 0,
-            smartSpeed: 200,
-            slideSpeed: 500,
-            slideBy: slidesPerPage,
-            responsiveRefreshRate: 100,
-            margin: 10
-        }).on('changed.owl.carousel', syncPosition2);
-
-    function syncPosition(el) {
-        //if you set loop to false, you have to restore this next line
-        //var current = el.item.index;
-
-        //if you disable loop you have to comment this block
-        var count = el.item.count - 1;
-        var current = Math.round(el.item.index - (el.item.count / 2) - .5);
-
-        if (current < 0) {
-            current = count;
-        }
-        if (current > count) {
-            current = 0;
-        }
-
-        //end block
-
-        sync2
-            .find(".owl-item")
-            .removeClass("current")
-            .eq(current)
-            .addClass("current");
-        var onscreen = sync2.find('.owl-item.active').length - 1;
-        var start = sync2.find('.owl-item.active').first().index();
-        var end = sync2.find('.owl-item.active').last().index();
-
-        if (current > end) {
-            sync2.data('owl.carousel').to(current, 100, true);
-        }
-        if (current < start) {
-            sync2.data('owl.carousel').to(current - onscreen, 100, true);
-        }
-    }
-
-    function syncPosition2(el) {
-        if (syncedSecondary) {
-            var number = el.item.index;
-            sync1.data('owl.carousel').to(number, 100, true);
-        }
-    }
-
-    sync2.on("click", ".owl-item", function (e) {
-        e.preventDefault();
-        var number = $(this).index();
-        sync1.data('owl.carousel').to(number, 300, true);
-    });
-
-    $('.product-detail .item .title').click(function() {
+    $('.product-detail .item .title').click(function () {
         $(this).toggleClass('active');
         $(this).siblings(".content").slideToggle();
     });
@@ -422,15 +343,53 @@ $(document).ready(function () {
         let body = $("html, body");
         body.stop().animate({ scrollTop: 0 }, 500, 'swing', function () {
         });
-    })
+    });
 
     $('.pop-upform').click(function () {
         $('.form-popup-order').addClass('active');
         $('.overlay').addClass('show');
-    })
+    });
 
     $('.form-popup-order .exit-popup, .overlay').click(function () {
         $('.form-popup-order').removeClass('active');
+        $('.video .video-popup').removeClass('active');
         $('.overlay').removeClass('show');
-    })
+    });
+
+    var dataSrcValue = $('.video-popup iframe').data('src');
+    var dataSrcValue1 = $('.video-popup video source').data('src');
+    var videoUpload = document.getElementById("video-upload");
+    $('.video').click(function () {
+        $('.video-popup iframe').attr("src", dataSrcValue);
+        //$('.video-popup video source').attr("src", dataSrcValue1);
+        $('.video .video-popup').addClass('active');
+        $('.btn-close-video').addClass('active');
+    });
+
+    $('.btn-close-video').click(function () {
+        $('.video-popup iframe').attr("src", "");
+        videoUpload.pause();
+        videoUpload.currentTime = 0;
+        $('.video .video-popup').removeClass('active');
+        $('.btn-close-video').removeClass('active');
+    });
+});
+
+var swiper = new Swiper(".mySwiper", {
+    loop: true,
+    spaceBetween: 10,
+    slidesPerView: 4,
+    freeMode: true,
+    watchSlidesProgress: true,
+});
+var swiper2 = new Swiper(".mySwiper2", {
+    loop: true,
+    spaceBetween: 0,
+    navigation: {
+        nextEl: ".slide-next",
+        prevEl: ".slide-prev",
+    },
+    thumbs: {
+        swiper: swiper,
+    },
 });
