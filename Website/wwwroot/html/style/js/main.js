@@ -346,15 +346,13 @@
     });
 
     $('.about-top .type .list .item').on('click', function () {
-        var headfix = $('header').height();
         var dataId = $(this).data('id');
 
-        var targetElement = $('#module_' + dataId);
-        var targetOffset = targetElement.offset().top - headfix;
+        var targetOffset = $('#' + dataId).offset().top;
 
         $('html, body').animate({
             scrollTop: targetOffset
-        }, 1000); 
+        }, 1000);
     });
 
     $('.pop-upform').click(function () {
