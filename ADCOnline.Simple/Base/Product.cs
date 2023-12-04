@@ -87,5 +87,7 @@ namespace ADCOnline.Simple.Base
         public string Star { get; set; }
         public string CompanyCar { get; set; }
         public double TotalStars { get; set; }
+        public string Size { get; set; }
+        public string Size2 { get; set; }
     }
 }

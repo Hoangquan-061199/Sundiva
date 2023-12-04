@@ -181,7 +181,7 @@ namespace Website.Areas.Admin.Controllers
             SearchModel seach = new();
             TryUpdateModelAsync(seach);
             seach.lang = Lang();
-            seach.type = "ContactUsOrderProduct";
+            seach.type = "OrderProduct";
             List<ContactUsAdmin> ltsList = _contactUsDa.ListSearch(seach, seach.page, 50, true);
             string fileName = string.Format("dat-hang_{0}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             string filePath = Path.Combine(_systemRootPath + "/wwwroot/files/ExportImport", fileName);
@@ -204,12 +204,16 @@ namespace Website.Areas.Admin.Controllers
                 xlPackage.Workbook.CalcMode = ExcelCalcMode.Manual;
                 //Create Headers and format them
                 string[] properties = new string[100];
-                properties[0] = "ID";
+                properties[0] = "STT";
                 properties[1] = "Tên khách hàng";
-                properties[3] = "Số điện thoại";
-                properties[4] = "Địa chỉ";
-                properties[10] = "Nội dung";
-                properties[11] = "Ngày gửi";
+                properties[2] = "Số điện thoại";
+                properties[3] = "Địa chỉ";
+                properties[4] = "Sản phẩm";
+                properties[5] = "Giá";
+                properties[6] = "Số lượng";
+                properties[7] = "Nội dung";
+                properties[8] = "Trạng thái";
+                properties[9] = "Ngày gửi";
                 for (int i = 0; i < properties.Length; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = properties[i];
@@ -218,18 +222,16 @@ namespace Website.Areas.Admin.Controllers
                     worksheet.Cells[1, i + 1].Style.Font.Bold = true;
                 }
                 int row = 2;
+                int stt = 1;
                 foreach (ContactUsAdmin item in report)
                 {
                     dem++;
                     int col = 1;
                     if (item.ID > 0)//ID
-                        worksheet.Cells[row, col].Value = item.ID;
+                        worksheet.Cells[row, col].Value = stt;
                     col++;
                     if (item.FullName != null)//Tên khách hàng
                         worksheet.Cells[row, col].Value = item.FullName;
-                    col++;
-                    if (item.Email != null)//Email
-                        worksheet.Cells[row, col].Value = item.Email;
                     col++;
                     if (item.Phone != null)//Số điện thoại
                         worksheet.Cells[row, col].Value = item.Phone;
@@ -237,28 +239,33 @@ namespace Website.Areas.Admin.Controllers
                     if (item.Address != null)//Địa chỉ
                         worksheet.Cells[row, col].Value = item.Address;
                     col++;
-                    if (!string.IsNullOrEmpty(item.ProductLink))//Tour du lịch
-                        worksheet.Cells[row, col].Value = Utility.ReplaceHttpToHttps(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + item.ProductLink, WebConfig.EnableHttps);
+                    if (item.ProductName != null)//Sản phẩm
+                        worksheet.Cells[row, col].Value = item.ProductName;
                     col++;
-                    if (item.NumberElder != 0)//Số người lớn
-                        worksheet.Cells[row, col].Value = item.NumberElder;
+                    if (item.Price != null)//Giá
+                        worksheet.Cells[row, col].Value = item.Price;
                     col++;
-                    if (item.NumberChildren != 0)//Số trẻ em
-                        worksheet.Cells[row, col].Value = item.NumberChildren;
-                    col++;
-                    if (item.NumberChildren2 != 0)//Số trẻ em
-                        worksheet.Cells[row, col].Value = item.NumberChildren2;
-                    col++;
-                    if (item.NumberChildren3 != 0)//Số trẻ em
-                        worksheet.Cells[row, col].Value = item.NumberChildren3;
+                    if (item.Number != null)//Số lượng
+                        worksheet.Cells[row, col].Value = item.Number;
                     col++;
                     if (item.Content != null)//Nội dung
                         worksheet.Cells[row, col].Value = item.Content;
+                    col++;
+                    if (item.Phone != null)//Trang thái
+                        if (item.Status == 1)
+                        {
+                            worksheet.Cells[row, col].Value = "Chưa đọc";
+                        }
+                        else
+                        {
+                            worksheet.Cells[row, col].Value = "Đã đọc";
+                        }
                     col++;
                     if (item.CreatedDate.HasValue)//Ngày gửi
                         worksheet.Cells[row, col].Value = item.CreatedDate.Value.ToString("dd/MM/yyyy");
                     col++;
                     row++;
+                    stt++;
                 }
                 string nameexcel = "Danh sách đặt tour " + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fff");
                 xlPackage.Workbook.Properties.Title = string.Format("{0} reports", nameexcel);

@@ -53,6 +53,6 @@ namespace ADCOnline.Simple.Admin
         public int NumberChildren { get; set; }
         public int NumberChildren2 { get; set; }
         public int NumberChildren3 { get; set; }
-
+        public string Price { get; set; }
     }
 }

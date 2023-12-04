@@ -74,7 +74,7 @@
                     <div class="list">
                         @foreach (WebsiteModulesItem item in Model.ListModuleItems.OrderBy(x => x.OrderDisplay))
                         {
-                            <div class="item">
+                            <div class="item" data-id="@item.ID">
                                 <p>@item.Name</p>
                             </div>
                         }
@@ -94,7 +94,7 @@
                     {
                         foreach (WebsiteContentItem item in module.ListContentItem)
                         {
-                            <div class="letter">
+                            <div class="letter" id="module_@module.ID">
                                 <div class="container">
                                     <div class="left">
                                         <h2 class="big-title title-extra">@item.Name</h2>
@@ -115,7 +115,7 @@
                     {
                         foreach (WebsiteContentItem item in module.ListContentItem)
                         {
-                            <div class="about">
+                            <div class="about" id="module_@module.ID">
                                 <div class="container">
                                     <h2 class="big-title title-extra center">@item.Name</h2>
                                     <div class="paragraph fs17 center detail-content">
@@ -134,7 +134,7 @@
                             <div class="container">
                                 @foreach (WebsiteContentItem item in module.ListContentItem)
                                 {
-                                    <div class="item item-vission @(i%2!=0 ? "vision" : "revert")">
+                                    <div class="item item-vission @(i%2!=0 ? "vision" : "revert")" id="module_@module.ID">
                                         <div class="img">
                                             @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                         </div>
@@ -154,7 +154,7 @@
                 case StaticEnum.GiaTri:
                     if (module.ListContentItem.Any())
                     {
-                        <div class="core-values">
+                        <div class="core-values" id="module_@module.ID">
                             <div class="container">
                                 <h2 class="big-title title-extra center">@module.Name</h2>
                                 <div class="paragraph fs17 center detail-content">
@@ -181,7 +181,7 @@
                 case StaticEnum.LichSu:
                     if (module.ListContentItem.Any())
                     {
-                        <div class="history">
+                        <div class="history" id="module_@module.ID">
                             <div class="title">
                                 <h2 class="big-title center title-extra color-white">@module.Name</h2>
                             </div>
@@ -211,7 +211,7 @@
                         @foreach (WebsiteContentItem item in module.ListContentItem)
                         {
                             var album = !string.IsNullOrEmpty(item.AlbumPictureJson) ? JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(item.AlbumPictureJson) : new List<AlbumGalleryItem>();
-                            <div class="capacity">
+                            <div class="capacity" id="module_@module.ID">
                                 <div class="container">
                                     <div class="item item-vission h-slide">
                                         @if (album.Any(x => x.AlbumType == 0))
@@ -246,7 +246,7 @@
                 case StaticEnum.DoiNgu:
                     if (module.ListContentItem.Any())
                     {
-                        <div class="personnel">
+                        <div class="personnel" id="module_@module.ID">
                             <div class="container">
                                 <h2 class="big-title center title-extra">@module.Name</h2>
                                 <div class="paragraph fs17 center detail-content">
@@ -278,7 +278,7 @@
                 case StaticEnum.ThanhTich:
                     if (module.ListContentItem.Any())
                     {
-                        <div class="achievements">
+                        <div class="achievements" id="module_@module.ID">
                             <div class="container">
                                 <h2 class="big-title center title-extra">@module.Name</h2>
                                 <div class="slide-achievements owl-carousel owl-theme">
