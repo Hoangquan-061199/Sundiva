@@ -76,6 +76,7 @@ namespace ADCOnline.Simple.Item
         public string SEOTitle { get; set; }
         public string Title { get; set; }
         public decimal? Price { get; set; }
+        public decimal? Price2 { get; set; }
         public decimal? PriceOld { get; set; }
         public int? TypeSale { get; set; }
         public int? TypeSaleValue { get; set; }

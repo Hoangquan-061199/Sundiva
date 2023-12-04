@@ -51,6 +51,7 @@ namespace ADCOnline.Simple.Admin
         public string Video { get; set; }
         public string AttributeModuleIds { get; set; }
         public string TypeView { get; set; }
+        public string TypeViewMenu { get; set; }
         public int? PercentSaleProduct { get; set; }
         public string HotlineProduct { get; set; }
         public DateTime? StartDate { get; set; }

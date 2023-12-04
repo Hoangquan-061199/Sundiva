@@ -69,9 +69,9 @@ namespace ADCOnline.Utils
                 "TypeProductI" => "Thuê xe",
                 "TypeProductII" => "Khách sạn",
                 "TypeProductIII" => "Khác II",
-                "MenuI" => "Trong nước",
-                "MenuII" => "Nước ngoài",
-                "MenuIII" => "Khách đoàn",
+                "MenuI" => "Rèm gỗ",
+                //"MenuII" => "Nước ngoài",
+                //"MenuIII" => "Khách đoàn",
                 _ => "",
             };
         }

@@ -35,6 +35,7 @@ namespace ADCOnline.Simple.Item
         public string PositionCode { get; set; }
         public string ModuleTypeCode { get; set; }
         public string TypeView { get; set; }
+        public string TypeViewMenu { get; set; }
         public string TypeViewChild { get; set; }
         public string Code { get; set; }
         public string Video { get; set; }

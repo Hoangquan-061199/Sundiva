@@ -25,6 +25,7 @@ namespace ADCOnline.Simple.Base
         public string SeoKeyword { get; set; }
         public string SEOTitle { get; set; }
         public decimal? Price { get; set; }
+        public decimal? Price2 { get; set; }
         public int? TotalViews { get; set; }
         public Guid? CreatorID { get; set; }
         public string CreatorName { get; set; }

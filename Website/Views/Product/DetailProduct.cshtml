@@ -92,24 +92,14 @@
                                 <div class="video">
                                     <div class="video-img">
                                         <div class="icon"><img src="./html/style/images/icon-youtube.webp"></div>
-                                        @if (Model.ProductItem.Video.Contains("Upload"))
-                                        {
-                                            <div class="img">
-                                                <canvas id="canvas"></canvas>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="img"><img src="https://img.youtube.com/vi/@Model.ProductItem.Video/0.jpg"></div>
-                                        }
+                                        <div class="img">
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ProductItem.UrlPicture, Model.ProductItem.Name))
+                                        </div>
                                     </div>
                                     <div class="video-popup @(Model.ProductItem.Video.Contains("Upload") ? "video" : string.Empty)">
                                         @if (Model.ProductItem.Video.Contains("Upload"))
                                         {
-                                            @*<video id="video-upload" controls>
-                                                <source src="@Model.ProductItem.Video" type="video/mp4">
-                                            </video>*@
-                                            <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video>
+                                            <video id="video-upload" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video>
                                         }
                                         else
                                         {
@@ -128,11 +118,35 @@
                         <p>@ResourceData.Resource("Ma", ViewBag.Lang): @Model.ProductItem.ProductCode</p>
                     </div>
                     <div class="p-price">
-                        @if (Model.ProductItem.PriceOld.HasValue)
+                        @if (Model.ModuleItem.TypeViewMenu == StaticEnum.MenuI)
                         {
-                            <p>@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
+                            @if (Model.ProductItem.PriceOld.HasValue && Model.ProductItem.PriceOld > 0)
+                            {
+                                <p class="price-old">
+                                    @ResourceData.Resource("GiaCu", ViewBag.Lang): 
+                                    @Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)
+                                </p>
+                            }
+                            <p class="price">
+                                @ResourceData.Resource("He1Day", ViewBag.Lang):
+                                <strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong>
+                            </p>
+                            @if (Model.ProductItem.Price2.HasValue && Model.ProductItem.Price2 > 0)
+                            {
+                                <p class="price">
+                                    @ResourceData.Resource("He2Day", ViewBag.Lang):
+                                    <strong>@Utility.GetFormatPriceType(Model.ProductItem.Price2,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong>
+                                </p>
+                            }
                         }
-                        <p><strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                        else
+                        {
+                            @if (Model.ProductItem.PriceOld.HasValue && Model.ProductItem.PriceOld > 0)
+                            {
+                                <p class="price-old">@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
+                            }
+                            <p class="price"><strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                        }
                     </div>
                     <div class="paragraph fs17 detail-content">
                         @Html.Raw(Model.ProductItem.Description)

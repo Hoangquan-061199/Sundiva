@@ -199,9 +199,10 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <select name="TypeViewMenu" id="TypeViewMenu" class="form-control">
+                                            <option value="" >-- Chọn --</option>
                                             <option value="@StaticEnum.MenuI" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuI ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuI)</option>
-                                            <option value="@StaticEnum.MenuII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuII)</option>
-                                            <option value="@StaticEnum.MenuIII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuIII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuIII)</option>
+                                            @*<option value="@StaticEnum.MenuII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuII)</option>
+                                            <option value="@StaticEnum.MenuIII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuIII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuIII)</option>*@
                                         </select>
                                     </div>
                                 </div>

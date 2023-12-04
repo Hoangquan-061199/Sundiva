@@ -366,18 +366,6 @@
         $('.btn-close-video').addClass('active');
     });
 
-    if ($('.video-popup').hasClass('video')) {
-        //getImageForVideo("video-upload", "canvas")
-        //let video = $('#video-upload');
-        //getScreenshot(video[0])
-        capture()
-        function capture() {
-            var canvas = document.getElementById('canvas');
-            var video = document.getElementById('video');
-            canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        }
-    }
-
     $('.btn-close-video').click(function () {
         if ($('.video-popup').hasClass('video')) {
             videoUpload.pause();
@@ -393,7 +381,7 @@
 var swiper = new Swiper(".mySwiper", {
     loop: true,
     spaceBetween: 10,
-    slidesPerView: 5,
+    slidesPerView: 4,
     freeMode: true,
     watchSlidesProgress: true,
 });

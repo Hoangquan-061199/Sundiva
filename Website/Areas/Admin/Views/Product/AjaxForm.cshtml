@@ -67,18 +67,42 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab =="TabGenaral" ? "active" : string.Empty)" id="TabGenaral">
                             <div class="form-group">
-                                <div class="col-sm-1">
-                                    <label>Tên</label>
-                                </div>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control title count @(ViewBag.Action.Equals("Add") ? "autoPermalinkP" : "" )" name="Name" id="Name" value="@Model.Product.Name" placeholder="@Model.Product.Name " />
-                                </div>
-                                <div class="col-sm-1">
-                                    <label>Mã sản phẩm</label>
-                                </div>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control notvalid" name="ProductCode" id="ProductCode" value="@Model.Product.ProductCode" />
-                                </div>
+                                @if (ViewBag.TypeViewMenu == StaticEnum.MenuI)
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Tên</label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control title count @(ViewBag.Action.Equals("Add") ? "autoPermalinkP" : "" )" name="Name" id="Name" value="@Model.Product.Name" placeholder="@Model.Product.Name " />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>Giá (1 dây)</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control maskPrice" name="Price" id="PriceView" value="@(Model.Product.Price.HasValue ? Model.Product.Price.Value : 0)" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>Mã sản phẩm</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control notvalid" name="ProductCode" id="ProductCode" value="@Model.Product.ProductCode" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-sm-1">
+                                        <label>Tên</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control title count @(ViewBag.Action.Equals("Add") ? "autoPermalinkP" : "" )" name="Name" id="Name" value="@Model.Product.Name" placeholder="@Model.Product.Name " />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>Mã sản phẩm</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control notvalid" name="ProductCode" id="ProductCode" value="@Model.Product.ProductCode" />
+                                    </div>
+                                }
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-1">
@@ -96,10 +120,18 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
-                                    <label>Giá hiển thị</label>
+                                    <label>@(ViewBag.TypeViewMenu == StaticEnum.MenuI ? "Giá (2 dây)" : "Giá hiển thị")</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control maskPrice" name="Price" id="PriceView" value="@(Model.Product.Price.HasValue ? Model.Product.Price.Value : 0)" />
+                                    @if (ViewBag.TypeViewMenu == StaticEnum.MenuI)
+                                    {
+                                        <input type="text" class="form-control maskPrice" name="Price2" id="PriceView2" value="@(Model.Product.Price2.HasValue ? Model.Product.Price2.Value : 0)" />
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control maskPrice" name="Price" id="PriceView" value="@(Model.Product.Price.HasValue ? Model.Product.Price.Value : 0)" />
+                                    }
+
                                 </div>
                                 <div class="col-sm-1">
                                     <label>Giá cũ</label>
@@ -501,7 +533,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div role="tabpanel" class="tab-pane @(ViewBag.Tab =="TabProductMk" ? "active" : string.Empty)" id="TabProductMk">
                             @*<div class="form-group">
                         <div class="col-sm-2">
@@ -538,7 +570,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div role="tabpanel" class="tab-pane @(ViewBag.Tab =="TabRelate" ? "active" : string.Empty)" id="TabRelate">
                             <div class="form-group">
                                 <div class="col-xs-12">
@@ -703,7 +735,7 @@
             Count();
             formatPriceChange();
             LoadCKEDITOR('Description', true, 200);
-            @*LoadCKEDITOR('ShortDescription', true, 400);*@
+        @*LoadCKEDITOR('ShortDescription', true, 400);*@
                 LoadCKEDITOR('Content', true, 400);
             LoadCKEDITOR('Document', true, 400);
             LoadCKEDITOR('Information', true, 400);

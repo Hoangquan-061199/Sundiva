@@ -191,6 +191,7 @@ namespace Website.Areas.Admin.Controllers
                     if (module.ListWebsiteModuleAdmin != null)
                     {
                         ViewBag.TypeView = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeView;
+                        ViewBag.TypeViewMenu = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeViewMenu;
                     }
                     if (!string.IsNullOrEmpty(obj.ContentIds))
                     {
@@ -249,6 +250,7 @@ namespace Website.Areas.Admin.Controllers
                     if (module.ListWebsiteModuleAdmin != null)
                     {
                         ViewBag.TypeView = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeView;
+                        ViewBag.TypeViewMenu = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeViewMenu;
                     }
                 }
             }

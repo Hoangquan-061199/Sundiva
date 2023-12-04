@@ -860,20 +860,21 @@ body {
 
 .p-price {
     display: flex;
+    align-items: center;
     gap: 10px;
 
-    p {
+    .price-old {
         color: var(--color-old-price);
         font-size: var(--fs-old-price);
+        text-decoration: line-through;
+    }
+
+    .price {
 
         strong {
             font-weight: 400;
-            font-size: var(--fs-new-price);
+            font-size: 20px;
             color: var(--color-main);
-        }
-
-        &:first-child {
-            text-decoration: line-through;
         }
     }
 }
@@ -2142,7 +2143,7 @@ footer {
     }
 }
 
-.price {
+.price-quote {
     @include marginBottom(100px);
 
     .container {
@@ -2680,11 +2681,12 @@ footer {
                 .bot {
                     display: flex;
                     align-items: flex-start;
-                    justify-content: space-between;
+                    justify-content: flex-start;
 
                     .slide-product-detail1 {
-                        width: calc(100% - 126px);
+                        width: calc(100% - 140px);
                         margin-right: 15px;
+                        margin-left: 0;
 
                         .item {
                             border-radius: 15px;
