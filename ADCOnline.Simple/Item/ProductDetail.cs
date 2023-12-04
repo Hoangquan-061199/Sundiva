@@ -238,5 +238,7 @@ namespace ADCOnline.Simple.Item
         public string Shipping { get; set; }
         public string AddressId { get; set; }
         public int Star { get; set; }
+        public string Size { get; set; }
+        public string Size2 { get; set; }
     }
 }
