@@ -81,8 +81,14 @@
                                     <input type="text" class="form-control-readonly notvalid" readonly
                                            value="@Model.ContactUs.Phone" placeholder="@Model.ContactUs.Phone" />
                                 </div>
+
+                                <label class="col-sm-1">Loại:</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control-readonly notvalid" readonly
+                                           value="@Model.ContactUs.Title" placeholder="@Model.ContactUs.Title" />
+                                </div>
                                 <label class="col-sm-1">Trạng thái</label>
-                                <div class="col-sm-5">
+                                <div class="col-sm-2">
                                     <select name="Status" id="Status" class="form-control">
                                         <option value="1" @(Model.ContactUs.Status == 1 ? "selected" : string.Empty)>
                                             Chưa

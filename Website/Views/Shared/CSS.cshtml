@@ -1,4 +1,26 @@
-﻿<link rel="stylesheet" href="/html/style/css/owl.carousel.min.css">
-<link rel="stylesheet" href="/html/style/css/owl.theme.default.min.css">
+﻿@using System.Text;
+
+@*<link rel="stylesheet" href="/html/style/css/owl.carousel.min.css">
+<link rel="stylesheet" href="/html/style/css/owl.theme.default.min.css">*@
+
+
+
+@{
+    StringBuilder css = new();
+        //StringBuilder css1 = new();
+    css.Append(Common.ReadFile("owl.carousel.min.css", "/html/style/css/"));
+    css.Append(Common.ReadFile("owl.theme.default.min.css", "/html/style/css/"));
+    //css1.Append(Common.ReadFile("style.css", "/html/style/scss/"));
+}
+<style>
+    @Html.Raw(css)
+</style>
 <link rel="stylesheet" href="/html/style/scss/style.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+@*
+<style>
+    @Html.Raw(css1)
+</style>*@
+@*<link rel="preload" href="/html/style/scss/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">*@
+@*<noscript><link rel="stylesheet" href="/html/style/scss/style.css"></noscript>*@
+
+

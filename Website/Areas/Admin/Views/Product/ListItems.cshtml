@@ -24,6 +24,7 @@
 }
 @if (Model.SystemActionAdmin.View)
 {
+    <input type="hidden" id="TypeView" value="Product" />
     <div id="tblContent">
         <table class="table table-bordered table-hover">
             <thead>
@@ -132,6 +133,7 @@
                                     <li><a href="javascript:" class="removeframes btn btn-danger" title="Bỏ khung các sản phẩm đã chọn"><i class="lnr lnr-pencil"></i><span>Bỏ khung</span></a></li>
                                 }
                                 <li><a href="javascript:" class="resize btn btn-warning"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                                <li><a href="javascript:" class="resize-album"><i class="lnr lnr-pencil"></i><span>Resize album</span></a></li>
                             </ul>
                         </div>
                     </th>

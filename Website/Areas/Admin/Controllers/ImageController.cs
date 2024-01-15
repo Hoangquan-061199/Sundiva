@@ -1,4 +1,5 @@
-﻿using ADCOnline.Utils;
+﻿using ADCOnline.Simple.Item;
+using ADCOnline.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,6 @@ namespace Website.Areas.Admin.Controllers
         {
             string dpath = "/wwwroot/resize/";
             string c = string.Empty;
-            Image fileImage;
             try
             {
                 string d = MakePhysicalPath(dpath);
@@ -46,43 +46,10 @@ namespace Website.Areas.Admin.Controllers
                 string res = GetSuccessRes();
                 FileInfo f = new(name);
                 RemoveExist(dpath + name);
-                string dest = Path.Combine(c, name);
+                string dest = Path.Combine(c, name); // image goc
                 string size = WebConfig.Sizes;
-                string[] listsize = size.Split(',');
-                fileImage = Image.FromFile(dest);
-                ImageFormat format = fileImage.RawFormat;
-                ImageCodecInfo codec = ImageCodecInfo.GetImageDecoders().First(x => x.FormatID == format.Guid);
-                string mimeType = codec.MimeType;
-                fileImage.Dispose();
-                for (int i = 0; i < listsize.Length; i++)
-                {
-                    #region resize
-                    string newurl = AddTail(c + "/", Path.GetFileNameWithoutExtension(name), "x" + listsize[i] + "x4", Path.GetExtension(name), listsize[i]);
-                    using Image filefrom = Image.FromFile(dest);
-                    int height;
-                    int width = ConvertUtil.ToInt32(Convert.ToInt32(listsize[i]));
-                    if (filefrom.Width > width)
-                    {
-                        height = (int)Math.Round(Convert.ToDecimal(width * filefrom.Height / filefrom.Width));
-                    }
-                    else
-                    {
-                        width = filefrom.Width;
-                        height = filefrom.Height;
-                    }
-                    Bitmap result = ResizeImage(filefrom, width, height);
-                    ImageCodecInfo myImageCodecInfo;
-                    Encoder myEncoder;
-                    EncoderParameter myEncoderParameter;
-                    EncoderParameters myEncoderParameters;
-                    myImageCodecInfo = GetEncoderInfo(mimeType);
-                    myEncoder = Encoder.ColorDepth;
-                    myEncoderParameters = new EncoderParameters(1);
-                    myEncoderParameter = new EncoderParameter(myEncoder, 24L);
-                    myEncoderParameters.Param[0] = myEncoderParameter;
-                    result.Save(newurl, myImageCodecInfo, myEncoderParameters);
-                    #endregion
-                }
+                var isResize = ResizeImages.ResizeImage(c, dest, size, name);
+                if (!isResize) return NotFound();
                 return Ok(true);
             }
             catch (Exception e)

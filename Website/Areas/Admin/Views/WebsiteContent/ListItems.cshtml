@@ -16,6 +16,7 @@
 }
 @if (Model.SystemActionAdmin.View)
 {
+    <input type="hidden" id="TypeView" value="Content" />
     <table id="tblContent" class="table table-bordered table-hover">
         <thead>
             <tr role="row">
@@ -69,6 +70,7 @@
                                 <li><a href="javascript:" class="notsitemapall"><i class="lnr lnr-warning"></i><span>Bỏ sitemap</span></a></li>
                             }
                             <li><a href="javascript:" class="resize"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                            <li><a href="javascript:" class="resize-album"><i class="lnr lnr-pencil"></i><span>Resize album</span></a></li>
                         </ul>
                     </div>
                 </th>

@@ -1,6 +1,6 @@
 @font-face {
     font-family: UTM-E-C;
-    src: url("../fonts/00089-UTM-Essendine-Caps.ttf");
+    src: url("/html/style/fonts/00089-UTM-Essendine-Caps.ttf");
     font-display: swap;
 }
 
@@ -8,7 +8,7 @@
     font-family: "default";
     font-style: normal;
     font-weight: 700;
-    src: url("../fonts/inteligent-bold.otf");
+    src: url("/html/style/fonts/inteligent-bold.otf");
     font-display: swap;
 }
 
@@ -16,7 +16,7 @@
     font-family: "default";
     font-style: normal;
     font-weight: 600;
-    src: url("../fonts/inteligent-semibold.otf");
+    src: url("/html/style/fonts/inteligent-semibold.otf");
     font-display: swap;
 }
 
@@ -24,7 +24,7 @@
     font-family: "default";
     font-style: normal;
     font-weight: 400;
-    src: url("../fonts/inteligent-regular.otf");
+    src: url("/html/style/fonts/inteligent-regular.otf");
     font-display: swap;
 }
 
@@ -58,7 +58,7 @@
     --color-before-input: #d8d8d8;
     //bg-color
     --bg-translate: #eeefef;
-    --bg-mess: ##1777f1;
+    --bg-mess: #1777f1;
     --bg-zalo: #008ff3;
     //height
     --h-header: 87.6px;
@@ -113,7 +113,7 @@
     --fs-title-banner: 26px;
     --fs-title-main-page: 26px;
     --fs-title-item-flex: 24px;
-    --fs-title-recruitment: 24px;
+    --fs-title-recruitment: 22px;
     --fs-title-form: 22px;
     --fs-title-item: 20px;
     --fs-title-product: 18px;
@@ -136,6 +136,7 @@
         --fs-title-banner: 20px;
         --fs-text: 15px;
         --fs-title-recuiment: 17px;
+        --fs-title-recruitment : 20px;
     }
 }
 //991px

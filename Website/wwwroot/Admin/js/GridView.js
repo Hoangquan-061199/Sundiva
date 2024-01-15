@@ -52,6 +52,48 @@ function registerGridView(selector) {
         $(this).parents('.btn-group').removeClass('open');
         return false;
     });
+    $('a.resize-album').click(function (e) {
+        debugger
+        e.preventDefault();
+        $('.loading_admin').addClass('active');
+        let total = $(selector + " input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").length;
+        let start = 0;
+        $('#status').show();
+        $('#status-total').text(total);
+        $(selector + " input.check[type='checkbox']:checked").not("#checkAll").not(".checkAll").each(function () {
+            debugger
+            let id = $(this).val();
+            let typeview = $('#TypeView').val();
+            let url = "/Adminadc/Image/ResizeAlbum?id=" + id + "&type=" + typeview;
+            $.ajax({
+                url: encodeURI(url), cache: false, type: "Post",
+                success: function (data) {
+                    let sc = $('#status-success').text();
+                    $('#status-success').text(parseInt(sc) + 1);
+                    start++;
+                    if (start == total) {
+                        $('.loading_admin').removeClass('active');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500)
+                    }
+                },
+                error: function (data) {
+                    let sc = $('#status-failed').text();
+                    $('#status-failed').text(parseInt(sc) + 1);
+                    start++;
+                    if (start == total) {
+                        $('.loading_admin').removeClass('active');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500)
+                    }
+                }
+            });
+        });
+        $(this).parents('.btn-group').removeClass('open');
+        return false;
+    });
     $(selector).on('click', '.checkAll', function () {
         $(selector + " input.check[type='checkbox']").not(".checkAll").not("#checkAll").prop("checked", $(this).is(":checked"));
     });

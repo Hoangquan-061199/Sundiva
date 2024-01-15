@@ -2,7 +2,7 @@
 @using ADCOnline.Utils
 @model Website.Areas.Admin.ViewModels.WebsiteModuleViewModel
 @{
-    bool Attr = false;
+    bool Attr = true;
     bool Relate = false;
     bool Video = true;
 }
@@ -194,17 +194,17 @@
                                         </div>
                                         <span>Hướng dẫn: Chọn file hoặc Copy link youtube (bHLG1RVt7Kw)</span>
                                     </div>
-                                    <div class="col-sm-1">
+                                    @*<div class="col-sm-1">
                                         <label>Kiểu sản phẩm</label>
                                     </div>
                                     <div class="col-sm-2">
                                         <select name="TypeViewMenu" id="TypeViewMenu" class="form-control">
                                             <option value="" >-- Chọn --</option>
                                             <option value="@StaticEnum.MenuI" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuI ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuI)</option>
-                                            @*<option value="@StaticEnum.MenuII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuII)</option>
-                                            <option value="@StaticEnum.MenuIII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuIII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuIII)</option>*@
+                                            <option value="@StaticEnum.MenuII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuII)</option>
+                                            <option value="@StaticEnum.MenuIII" @(Model.WebsiteModule.TypeViewMenu == StaticEnum.MenuIII ? "selected" : string.Empty)>@Temp.TextTypeMenu(StaticEnum.MenuIII)</option>
                                         </select>
-                                    </div>
+                                    </div>*@
                                 </div>
                             }
                             <div class="form-group">

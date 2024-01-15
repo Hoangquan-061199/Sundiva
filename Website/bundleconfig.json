@@ -16,5 +16,11 @@
     "inputFiles": [
       "wwwroot/html/style/js/main.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/html/process/ProcessData.min.js",
+    "inputFiles": [
+      "wwwroot/html/process/ProcessData.js"
+    ]
   }
 ]

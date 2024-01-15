@@ -660,7 +660,7 @@ namespace Website.Utils
                 string path = Path.GetDirectoryName(urlImage);
                 string file = Path.GetFileName(urlImage);
                 string ext = Path.GetExtension(file);
-                if (ext == ".svg" || ext == ".webp" || ext == ".gif")
+                if (ext == ".svg" || ext == ".gif")
                 {
                     return urlImage;
                 }

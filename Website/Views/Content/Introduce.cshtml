@@ -103,6 +103,7 @@
                                         </div>
                                     </div>
                                     <div class="right">
+                                        <span class="hover"></span>
                                         @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                     </div>
                                 </div>
@@ -136,6 +137,7 @@
                                 {
                                     <div class="item item-vission @(i%2!=0 ? "vision" : "revert")" id="module_@module.ID">
                                         <div class="img">
+                                            <span class="hover"></span>
                                             @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                         </div>
                                         <div class="text">
@@ -257,6 +259,7 @@
                                     {
                                         <div class="item item-personnel">
                                             <div class="img">
+                                                <span class="hover"></span>
                                                 @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                             </div>
                                             <div class="text">

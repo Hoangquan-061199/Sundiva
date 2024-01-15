@@ -372,6 +372,7 @@
             font-size: var(--fs-page);
             background-color: var(--color-white);
             aspect-ratio: 1;
+            cursor: pointer;
 
             svg {
                 fill: var(--color-main);
@@ -717,7 +718,7 @@
         }
     }
 
-    .overlay {
+    .overlay, .overlay-popup, .overlay-popup-index {
         position: fixed;
         @include widthHeight(100%);
         z-index: 990;
@@ -735,8 +736,35 @@
         }
     }
 
+    .overlay-popup {
+        z-index: 30;
+    }
+
+    .overlay-popup-index {
+        z-index: 9999;
+    }
+
     .grecaptcha-badge {
         display: none !important;
+    }
+
+    .hover {
+        position: relative;
+
+        &::after {
+            transition: transform 0.8s linear;
+            transform: rotate(45deg) translateX(-1000px);
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 0;
+            width: 500px;
+            height: 1000px;
+            display: block;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 99;
+            pointer-events: none;
+        }
     }
 
     #notfound {
@@ -817,30 +845,30 @@
         div {
             @include flexCenter;
             background: var(--color-white);
-            margin: 15px 0;
-            width: 60px;
-            height: 60px;
+            margin: 5px 0;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
             cursor: pointer;
 
-            i {
-                font-size: 20px;
+            svg {
+                @include widthHeight(25px);
             }
 
             img {
-                @include widthHeight(20px, 31px);
-            }
-
-            &.mess {
-                background: var(--bg-mess);
+                width: 20px;
             }
 
             &.zalo {
 
                 img {
-                    @include widthHeight(33px, 32px);
+                    @include widthHeight(25px, auto);
+
+                    &:nth-child(2) {
+                        display: none;
+                    }
                 }
             }
 
@@ -848,6 +876,54 @@
 
             svg {
                 fill: var(--color-table1);
+            }
+
+            &:hover {
+                cursor: pointer;
+
+                &.phone {
+                    svg {
+                        fill: red;
+                    }
+                }
+
+                &.mess {
+                    svg {
+                        fill: #0866ff;
+                    }
+                }
+
+                &.zalo {
+
+                    img {
+                        &:nth-child(2) {
+                            display: block;
+                        }
+
+                        &:nth-child(1) {
+                            display: none;
+                        }
+                    }
+                }
+
+                &.instagram {
+                    svg {
+                        fill: #c92258;
+                    }
+                }
+
+                &.youtube {
+                    svg {
+                        fill: red;
+                    }
+                }
+
+                &.tiktok {
+                    svg {
+                        fill: #111111;
+                        filter: drop-shadow(2px 0px 0px #fd3e3e) drop-shadow(-2px -2px 0px #4de8f4);
+                    }
+                }
             }
         }
 
@@ -868,7 +944,6 @@
                 opacity: .1;
                 -webkit-animation: coccoc-alo-circle-anim 1.2s infinite ease-in-out;
                 -moz-animation: coccoc-alo-circle-anim 1.2s infinite ease-in-out;
-                -ms-animation: coccoc-alo-circle-anim 1.2s infinite ease-in-out;
                 -o-animation: coccoc-alo-circle-anim 1.2s infinite ease-in-out;
                 animation: coccoc-alo-circle-anim 1.2s infinite ease-in-out;
                 -webkit-transition: all .5s;
@@ -902,7 +977,6 @@
                 border: 2px solid transparent;
                 -webkit-animation: coccoc-alo-circle-fill-anim 2.3s infinite ease-in-out;
                 -moz-animation: coccoc-alo-circle-fill-anim 2.3s infinite ease-in-out;
-                -ms-animation: coccoc-alo-circle-fill-anim 2.3s infinite ease-in-out;
                 -o-animation: coccoc-alo-circle-fill-anim 2.3s infinite ease-in-out;
                 animation: coccoc-alo-circle-fill-anim 2.3s infinite ease-in-out;
                 -webkit-transition: all .5s;
@@ -927,7 +1001,6 @@
                 opacity: 1;
                 -webkit-animation: coccoc-alo-circle-img-anim 1s infinite ease-in-out;
                 -moz-animation: coccoc-alo-circle-img-anim 1s infinite ease-in-out;
-                -ms-animation: coccoc-alo-circle-img-anim 1s infinite ease-in-out;
                 -o-animation: coccoc-alo-circle-img-anim 1s infinite ease-in-out;
                 animation: coccoc-alo-circle-img-anim 1s infinite ease-in-out;
             }

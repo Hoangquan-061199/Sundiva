@@ -31,6 +31,7 @@
 }
 @if (Model.ProductItem != null)
 {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.css">
     <div class="path no-banner">
         <div class="container">
@@ -99,11 +100,11 @@
                                     <div class="video-popup @(Model.ProductItem.Video.Contains("Upload") ? "video" : string.Empty)">
                                         @if (Model.ProductItem.Video.Contains("Upload"))
                                         {
-                                            <video id="video-upload" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video>
+                                            <video id="video-upload" src="@Model.ProductItem.Video" type="video/mp4" controls></video>
                                         }
                                         else
                                         {
-                                            <iframe class="yotube-video" data-src="https://www.youtube.com/embed/@Model.ProductItem.Video" src="https://www.youtube.com/embed/@Model.ProductItem.Video" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                            <iframe class="yotube-video" width="560" height="315" src="https://www.youtube.com/embed/@Model.ProductItem.Video" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                         }
                                     </div>
                                     <p>Video</p>
@@ -114,43 +115,41 @@
                 </div>
                 <div class="right">
                     <h1 class="big-title title-product-detail">@Model.ProductItem.Name</h1>
-                    <div class="code">
-                        <p>@ResourceData.Resource("Ma", ViewBag.Lang): @Model.ProductItem.ProductCode</p>
-                    </div>
+                    @if (!string.IsNullOrEmpty(Model.ProductItem.ProductCode))
+                    {
+                        <div class="code">
+                            <p>@ResourceData.Resource("Ma", ViewBag.Lang): @Model.ProductItem.ProductCode</p>
+                        </div>
+                    }
                     <div class="p-price">
-                        @if (Model.ModuleItem.TypeViewMenu == StaticEnum.MenuI)
+                        @if (Model.ProductItem.PriceOld.HasValue && Model.ProductItem.PriceOld > 0)
                         {
-                            @if (Model.ProductItem.PriceOld.HasValue && Model.ProductItem.PriceOld > 0)
-                            {
-                                <p class="price-old">
-                                    @ResourceData.Resource("GiaCu", ViewBag.Lang): 
-                                    @Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)
-                                </p>
-                            }
-                            <p class="price">
-                                @ResourceData.Resource("He1Day", ViewBag.Lang):
-                                <strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong>
-                            </p>
-                            @if (Model.ProductItem.Price2.HasValue && Model.ProductItem.Price2 > 0)
-                            {
-                                <p class="price">
-                                    @ResourceData.Resource("He2Day", ViewBag.Lang):
-                                    <strong>@Utility.GetFormatPriceType(Model.ProductItem.Price2,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong>
-                                </p>
-                            }
+                            <p class="price-old">@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
                         }
-                        else
-                        {
-                            @if (Model.ProductItem.PriceOld.HasValue && Model.ProductItem.PriceOld > 0)
-                            {
-                                <p class="price-old">@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
-                            }
-                            <p class="price"><strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
-                        }
+                        <p class="price"><strong class="price-change" id="price-change" data-price-original="@Model.ProductItem.Price">@Utility.GetFormatPriceType((Model.ProductItem.Price),1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
                     </div>
                     <div class="paragraph fs17 detail-content">
                         @Html.Raw(Model.ProductItem.Description)
                     </div>
+                    @if (Model.AttributeItemCals.Any())
+                    {
+                        int i = 1;
+                        <div class="attrbutes">
+                            @foreach (var parent in Model.AttributeItemCals.Where(x => x.ParentID == 0).OrderBy(x => x.OrderDisplay))
+                            {
+                                <div class="parent-attr">@(parent.Name):</div>
+                                <div class="list-child">
+                                    @foreach (var item in Model.AttributeItemCals.Where(x => x.ParentID == parent.ID).OrderBy(x => x.OrderDisplay))
+                                    {
+                                        <div class="item-attr @(i == 1 ? "active" : 0)" data-price="@(Model.AttributeWebsiteContentItems.FirstOrDefault(x => x.AttributeID == item.ID).Price ?? 0)">
+                                            @item.Name
+                                        </div>
+                                        i++;
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
                     <div class="contact-order">
                         <div class="item pop-upform">@ResourceData.Resource("DatHangNgay", ViewBag.Lang)</div>
                         @if (hotline.Any())
@@ -256,15 +255,19 @@
                             {
                                 <div class="item item-product-new">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                        <span class="hover"></span>
                                         @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                     </a>
                                     <div class="text">
                                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
                                             @item.Name
                                         </a>
-                                        <div class="code">
-                                            <p>@ResourceData.Resource("Ma", ViewBag.Lang): @item.ProductCode</p>
-                                        </div>
+                                        @if (!string.IsNullOrEmpty(item.ProductCode))
+                                        {
+                                            <div class="code">
+                                                <p>@ResourceData.Resource("Ma", ViewBag.Lang): @item.ProductCode</p>
+                                            </div>
+                                        }
                                         <div class="p-price">
                                             @if (item.PriceOld.HasValue && item.PriceOld > 0)
                                             {
@@ -290,6 +293,7 @@
                 @foreach (WebsiteModulesItem item in Model.ListModulesItem)
                 {
                     <div class="item item-collection">
+                        <span class="hover"></span>
                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
                             @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                         </a>
@@ -301,99 +305,127 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
+    <div class="overlay-popup"></div>
     <div class="form-contact form-popup-order">
         <div class="exit-popup">
-            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @@fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" /></svg>
         </div>
-        <div class="left">
-            <div class="img">
-                @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ProductItem.UrlPicture, Model.ProductItem.Name))
-            </div>
-            <div class="info">
-                <h3>@Model.ProductItem.Name</h3>
-                <div class="p-price">
-                    @if (Model.ProductItem.PriceOld.HasValue)
-                    {
-                        <p>@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
-                    }
-                    <p><strong>@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+        <div class="block">
+            <div class="left">
+                <div class="img">
+                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ProductItem.UrlPicture, Model.ProductItem.Name))
+                </div>
+                <div class="info">
+                    <h3>@Model.ProductItem.Name</h3>
+                    <div class="p-price">
+                        @if (Model.ProductItem.PriceOld.HasValue && Model.ProductItem.PriceOld > 0)
+                        {
+                            <p class="price-old">@Utility.GetFormatPriceType(Model.ProductItem.PriceOld,1,"",true)</p>
+                        }
+                        <p class="price"><strong class="price-change">@Utility.GetFormatPriceType(Model.ProductItem.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="right">
-            <div class="big-title title-form-contact">
-                <p>@ResourceData.Resource("DatHang", ViewBag.Lang)</p>
-            </div>
-            <form action="@Url.Action("SendOrder","Home")" id="SendCOrder" method="post" autocomplete="off">
-                <div class="form-input">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 448 512">
-                            <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
-                        </svg>
-                    </div>
-                    <input type="text" name="FullName" placeholder="@ResourceData.Resource("HoTen",ViewBag.Lang)*" />
+            <div class="right">
+                <div class="big-title title-form-contact">
+                    <p>@ResourceData.Resource("DatHang", ViewBag.Lang)</p>
                 </div>
-                <div class="form-input">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 384 512">
-                            <path d="M16 64C16 28.7 44.7 0 80 0H304c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H80c-35.3 0-64-28.7-64-64V64zM224 448a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM304 64H80V384H304V64z" />
-                        </svg>
+                <form action="@Url.Action("SendOrder","Home")" id="SendCOrder" method="post" autocomplete="off">
+                    <div class="form-input">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 448 512">
+                                <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                            </svg>
+                        </div>
+                        <input type="text" name="FullName" placeholder="@ResourceData.Resource("HoTen",ViewBag.Lang)*" />
                     </div>
-                    <input type="text" name="Phone" placeholder="@ResourceData.Resource("DienThoai",ViewBag.Lang)*" />
-                </div>
-                <div class="form-input">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @@fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" /></svg>
+                    <div class="form-input">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 384 512">
+                                <path d="M16 64C16 28.7 44.7 0 80 0H304c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H80c-35.3 0-64-28.7-64-64V64zM224 448a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zM304 64H80V384H304V64z" />
+                            </svg>
+                        </div>
+                        <input type="text" name="Phone" placeholder="@ResourceData.Resource("DienThoai",ViewBag.Lang)*" />
                     </div>
-                    <input type="text" name="Address" placeholder="@ResourceData.Resource("DiaChi",ViewBag.Lang)*" />
-                </div>
-                <div class="form-input">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @@fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M160 32c9 0 17.5 3.8 23.6 10.4l88 96c11.9 13 11.1 33.3-2 45.2s-33.3 11.1-45.2-2L192 146.3V448c0 17.7-14.3 32-32 32s-32-14.3-32-32V146.3L95.6 181.6c-11.9 13-32.2 13.9-45.2 2s-13.9-32.2-2-45.2l88-96C142.5 35.8 151 32 160 32zM450.7 294c8.3 6 13.3 15.7 13.3 26v96h16c17.7 0 32 14.3 32 32s-14.3 32-32 32H432 384c-17.7 0-32-14.3-32-32s14.3-32 32-32h16V364.4l-5.9 2c-16.8 5.6-34.9-3.5-40.5-20.2s3.5-34.9 20.2-40.5l48-16c9.8-3.3 20.5-1.6 28.8 4.4zm-5-145.1A32 32 0 1 0 418.3 91a32 32 0 1 0 27.4 57.9zm-40.7 54.9C369.6 192.4 344 159.2 344 120c0-48.6 39.4-88 88-88s88 39.4 88 88c0 23.5-7.5 46.3-21.5 65.2L449.7 251c-10.5 14.2-30.6 17.2-44.8 6.7s-17.2-30.6-6.7-44.8l6.8-9.2z" /></svg>
+                    <div class="form-input">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @@fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" /></svg>
+                        </div>
+                        <input type="text" name="Address" placeholder="@ResourceData.Resource("DiaChi",ViewBag.Lang)*" />
                     </div>
-                    <input type="text" name="Number" placeholder="@ResourceData.Resource("SoLuong",ViewBag.Lang)*" />
-                </div>
-                <div class="form-textarea">
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 576 512">
-                            <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
-                        </svg>
+                    <div class="form-input">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @@fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M160 32c9 0 17.5 3.8 23.6 10.4l88 96c11.9 13 11.1 33.3-2 45.2s-33.3 11.1-45.2-2L192 146.3V448c0 17.7-14.3 32-32 32s-32-14.3-32-32V146.3L95.6 181.6c-11.9 13-32.2 13.9-45.2 2s-13.9-32.2-2-45.2l88-96C142.5 35.8 151 32 160 32zM450.7 294c8.3 6 13.3 15.7 13.3 26v96h16c17.7 0 32 14.3 32 32s-14.3 32-32 32H432 384c-17.7 0-32-14.3-32-32s14.3-32 32-32h16V364.4l-5.9 2c-16.8 5.6-34.9-3.5-40.5-20.2s3.5-34.9 20.2-40.5l48-16c9.8-3.3 20.5-1.6 28.8 4.4zm-5-145.1A32 32 0 1 0 418.3 91a32 32 0 1 0 27.4 57.9zm-40.7 54.9C369.6 192.4 344 159.2 344 120c0-48.6 39.4-88 88-88s88 39.4 88 88c0 23.5-7.5 46.3-21.5 65.2L449.7 251c-10.5 14.2-30.6 17.2-44.8 6.7s-17.2-30.6-6.7-44.8l6.8-9.2z" /></svg>
+                        </div>
+                        <input type="text" name="Number" placeholder="@ResourceData.Resource("SoLuong",ViewBag.Lang)*" />
                     </div>
-                    <textarea name="Content" id="" cols="30" rows="5" placeholder="@ResourceData.Resource("NoiDung", ViewBag.Lang)"></textarea>
-                </div>
-                <button type="submit" class="more border square1 submit-contact">
-                    @ResourceData.Resource("GuiDi", ViewBag.Lang)
-                    <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-                        </svg>
+                    <div class="form-textarea">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 576 512">
+                                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z" />
+                            </svg>
+                        </div>
+                        <textarea name="Content" id="" cols="30" rows="5" placeholder="@ResourceData.Resource("NoiDung", ViewBag.Lang)"></textarea>
                     </div>
-                </button>
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="Token" id="ModelTokenOrder" />
-                <input type="hidden" name="ProductID" value="@Model.ProductItem.ID" />
-            </form>
+                    <button type="submit" class="more border square1 submit-contact">
+                        @ResourceData.Resource("GuiDi", ViewBag.Lang)
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                            </svg>
+                        </div>
+                    </button>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="TypeAttr" id="type-attr" value="" />
+                    <input type="hidden" name="Price" id="price-form" value="" />
+                    <input type="hidden" name="Token" id="ModelTokenOrder" />
+                    <input type="hidden" name="ProductID" value="@Model.ProductItem.ID" />
+                </form>
 
-            <script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptChaConfig.Value.SiteKey"></script>
-            <script>
-                function getTokenOrder() {
-                    grecaptcha.ready(function () {
-                        grecaptcha.execute('@GoogleCaptChaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
-                            document.getElementById('ModelTokenOrder').value = token;
+                <script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptChaConfig.Value.SiteKey"></script>
+                <script>
+                    function getTokenOrder() {
+                        grecaptcha.ready(function () {
+                            grecaptcha.execute('@GoogleCaptChaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
+                                document.getElementById('ModelTokenOrder').value = token;
+                            });
                         });
+                    }
+                    setInterval(getTokenOrder, 11500);
+                    $(function () {
+                        //var d = new Date();
+                        //$('#Time').datetimepicker({
+                        //    format: 'd/m/Y', timepicker: false, theme: 'dark', minDate: d
+                        //});
+                        getTokenOrder();
+                        var process = new ProcessData();
+                        process.SendOrder();
                     });
-                }
-                setInterval(getTokenOrder, 11500);
-                $(function () {
-                    //var d = new Date();
-                    //$('#Time').datetimepicker({
-                    //    format: 'd/m/Y', timepicker: false, theme: 'dark', minDate: d
-                    //});
-                    getTokenOrder();
-                    var process = new ProcessData();
-                    process.SendOrder();
-                });
-            </script>
+                </script>
+            </div>
         </div>
+
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+        });
+        var swiper2 = new Swiper(".mySwiper2", {
+            loop: true,
+            spaceBetween: 0,
+            navigation: {
+                nextEl: ".slide-next",
+                prevEl: ".slide-prev",
+            },
+            thumbs: {
+                swiper: swiper,
+            },
+        });
+        </script>
 }

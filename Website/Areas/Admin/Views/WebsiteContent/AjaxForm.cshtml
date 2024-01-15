@@ -17,9 +17,9 @@
             <div class="btncss">
                 <button id="submit" type="submit" class="primaryAction btn btn-success btn-sm">@ViewBag.ActionText</button>
                 <button id="reset" type="reset" class="primaryAction btn btn-default btn-sm">Nhập lại</button>
-                @if (!string.IsNullOrEmpty(Model.WebsiteContent.NameAscii) || !string.IsNullOrEmpty(Model.WebsiteContent.LinkUrl))
+                @if (!string.IsNullOrEmpty(Model.WebsiteContent.ModuleNameAscii) || !string.IsNullOrEmpty(Model.WebsiteContent.LinkUrl))
                 {
-                    <a style="@(ViewBag.Action == "Edit" ? "display:inline;" : "display:none;")" href="@Utility.Link(string.Empty,Model.WebsiteContent.NameAscii,Model.WebsiteContent.LinkUrl)" target="_blank" class="primaryAction btn btn-info btn-sm">Xem nhanh</a>
+                    <a style="@(ViewBag.Action == "Edit" ? "display:inline;" : "display:none;")" href="@Utility.Link(string.Empty,Model.WebsiteContent.ModuleNameAscii,Model.WebsiteContent.LinkUrl)" target="_blank" class="primaryAction btn btn-info btn-sm">Xem nhanh</a>
                 }
                 <div class="btn btn-info back-grid-view">Quay lại</div>
             </div>

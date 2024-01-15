@@ -659,7 +659,6 @@ $(function () {
 });
 //#region hidden
 var Resource = new Object();
-LoadResource();
 function LoadResource() { var o = "/DataJson/Resource/Resources_" + lang + ".json"; $.ajax({ url: o, dataType: "json", async: !1, success: function (o) { Resource = o }, error: function (o) { console.log("Dữ liệu không tồn tại") } }) }
 function GetSource(e) { var r = Resource[e]; return null != r ? r : "[" + e + "]" }
 var getUrlParameter = function (r) { for (var t, e = window.location.search.substring(1).split("&"), n = 0; n < e.length; n++)if ((t = e[n].split("="))[0] === r) return t[1], decodeURIComponent(t[1]); return !1 };
@@ -678,24 +677,8 @@ function resizeImage(e, s) {
 
 function getValueFormMutilSelect(t) { var e, i = ""; return $(t).find("input[type='checkbox']:checked, input[type='radio']:checked, input[type='text'],input[type='number'], input[type='hidden'], select").each(function () { e = $(this).attr("name"), "" != $(this).val() && (i += "&" + e + "=" + $(this).val()) }), "" != i && (i = i.substring(1)), i }
 function getparram(t) { var n = new Object; return $(t).find("input[type='checkbox']:checked, input[type='radio']:checked, input[type='text'],input[type='number'], input[type='hidden'], select").each(function () { var t = $(this).attr("name"), e = $(this).val(); "" != $(this).val() && "" != t && null != t && (n[t] = e) }), n }
-//function TemplateLoading() { return '<div class="load show text-center"><img src="/html/style/image2022/loading.svg" alt="' + GetSource('DangTai') + '" /><p>' + GetSource('DangTai') + '</p></div>' }
 function formatPrice(n, e) { return null == n ? "Liên hệ" : n.toFixed(0).replace(/./g, function (n, e, r) { return 0 < e && "." !== n && (r.length - e) % 3 == 0 ? "," + n : n }) + e }
-function OpenVideo(url) {
-    var html = ``;
-    if (url != '') {
-        html = `<div class="popup-vd">`;
-        if (url.includes('images/')) {
-            html += `<div class="ifr-tv"><video width="400" autoplay controls><source src="` + url + `" type="video/mp4"></video></div><div class="bgblack"></div><div class="close-pu"></div>`;
-        } else {
-            var src = "https://www.youtube.com/embed/" + url + "?autoplay=1";
-            html += `<div class="ifr-tv"><iframe src="` + src + `" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div class="bgblack"></div><div class="close-pu"></div>`;
-        }
-        html += `<script>$(".bgblack, .close-pu").click(function () { $('body').find(".popup-vd").remove();$('body').removeClass('nonescroll'); });</script></div>`;
-        $('body').append(html);
-        $('body').addClass('nonescroll');
-        $('.popup-vd').addClass('active');
-    }
-}
+
 function AlertError(r) { window.alert(r) }
 function OpenAlert(msg, success) {
     $('.alrt-popup .main').html(msg);

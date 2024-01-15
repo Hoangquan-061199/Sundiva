@@ -206,7 +206,7 @@ namespace ADCOnline.Business.Implementation.AdminManager
         {
             using (SqlConnection connect = _dapperDa.GetOpenConnection())
             {
-                var result = connect.Query<Simple.Base.SubItem>("SELECT * FROM SubItem WHERE ProductID=@productId", new { productId });
+                var result = connect.Query<Simple.Base.SubItem>("SELECT * FROM SubItem WHERE IsDeleted = 0 and ProductID=@productId", new { productId });
                 connect.Close();
                 return result.ToList();
             }

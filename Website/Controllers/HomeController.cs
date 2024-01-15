@@ -764,7 +764,9 @@ namespace Website.Controllers
                 var product = _productManager.GetId(model.ProductID);
                 model.ProductName = product.Name;
                 model.ProductLink = Utility.Link(product._NameAscii, string.Empty, product.LinkUrl);
-                model.Price = Utility.GetFormatPriceType(product.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang), true);
+                var priceres = Request.Form["Price"];
+                var typeAttr = Request.Form["TypeAttr"];
+                model.Price = Utility.GetFormatPriceType(Convert.ToDecimal(priceres), 1,ResourceData.Resource("LienHe", ViewBag.Lang), true);
                 #endregion
                 str = str.Replace("[Main]", mainTemplate.Content);
                 str = str.Replace("[HoTen]", model.FullName);
@@ -774,6 +776,7 @@ namespace Website.Controllers
                 str = str.Replace("[NoiDung]", model.Content);
                 str = str.Replace("[SanphamLink]", Utility.ReplaceHttpToHttps(HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + model.ProductLink, WebConfig.EnableHttps));
                 str = str.Replace("[Gia]", model.Price);
+                str = str.Replace("[Loai]", typeAttr);
                 str = str.Replace("[TenSanPham]", model.ProductName);
                 #region Send mail
                 try
@@ -807,6 +810,7 @@ namespace Website.Controllers
                         ProductLink = model.ProductLink,
                         Content = model.Content,
                         Price = model.Price,
+                        Title = typeAttr,
                         Code = "OrderProduct"
                     };
                     int result = _contactUsManager.Insert(contact);

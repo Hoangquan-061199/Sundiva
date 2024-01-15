@@ -5968,8 +5968,8 @@ button i {
     margin-bottom: 0;
     font-weight: 400;
     font-size: 14px;
-    line-height: 28px;
-    white-space: nowrap;
+    line-height: 1.5;
+    /* white-space: nowrap; */
 }
 
 .lst-gallery {

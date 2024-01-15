@@ -275,8 +275,8 @@ namespace ADCOnline.Utils
         private static readonly List<string> list = new()
         {
             News,Contact,Company,Project,Services,Gallery,Video,Introduce,Document,Updating,Recuitment,
-            Library,Build,Application,ContactUs,
-            CompanyActivities,BusinessAreas,Video,SimpleModule
+            Library,Build,Application,ContactUs,Album,
+            CompanyActivities,BusinessAreas,Video,SimpleModule,PriceQuote,Catalogue
         };
         public static List<string> ModuleContent = list;
         private static readonly List<string> listSitemap = new()

@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    <div class="price">
+    <div class="price-quote">
         <div class="container">
             <div class="left">
                 @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
@@ -114,6 +114,7 @@
                             {
                                 <div class="item item-product-new">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                        <span class="hover"></span>
                                         @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                     </a>
                                     <div class="text">
@@ -127,11 +128,11 @@
                                             </div>
                                         }
                                         <div class="p-price">
-                                            @if (item.PriceOld.HasValue)
+                                            @if (item.PriceOld.HasValue && item.PriceOld > 0)
                                             {
-                                                <p>@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
+                                                <p class="price-old">@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
                                             }
-                                            <p><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                                            <p class="price"><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
                                         </div>
                                     </div>
                                 </div>
@@ -149,6 +150,7 @@
                         {
                             <div class="item-price-quote">
                                 <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                    <span class="hover"></span>
                                     @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                 </a>
                                 <div class="info">

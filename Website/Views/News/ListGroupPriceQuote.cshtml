@@ -86,6 +86,8 @@
                     @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.Where(x => x.ParentID > 0))
                     {
                         <div class="item item-collection">
+                            <span class="hover"></span>
+
                             <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
                                 @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                             </a>

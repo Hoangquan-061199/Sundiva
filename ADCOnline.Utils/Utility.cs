@@ -17,6 +17,7 @@ using ADCOnline.Simple.Item;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace ADCOnline.Utils
 {
@@ -81,7 +82,7 @@ namespace ADCOnline.Utils
             try
             {
                 SizeImages imageSize = new SizeImages();
-                if (string.IsNullOrEmpty(imageUrl))
+                if (string.IsNullOrEmpty(imageUrl) || imageUrl.EndsWith("svg"))
                 {
                     imageSize.IsPicture = false;
                     imageSize.Width = 600;
@@ -100,6 +101,7 @@ namespace ADCOnline.Utils
                     }
                     using (Image filefrom = Image.Load(url))
                     {
+                        imageSize.IsPicture = true;
                         imageSize.Width = filefrom.Width;
                         imageSize.Height = filefrom.Height;
                     };
@@ -118,7 +120,7 @@ namespace ADCOnline.Utils
                     using (var imageStream = httpClient.OpenRead(imageUrl))
                     using (var image = Image.Load(imageStream))
                     {
-
+                        imageSize.IsPicture = true;
                         imageSize.Width = image.Width;
                         imageSize.Height = image.Height;
                     }
@@ -159,14 +161,22 @@ namespace ADCOnline.Utils
 
         public static string GetImage(string pathServer, string imageUrl, string name)
         {
-            SizeImages image = GetSizeImages(pathServer, imageUrl);
-            if (image.IsPicture)
+            if(string.IsNullOrEmpty(imageUrl)) return "<span class=\"no-image\">No image</span>";
+            if (imageUrl.EndsWith("svg"))
             {
-                return $"<img src=\"{imageUrl}\" alt=\"{name}\" width=\"{image.Width}\" height=\"{image.Height}\" loading=\"lazy\">";
+                return $"<img src=\"{imageUrl}\" alt=\"{name}\" loading=\"lazy\">";
             }
             else
             {
-                return "<span class=\"no-image\">No image</span>";
+                SizeImages image = GetSizeImages(pathServer, imageUrl);
+                if (image.IsPicture)
+                {
+                    return $"<img src=\"{imageUrl}\" alt=\"{name}\" width=\"{image.Width}\" height=\"{image.Height}\" loading=\"lazy\">";
+                }
+                else
+                {
+                    return "<span class=\"no-image\">No image</span>";
+                }
             }
         }
 
@@ -226,7 +236,7 @@ namespace ADCOnline.Utils
                                 {
                                     unicode = RemoveHTML(unicode);
                                 }
-                                string rex = @"[^\w^\-:/.=?@#&]";
+                                string rex = @"[^\w^\-:/.=?#&]";
                                 unicode = Regex.Replace(unicode, rex, "");
                                 break;
                             }

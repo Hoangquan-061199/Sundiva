@@ -2,6 +2,7 @@
 @using ADCOnline.Utils
 @if (Model.SystemActionAdmin.View)
 {
+    <input type="hidden" id="TypeView" value="Module" />
     <div class="badge badge-info" style="margin-bottom:10px;cursor:pointer;" id="ShowAll">Xem hết danh mục</div>
     <div class="badge badge-warning" style="margin-bottom:10px;cursor:pointer;" id="HideAll">Ẩn danh mục</div>
     <table id="gridItems" class="table table-bordered table-hover">
@@ -42,6 +43,7 @@
                         <li><a href="javascript:" class="updateproducts"><i class="lnr lnr-trash"></i><span>Cập nhất số bài viết</span></a></li>
                         }*@
                             <li><a href="javascript:" class="resize"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                            <li><a href="javascript:" class="resize-album"><i class="lnr lnr-pencil"></i><span>Resize album</span></a></li>
                         </ul>
                     </div>
                 </th>

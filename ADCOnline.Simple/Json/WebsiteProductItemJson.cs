@@ -21,6 +21,7 @@ namespace ADCOnline.Simple.Json
         public string UrlPicture { get; set; }
         public string ProductCode { get; set; }
         public decimal? Price { get; set; }
+        public decimal? Price2 { get; set; }
         public decimal? PriceOld { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int? TypeSale { get; set; }
