@@ -369,7 +369,6 @@
 
         var targetElement = $('#module_' + dataId);
         var targetOffset = targetElement.offset().top - headfix;
-
         $('html, body').animate({
             scrollTop: targetOffset
         }, 1000);
