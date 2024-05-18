@@ -149,7 +149,7 @@
                                     </a>
                                     <div class="text">
                                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
-                                            @item.Name
+                                            @item.Name_
                                         </a>
                                         @if (!string.IsNullOrEmpty(item.ProductCode))
                                         {
@@ -184,11 +184,11 @@
                             <div class="item item-product-new main">
                                 <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
                                     <span class="hover"></span>
-                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                 </a>
                                 <div class="text">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
-                                        @item.Name
+                                        @item.Name_
                                     </a>
                                     @if (!string.IsNullOrEmpty(item.ProductCode))
                                     {

@@ -22,12 +22,12 @@ namespace Website.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            if (SystemActionAdmin.View != true)
+            string role = HttpContext.Session.GetString("WebAdminRole");
+            if (!SystemActionAdmin.View && role != "Admin")
             {
                 return Redirect("/" + WebConfig.AdminAlias);
             }
             Module module = _moduleAdminDa.GetTag("Department");
-            string role = HttpContext.Session.GetString("WebAdminRole");
             string userId = HttpContext.Session.GetString("WebAdminUserID");
             HomeAdminViewModel model = new()
             {

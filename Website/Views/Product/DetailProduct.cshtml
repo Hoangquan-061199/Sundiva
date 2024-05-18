@@ -82,7 +82,7 @@
                                     @foreach (var item in Model.ProductItem.AlbumGalleryItems.Where(x => x.AlbumType == 0))
                                     {
                                         <div class="swiper-slide item">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ProductItem.Name))
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.AlbumUrl, Context, 400, 400), Model.ProductItem.Name))
                                         </div>
                                     }
                                 </div>
@@ -165,7 +165,7 @@
                     {
                         <div class="item">
                             <div class="title">
-                                <h2 class="big-title none title-main-page">@ResourceData.Resource("GioiThieuVe", ViewBag.Lang) @Model.ProductItem.Name_</h2>
+                                <h2 class="big-title none title-main-page">@ResourceData.Resource("GioiThieuVe", ViewBag.Lang) @Model.ProductItem.Name</h2>
                                 <div class="icon btn-down">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="18"
                                          viewBox="0 0 320 512">
@@ -236,7 +236,7 @@
                                     {
                                         <div class="item item-construction-index">
                                             <div class="img">
-                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                             </div>
                                             <h3 class="big-title title-product color-white">@item.Name</h3>
                                         </div>
@@ -256,7 +256,7 @@
                                 <div class="item item-product-new">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
                                         <span class="hover"></span>
-                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                     </a>
                                     <div class="text">
                                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
@@ -295,7 +295,7 @@
                     <div class="item item-collection">
                         <span class="hover"></span>
                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                         </a>
                         <h3 class="big-title title-product color-white center"><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></h3>
                     </div>

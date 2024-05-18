@@ -94,15 +94,15 @@ namespace ADCOnline.Business.Implementation.AdminManager
             {
                 using (SqlConnection connect = _dapperDa.GetOpenConnection())
                 {
-                    if (isShow)
+                   if (isShow)
                     {
-                        var result = connect.Query<ModuleAdmin>("SELECT * from Module WHERE 1=1 AND IsShow =1");
+                        var result = connect.Query<ModuleAdmin>("SELECT * from Module where Tag is null or (Tag != 'UserAdministration' and Tag != 'Roles' and Tag != 'Department') and IsShow =1");
                         connect.Close();
                         return result.ToList();
                     }
                     else
                     {
-                        var result = connect.Query<ModuleAdmin>("SELECT * from Module WHERE 1=1");
+                        var result = connect.Query<ModuleAdmin>("SELECT * from Module where Tag is null or (Tag != 'UserAdministration' and Tag != 'Roles' and Tag != 'Department')");
                         connect.Close();
                         return result.ToList();
                     }

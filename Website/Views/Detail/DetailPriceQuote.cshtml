@@ -110,11 +110,11 @@
                             {
                                 <div class="item item-product-new">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                     </a>
                                     <div class="text">
                                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
-                                            @item.Name
+                                            @item.Name_
                                         </a>
                                         @if (!string.IsNullOrEmpty(item.ProductCode))
                                         {
@@ -199,7 +199,7 @@
                                 {
                                     <figure class=" @(i > 8 ? "hide": string.Empty) @(i == 4 ? "wide" : string.Empty)">
                                         <a data-src="@item.AlbumUrl" data-fancybox="gallery" data-caption="@item.AlbumTitle" title="@item.AlbumTitle">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ContentItem.Name))
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.AlbumUrl, Context, 400, 400), Model.ContentItem.Name))
                                             <figcaption>
                                                 <h3>@item.AlbumTitle</h3>
                                                 <p>@item.AlbumTitle</p>

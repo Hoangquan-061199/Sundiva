@@ -105,7 +105,7 @@
                                     <label>Mã sản phẩm</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control notvalid" name="ProductCode" id="ProductCode" value="@Model.Product.ProductCode" />
+                                    <input type="text" class="form-control notvalid @(ViewBag.Action.Equals("Add") ? "autoPermalinkPC" : "" )" name="ProductCode" id="ProductCode" value="@Model.Product.ProductCode" />
                                 </div>
                             </div>
 
@@ -771,7 +771,27 @@
             })
             $('.autoPermalinkP').on('keyup', function (e) {
                 e.preventDefault();
-                $('#NameAscci').val(RemoveUnicode($(this).val()));
+                let productCode = $('#ProductCode').val();
+                if (productCode) {
+                    let val = RemoveUnicode($(this).val()) + "-" + RemoveUnicode(productCode);
+                    $('#NameAscci').val(val);
+                } else {
+                    let val = RemoveUnicode($(this).val());
+                    $('#NameAscci').val(val);
+                }
+            });
+            $('.autoPermalinkPC').on('change', function (e) {
+                e.preventDefault();
+                let name = $('#Name').val();
+                let productCode = $('#ProductCode').val();
+                if (productCode) {
+                    let val = RemoveUnicode(name) + "-" + RemoveUnicode(productCode);
+                    $('#NameAscci').val(val);
+                } else {
+                    let val = RemoveUnicode(name);
+                    $('#NameAscci').val(val);
+                }
+
             });
             if ($('#ItemId').length > 0) {
                 var fixscroll = function () {

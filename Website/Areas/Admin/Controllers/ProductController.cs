@@ -95,7 +95,9 @@ namespace Website.Areas.Admin.Controllers
                 ListModule = _moduleAdminDa.GetTabMenu(role, userId),
                 SearchModel = seach,
                 Product = seach.productId.HasValue ? _productDa.GetId(seach.productId.Value) : new ADCOnline.Simple.Base.Product(),
-                moduleParentID = ConvertUtil.ToInt32(moduleID)
+                moduleParentID = ConvertUtil.ToInt32(moduleID),
+                UserId = userId,
+                Role = role,
             };
             int total = model.ListItem.Any() ? model.ListItem.FirstOrDefault().TotalRecord : 0;
             ViewBag.GridHtml = GetPage(seach.page, total, seach.pagesize > 0 ? seach.pagesize : 50);
@@ -185,10 +187,16 @@ namespace Website.Areas.Admin.Controllers
                 ADCOnline.Simple.Base.Product obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                 if (obj != null)
                 {
+                    if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                    {
+                        module.SystemActionAdmin.Add = false;
+                        module.SystemActionAdmin.Edit = false;
+                        return View(module);
+                    }
                     module.SubItems = _productDa.GetSubItemByProductId(obj.ID);
                     module.Product = obj;
                     module.ListWebsiteModuleAdmin = _websiteModuleDa.GetListByArrIdNotShow(obj.ModuleIds);
-                    if (module.ListWebsiteModuleAdmin != null)
+                    if (module.ListWebsiteModuleAdmin != null && module.ListWebsiteModuleAdmin.Any())
                     {
                         ViewBag.TypeView = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeView;
                         ViewBag.TypeViewMenu = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeViewMenu;
@@ -247,7 +255,7 @@ namespace Website.Areas.Admin.Controllers
                     module.Product.ModuleIds = action.ModuleId;
                     module.Product.ModuleNameAscii = module.ListWebsiteModuleAdmin.FirstOrDefault().NameAscii;
                     module.AttributesAdmins = _attributesDa.GetAdminByModuleIds(true, moduleIdss);
-                    if (module.ListWebsiteModuleAdmin != null)
+                    if (module.ListWebsiteModuleAdmin != null && module.ListWebsiteModuleAdmin.Any())
                     {
                         ViewBag.TypeView = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeView;
                         ViewBag.TypeViewMenu = module.ListWebsiteModuleAdmin.FirstOrDefault().TypeViewMenu;
@@ -1750,6 +1758,8 @@ namespace Website.Areas.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> Actions()
         {
+            string role = HttpContext.Session.GetString("WebAdminRole");
+            string userId = HttpContext.Session.GetString("WebAdminUserID");
             ActionViewModel action = UpdateModelAction();
             JsonMessage msg = new() { Errors = true, Message = "Không có hành động nào được thực hiện." };
             List<AlbumGalleryAdmin> albumGalleryItemList = new();
@@ -1782,6 +1792,15 @@ namespace Website.Areas.Admin.Controllers
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa nhập tiêu đề" };
                             return Ok(msg);
+                        }
+                        if (!string.IsNullOrEmpty(obj.ProductCode))
+                        {
+                            var checkcode = _productDa.CheckProductCode(obj.ProductCode);
+                            if (checkcode > 0)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Mã sản phẩm đã tồn tại" };
+                                return Ok(msg);
+                            }
                         }
                         obj.Name = Utility.ValidString(obj.Name, Title, true);
                         obj.SEOTitle = Utility.ValidString(obj.SEOTitle, Title, true);
@@ -2006,12 +2025,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Edit:
                     try
                     {
-                        if (SystemActionAdmin.Edit != true)
+                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Edit != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         ADCOnline.Simple.Base.Product oldObj = obj;
                         await TryUpdateModelAsync(obj);
 
@@ -2022,6 +2041,15 @@ namespace Website.Areas.Admin.Controllers
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa nhập tiêu đề" };
                             return Ok(msg);
+                        }
+                        if (!string.IsNullOrEmpty(obj.ProductCode))
+                        {
+                            var checkcode = _productDa.CheckProductCode(obj.ProductCode);
+                            if (checkcode > 0 && checkcode != obj.ID)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Mã sản phẩm đã tồn tại" };
+                                return Ok(msg);
+                            }
                         }
                         obj.Name = Utility.ValidString(obj.Name, Title, true);
                         obj.SEOTitle = Utility.ValidString(obj.SEOTitle, Title, true);
@@ -2263,14 +2291,14 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Delete:
                     try
                     {
-                        if (SystemActionAdmin.Delete != true)
+                        ADCOnline.Simple.Base.Product content = _productDa.GetId(Convert.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Delete != true && (role != "Admin" && content.CreatorID.ToString() != userId))
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
                         try
                         {
-                            ADCOnline.Simple.Base.Product content = _productDa.GetId(Convert.ToInt32(action.ItemId));
                             content.IsDeleted = true;
                             content.ModifiedDate = DateTime.Now;
                             content.ModifiedName = membership.FullName;
@@ -2296,12 +2324,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Display:
                     try
                     {
-                        if (SystemActionAdmin.Active != true)
+                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Active != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         ADCOnline.Simple.Base.Product oldObj = obj;
                         obj.IsShow = true;
                         obj.ModifiedDate = DateTime.Now;
@@ -2328,12 +2356,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Hidden:
                     try
                     {
-                        if (SystemActionAdmin.Active != true)
+                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Active != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         ADCOnline.Simple.Base.Product oldObj = obj;
                         obj.IsShow = obj.IsShow == true ? false : true;
                         string message = ConvertUtil.ToBool(obj.IsShow) ? "Hiển thị thành công" : "Ẩn thành công";
@@ -2369,6 +2397,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if (role != "Admin" && content.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.IsShow = true;
                             content.ModifiedDate = DateTime.Now;
@@ -2403,6 +2436,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.IsShow = false;
                             content.ModifiedDate = DateTime.Now;
@@ -2437,6 +2475,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.IsDeleted = true;
                             content.ModifiedDate = DateTime.Now;
@@ -2463,12 +2506,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.IsVat:
                     try
                     {
-                        if (SystemActionAdmin.Active != true)
+                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Active != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         ADCOnline.Simple.Base.Product oldObj = obj;
                         obj.IsVAT = obj.IsVAT != true;
                         string message = "Cập nhật thành công";
@@ -2504,6 +2547,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.IsVAT = true;
                             content.ModifiedDate = DateTime.Now;
@@ -2539,6 +2587,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.IsVAT = false;
                             content.ModifiedDate = DateTime.Now;
@@ -2566,12 +2619,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.IsSitemap:
                     try
                     {
-                        if (SystemActionAdmin.Active != true)
+                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Active != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _productDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         ADCOnline.Simple.Base.Product oldObj = obj;
                         obj.IsSitemap = obj.IsSitemap != true;
                         string message = "Cập nhật thành công";
@@ -2607,6 +2660,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.IsSitemap = true;
                             content.ModifiedDate = DateTime.Now;
@@ -2642,6 +2700,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.IsSitemap = false;
                             content.ModifiedDate = DateTime.Now;
@@ -2677,6 +2740,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -2718,6 +2786,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",2,"))
                             {
@@ -2759,6 +2832,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.Status = Convert.ToInt32(action.Status);
                             if (content.Status is 0 or 2)
@@ -2797,6 +2875,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.Status = Convert.ToInt32(action.Status);
                             if (content.Status is 0 or 2)
@@ -2839,6 +2922,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -2880,6 +2968,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",0,"))
                             {
@@ -2917,6 +3010,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -2958,6 +3056,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",3,"))
                             {
@@ -2995,6 +3098,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -3036,6 +3144,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",1,"))
                             {
@@ -3073,6 +3186,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -3114,6 +3232,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",5,"))
                             {
@@ -3151,6 +3274,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -3192,6 +3320,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",2,"))
                             {
@@ -3235,6 +3368,11 @@ namespace Website.Areas.Admin.Controllers
                                 try
                                 {
                                     ADCOnline.Simple.Base.Product content = _productDa.GetId(item.ID);
+                                    if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                                    {
+                                        msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                        return Ok(msg);
+                                    }
                                     content.OrderDisplay = item.OrderDisplay;
                                     content.ModifiedDate = DateTime.Now;
                                     content.ModifiedName = membership.FullName;
@@ -3278,6 +3416,11 @@ namespace Website.Areas.Admin.Controllers
                                         return Ok(msg);
                                     }
                                     ADCOnline.Simple.Base.Product content = _productDa.GetId(item.ID);
+                                    if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                                    {
+                                        msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                        return Ok(msg);
+                                    }
                                     ADCOnline.Simple.Base.Product oldObj = content;
                                     content.Price = Convert.ToDecimal(item.Price);
                                     content.ModifiedDate = DateTime.Now;
@@ -3307,6 +3450,11 @@ namespace Website.Areas.Admin.Controllers
                                 try
                                 {
                                     ADCOnline.Simple.Base.Product content = _productDa.GetId(item.ID);
+                                    if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                                    {
+                                        msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                        return Ok(msg);
+                                    }
                                     ADCOnline.Simple.Base.Product oldObj = content;
                                     if (string.IsNullOrEmpty(item.Price))
                                     {
@@ -3380,6 +3528,11 @@ namespace Website.Areas.Admin.Controllers
                                 try
                                 {
                                     ADCOnline.Simple.Base.Product content = _productDa.GetId(item.ID);
+                                    if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                                    {
+                                        msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                        return Ok(msg);
+                                    }
                                     ADCOnline.Simple.Base.Product oldObj = content;
                                     if (string.IsNullOrEmpty(item.Price) || item.Price == "%")
                                     {
@@ -3436,6 +3589,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.TypeSaleValue = saleValue;
                             content.Price = content.PriceOld - content.PriceOld * Convert.ToDecimal(content.TypeSaleValue) / 100;
@@ -3473,6 +3631,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.Amount = Amount;
                             content.Status = 1;
@@ -3509,6 +3672,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             ADCOnline.Simple.Base.Product oldObj = content;
                             content.ViewHome = ViewHome;
                             content.ModifiedDate = DateTime.Now;
@@ -3548,6 +3716,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             foreach (int module in ModuleID)
                             {
                                 if (string.IsNullOrEmpty(content.ModuleIds))
@@ -3626,6 +3799,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             ADCOnline.Simple.Base.Product content = _productDa.GetId(item);
+                            if ((role != "Admin" && content.CreatorID.ToString() != userId))
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             foreach (int module in ModuleID)
                             {
                                 if (("," + content.ModuleIds + ",").Contains("," + module + ","))

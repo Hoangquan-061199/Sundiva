@@ -1,8 +1,11 @@
-﻿using ADCOnline.Simple.Item;
+﻿using ADCOnline.Business.Implementation.AdminManager;
+using ADCOnline.Simple.Admin;
+using ADCOnline.Simple.Item;
 using ADCOnline.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +21,9 @@ namespace Website.Areas.Admin.Controllers
 {
     public class ImageController : BaseController
     {
+        private readonly WebsiteContentDa _websiteContentDa;
+        private readonly ProductDa _productDa;
+        private readonly WebsiteModuleDa _websiteModuleDa;
         private readonly string _systemRootPath;
         private readonly string _tempPath;
         private readonly string _filesRootPath;
@@ -26,6 +32,9 @@ namespace Website.Areas.Admin.Controllers
         private Dictionary<string, string> _lang = null;
         public ImageController(IWebHostEnvironment env)
         {
+            _websiteContentDa = new WebsiteContentDa(WebConfig.ConnectionString);
+            _productDa = new ProductDa(WebConfig.ConnectionString);
+            _websiteModuleDa = new WebsiteModuleDa(WebConfig.ConnectionString);
             // Setup CMS paths to suit your environment (we usually inject settings for these)
             _systemRootPath = env.ContentRootPath;
             _tempPath = _systemRootPath + "\\wwwroot\\Upload\\Temp";
@@ -50,6 +59,53 @@ namespace Website.Areas.Admin.Controllers
                 string size = WebConfig.Sizes;
                 var isResize = ResizeImages.ResizeImage(c, dest, size, name);
                 if (!isResize) return NotFound();
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
+        }
+        public ActionResult ResizeAlbum(string id, string type)
+        {
+            string dpath = "/wwwroot/resize/";
+            string c = string.Empty;
+            try
+            {
+                List<AlbumGalleryAdmin> listAlbum = null;
+                if (type == "Content")
+                {
+                    var content = _websiteContentDa.GetId(Convert.ToInt32(id));
+                    if (string.IsNullOrEmpty(content.AlbumPictureJson)) return NotFound();
+                    listAlbum = JsonConvert.DeserializeObject<List<AlbumGalleryAdmin>>(content.AlbumPictureJson);
+                }
+
+                if (type == "Product")
+                {
+                    var product = _productDa.GetId(Convert.ToInt32(id));
+                    if (string.IsNullOrEmpty(product.AlbumPictureJson)) return NotFound();
+                    listAlbum = JsonConvert.DeserializeObject<List<AlbumGalleryAdmin>>(product.AlbumPictureJson);
+                }
+                if (type == "Module")
+                {
+                    var module = _websiteModuleDa.GetId(Convert.ToInt32(id));
+                    if (string.IsNullOrEmpty(module.AlbumPictureJson)) return NotFound();
+                    listAlbum = JsonConvert.DeserializeObject<List<AlbumGalleryAdmin>>(module.AlbumPictureJson);
+                }
+                if (listAlbum == null) return NotFound();
+
+                string d = MakePhysicalPath(dpath);
+                d = FixPath(d);
+                foreach (var item in listAlbum)
+                {
+                    string filename = Path.GetFileName(item.AlbumUrl);
+                    c = MakePhysicalPath(item.AlbumUrl.Replace(filename, ""));
+                    c = FixPath(c);
+                    string dest = Path.Combine(c, filename);
+                    string size = WebConfig.Sizes;
+                    var isResize = ResizeImages.ResizeImage(c, dest, size, filename);
+                    if (!isResize) return NotFound();
+                }
                 return Ok(true);
             }
             catch (Exception e)

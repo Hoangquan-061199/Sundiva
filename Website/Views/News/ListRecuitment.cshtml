@@ -111,7 +111,7 @@
                                     <td>@i.ToString("D2")</td>
                                     <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
                                     <td>@item.Address</td>
-                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                    <td>@(item.EndDate.HasValue ? item.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
                                     <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
                                 </tr>
                                 i++;

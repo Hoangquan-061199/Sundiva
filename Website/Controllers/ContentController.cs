@@ -146,6 +146,15 @@ namespace Website.Controllers
                                 SystemConfigJson config = cacheUtils.SystemConfigItem(Lang());
                                 //config.ConfigPopup = JsonConvert.DeserializeObject<Dictionary<string, string>>(config.ConfigPopupJson);
                                 module.AlbumGalleryItems = !string.IsNullOrEmpty(module.AlbumPictureJson) ? JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(module.AlbumPictureJson) : new List<AlbumGalleryItem>();
+                                var moduleproduct = _webModuleManager.GetByModuleTypeCode(StaticEnum.Product, Lang());
+
+                                if (module.ParentID == 0)
+                                {
+                                    ModuleViewModels modelparent = new();
+                                    modelparent.ModuleItem = module;
+                                    modelparent.WebsiteModulesItems = moduleproduct != null ? moduleproduct : new();
+                                    return View(@"~/Views/Product/ListGroupProduct.cshtml", modelparent);
+                                }
 
                                 ModuleViewModels model = new()
                                 {
@@ -154,8 +163,9 @@ namespace Website.Controllers
                                     ModuleItem = module,
                                     SystemConfigItem = config,
                                     WebsiteModulesItem = _webModuleManager.GetByTypeCode(StaticEnum.Contact, Lang()),
-                                    AdvertisingItems = cacheUtils.GetListAdvertisingItemByCode(StaticEnum.TourIndex, Lang())
-                                };
+                                    AdvertisingItems = cacheUtils.GetListAdvertisingItemByCode(StaticEnum.TourIndex, Lang()),
+                                    WebsiteModulesItems = moduleproduct != null ? moduleproduct : new()
+                            };
 
                                 var moduleNews = _webModuleManager.GetByTypeCode(StaticEnum.News, Lang());
                                 var moduleNewschild = cacheUtils.GetListModuleChidrentNotAsync(moduleNews.ID);
@@ -196,8 +206,6 @@ namespace Website.Controllers
                                 model.MaxPrice = _productManager.MaxPrice(search, module.ID, string.Join(",", childModule.Select(x => x.ID)));
                                 model.MinPrice = _productManager.MinPrice(search, module.ID, string.Join(",", childModule.Select(x => x.ID)));
                                 model.ListModulesItemTour = childModule;
-                                var moduleproduct = _webModuleManager.GetByModuleTypeCode(StaticEnum.Product, Lang());
-                                model.WebsiteModulesItems = moduleproduct != null ? moduleproduct : new();
 
                                 #region check khuyen mai (Ẩn)
 
@@ -264,8 +272,6 @@ namespace Website.Controllers
                                 //    return RedirectPermanent(model.ListProductItem.FirstOrDefault().NameAscii);
                                 //}
                                 await _webModuleManager.UpdateTotalViews(module.ID);
-                                if (module.ParentID == 0)
-                                    return View(@"~/Views/Product/ListGroupProduct.cshtml", model);
                                 return View(@"~/Views/Product/ListGridProduct.cshtml", model);
                             }
 
@@ -426,9 +432,9 @@ namespace Website.Controllers
                                 IEnumerable<WebsiteModulesItem> childmodule = await cacheUtils.GetListModuleChidrentAsync(module.ID);
                                 model.WebsiteModulesItems = module.ParentID == 0 ? await cacheUtils.GetListModuleChildID(module.ID, Lang()) : childmodule.Any(x => x.ParentID == module.ID) ? childmodule.Where(x => x.ParentID == module.ID)?.ToList() : await cacheUtils.GetListModuleChildID(module.ParentID.Value, Lang());
                                 int pageSize = 6;
+                                search.sort = 1;
                                 IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, string.Join(",", childmodule.Select(x => x.ID)), "0");
                                 model.ListContentItemAsync = listContent;
-
                                 List<WebsiteContentItem> listContentHot = _webContentManager.GetListContentHot(pageSize, module.ID, string.Join(",", childmodule.Select(x => x.ID)));
                                 model.ListContentItemHot = listContentHot;
                                 model.Total = listContent.Any() ? listContent.FirstOrDefault().TotalRecord : 0;

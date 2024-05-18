@@ -85,7 +85,7 @@ namespace Website.Areas.Admin.Controllers
             {
                 SystemActionAdmin.View = false;
             }
-            if(role == "Admin")
+            if (role == "Admin")
             {
                 SystemActionAdmin.View = true;
             }
@@ -101,7 +101,9 @@ namespace Website.Areas.Admin.Controllers
                 SystemActionAdmin = SystemActionAdmin,
                 ListItem = list,
                 SearchModel = seach,
-                WebsiteContent = seach.contentId.HasValue ? _websiteContentDa.GetId(seach.contentId.Value) : new WebsiteContent()
+                WebsiteContent = seach.contentId.HasValue ? _websiteContentDa.GetId(seach.contentId.Value) : new WebsiteContent(),
+                UserId = userId,
+                Role = role,
             };
             int total = list.Any() ? list.FirstOrDefault().TotalRecord : 0;
             ViewBag.GridHtml = GetPage(seach.page, total, seach.pagesize > 0 ? seach.pagesize : 50);
@@ -234,6 +236,12 @@ namespace Website.Areas.Admin.Controllers
             if (action.Do == ActionType.Edit)
             {
                 WebsiteContent obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                {
+                    module.SystemActionAdmin.Add = false;
+                    module.SystemActionAdmin.Edit = false;
+                    return View(module);
+                }
                 if (obj != null)
                 {
                     WebsiteModule moduleItem = _websiteModuleDa.GetByNameAscii(obj.ModuleNameAscii);
@@ -244,6 +252,7 @@ namespace Website.Areas.Admin.Controllers
                     if (moduleItem != null)
                     {
                         type = moduleItem.ModuleTypeCode;
+                        ViewBag.TypeView = moduleItem.TypeView;
                         if (!string.IsNullOrEmpty(type) && lstTypeInChild.Contains(type))
                         {
                             SearchModel seach = new();
@@ -252,7 +261,6 @@ namespace Website.Areas.Admin.Controllers
                             module.ListRelatedProduct = _productDa.ListSearch(seach, 1, 50, false, moduleIds);
                         }
                     }
-                    ViewBag.TypeView = moduleItem.TypeView;
                     module.WebsiteContent = obj;
                     module.ListWebsiteModuleAdmin = _websiteModuleDa.GetListByArrId(obj.ModuleIds);
                     module.ListProduct = !string.IsNullOrEmpty(obj.RelatedIds) ? _productDa.GetListByArrId(obj.RelatedIds) : new List<ProductAdmin>();
@@ -284,7 +292,7 @@ namespace Website.Areas.Admin.Controllers
             ViewBag.Action = action.Do ?? ActionType.Add;
             ViewBag.ActionText = ActionType.ActionText(action.Do);
             module.ModuleTypeCode = type;
-            List<string> lstNoUrl = new() { StaticEnum.SimpleModule};
+            List<string> lstNoUrl = new() { StaticEnum.SimpleModule };
             if (!string.IsNullOrEmpty(type) && lstNoUrl.Contains(type))
             {
                 return View("AjaxFormSimple", module);
@@ -332,6 +340,8 @@ namespace Website.Areas.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> Actions()
         {
+            string role = HttpContext.Session.GetString("WebAdminRole");
+            string userId = HttpContext.Session.GetString("WebAdminUserID");
             ActionViewModel action = UpdateModelAction();
             JsonMessage msg = new() { Errors = true, Message = "Không có hành động nào được thực hiện." };
             List<AlbumGalleryAdmin> albumGalleryItemList = new();
@@ -598,12 +608,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Edit:
                     try
                     {
-                        if (SystemActionAdmin.Edit != true)
+                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Edit != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         var oldObj = obj;
                         AddLogEdit(Request.Path, "Edit", obj.ID.ToString(), obj);
                         if (obj == null)
@@ -887,12 +897,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Display:
                     try
                     {
-                        if (SystemActionAdmin.Active != true)
+                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Active != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         WebsiteContent oldObj = obj;
                         obj.IsShow = true;
                         obj.ModifiedDate = DateTime.Now;
@@ -919,12 +929,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Hidden:
                     try
                     {
-                        if (SystemActionAdmin.Active != true)
+                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Active != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         WebsiteContent oldObj = obj;
                         obj.IsShow = obj.IsShow == true ? false : true;
                         string message = ConvertUtil.ToBool(obj.IsShow) ? "Hiển thị thành công" : "Ẩn thành công";
@@ -952,12 +962,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.Delete:
                     try
                     {
-                        if (SystemActionAdmin.Delete != true)
+                        obj = _websiteContentDa.GetId(Convert.ToInt32(action.ItemId));
+                        if (SystemActionAdmin.Delete != true && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _websiteContentDa.GetId(Convert.ToInt32(action.ItemId));
                         WebsiteContent oldObj = obj;
                         obj.IsDeleted = true;
                         _websiteContentDa.Update(obj);
@@ -990,6 +1000,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && content.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             content.IsShow = true;
                             content.ModifiedDate = DateTime.Now;
@@ -1025,6 +1040,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && content.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             content.IsShow = false;
                             content.ModifiedDate = DateTime.Now;
@@ -1060,6 +1080,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && content.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             content.IsDeleted = true;
                             content.ModifiedDate = DateTime.Now;
@@ -1101,6 +1126,11 @@ namespace Website.Areas.Admin.Controllers
                                 try
                                 {
                                     WebsiteContent content = _websiteContentDa.GetId(item.ID);
+                                    if (role != "Admin" && content.CreatorID.ToString() != userId)
+                                    {
+                                        msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                        return Ok(msg);
+                                    }
                                     content.OrderDisplay = item.OrderDisplay;
                                     content.ModifiedDate = DateTime.Now;
                                     content.ModifiedName = membership.FullName;
@@ -1124,12 +1154,12 @@ namespace Website.Areas.Admin.Controllers
                 case ActionType.IsSitemap:
                     try
                     {
-                        if (!SystemActionAdmin.Active)
+                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
+                        if (!SystemActionAdmin.Active && role != "Admin" && obj.CreatorID.ToString() != userId)
                         {
                             msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
-                        obj = _websiteContentDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         WebsiteContent oldObj = obj;
                         obj.IsSitemap = obj.IsSitemap != true;
                         string message = "Cập nhật thành công";
@@ -1165,6 +1195,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             content.IsSitemap = true;
                             content.ModifiedDate = DateTime.Now;
@@ -1200,6 +1235,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             content.IsSitemap = false;
                             content.ModifiedDate = DateTime.Now;
@@ -1235,6 +1275,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -1276,6 +1321,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",3,"))
                             {
@@ -1313,6 +1363,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -1354,6 +1409,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",1,"))
                             {
@@ -1391,6 +1451,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             if (string.IsNullOrEmpty(content.ViewHome))
                             {
@@ -1432,6 +1497,11 @@ namespace Website.Areas.Admin.Controllers
                         foreach (int item in ArrID)
                         {
                             WebsiteContent content = _websiteContentDa.GetId(item);
+                            if (role != "Admin" && obj.CreatorID.ToString() != userId)
+                            {
+                                msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
+                                return Ok(msg);
+                            }
                             WebsiteContent oldObj = content;
                             if (("," + content.ViewHome + ",").Contains(",4,"))
                             {

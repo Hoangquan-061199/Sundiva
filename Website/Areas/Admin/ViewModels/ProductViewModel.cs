@@ -41,6 +41,8 @@ namespace Website.Areas.Admin.ViewModels
         public int moduleParentID { get; set; }
         public string ValueSelected { get; set; }
         public int ParentID { get; set; }
+        public string Role { get; set; }
+        public string UserId { get; set; }
         public List<SubContentItem> ListContentSubAdmin { get; set; }
         public List<CommonJsonAdmin> LitsItemTimeTours { get; set; } 
         public List<CommonJsonAdmin> LitsItemAddressStart { get; set; }

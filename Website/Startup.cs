@@ -44,7 +44,7 @@ namespace Website
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             //runtime view *.cshtml
-            services.AddRazorPages().AddRazorRuntimeCompilation();
+            //services.AddRazorPages().AddRazorRuntimeCompilation();
             services.Configure<GoogleCaptchaConfig>(Configuration.GetSection("GoogleRecaptcha"));
             services.AddTransient(typeof(GoogleCapthaService));
             services.AddDistributedMemoryCache();
@@ -69,6 +69,16 @@ namespace Website
             services.AddMvc(option => option.EnableEndpointRouting = false).AddXmlSerializerFormatters();
             services.AddMvc(option => option.EnableEndpointRouting = false).AddSessionStateTempDataProvider().SetCompatibilityVersion(CompatibilityVersion.Latest);
             // Add WebMarkupMin services to the services container.
+            //services.AddWebMarkupMin(
+            //options =>
+            //{
+            //    options.AllowMinificationInDevelopmentEnvironment = true;
+            //    options.AllowCompressionInDevelopmentEnvironment = true;
+            //}
+            //).AddHtmlMinification(option =>
+            //{
+            //    option.MinificationSettings.RemoveRedundantAttributes = true;
+            //}).AddXmlMinification().AddHttpCompression();
 
             services.AddWebMarkupMin(options =>
             {
@@ -79,8 +89,8 @@ namespace Website
                 {
                     HtmlMinificationSettings settings = options.MinificationSettings;
                     settings.RemoveRedundantAttributes = true;
-                    settings.RemoveHttpProtocolFromAttributes = true;
-                    settings.RemoveHttpsProtocolFromAttributes = true;
+                    settings.RemoveHttpProtocolFromAttributes = false;
+                    settings.RemoveHttpsProtocolFromAttributes = false;
 
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();

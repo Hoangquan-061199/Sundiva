@@ -7,7 +7,7 @@
             <tr role="row">
                 <th>Tên đăng nhập</th>
                 <th>Họ Tên</th>
-                <th>Email</th>
+                <th>Quyền</th>
                 @*<th>Công ty</th>*@
                 <th>Phòng ban</th>
                 <th>Ngày tạo</th>
@@ -38,7 +38,7 @@
                         <tr>
                             <td>@item.UserName</td>
                             <td>@item.FullName</td>
-                            <td>@item.Email</td>
+                            <td>@item.RoleCode</td>
                             @*<td>
             @{
             var company = "";
@@ -52,20 +52,19 @@
                             <td>@deparmentName</td>
                             <td>@Utility.ConvertDateTimeVi(item.CreateDate)</td>
                             <td class="text-center">
-                                @if (Model.SystemActionAdmin.Active)
+                                @if (Model.SystemActionAdmin.Active && item.RoleCode != "Admin")
                                 {
                                     <a class="btnAdminModule" href="#@item.UserId"><span class="lnr lnr-database"></span></a>
                                 }
-
                             </td>
                             <td class="text-center">
-                                @if (Model.SystemActionAdmin.Active)
+                                @if (Model.SystemActionAdmin.Active && item.RoleCode != "Admin")
                                 {
                                     <a class="btn_AdminRole" href="#@item.UserId"><span class="lnr lnr-database"></span></a>
                                 }
                             </td>
                             <td class="text-center">
-                                @if (Model.SystemActionAdmin.Active)
+                                @if (Model.SystemActionAdmin.Active && item.RoleCode != "Admin")
                                 {
                                     <a class="btn_AdminModule" href="#@item.UserId"><span class="lnr lnr-database"></span></a>
                                 }
