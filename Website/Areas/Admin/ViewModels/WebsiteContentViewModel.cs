@@ -31,6 +31,8 @@ namespace Website.Areas.Admin.ViewModels
         public List<Module> ListModule { get; set; }
         public Module Module { get; set; }
         public string ModuleTypeCode { get; set; }
+        public string Role { get; set; }
+        public string UserId { get; set; }
         public List<SubContentItem> ListContentSubAdmin { get; set; }
     }
 }

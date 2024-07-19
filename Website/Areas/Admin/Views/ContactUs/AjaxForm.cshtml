@@ -48,15 +48,27 @@
                              class="tab-pane @(string.IsNullOrEmpty(ViewBag.Tab) || ViewBag.Tab =="TabGenaral" ? "active" : string.Empty)"
                              id="TabGenaral">
                             <div class="form-group">
-                                <label class="col-sm-1">Tiêu đề:</label>
+                               @* <label class="col-sm-1">Tiêu đề:</label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control-readonly notvalid" readonly
                                            value="@Model.ContactUs.Title" placeholder="@Model.ContactUs.Title" />
-                                </div>
+                                </div>*@
                                 <label class="col-sm-1">Khách hàng:</label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control-readonly notvalid" readonly
                                            value="@Model.ContactUs.FullName" placeholder="@Model.ContactUs.FullName" />
+                                </div>
+                                <label class="col-sm-1">Trạng thái</label>
+                                <div class="col-sm-5">
+                                    <select name="Status" id="Status" class="form-control">
+                                        <option value="1" @(Model.ContactUs.Status == 1 ? "selected" : string.Empty)>
+                                            Chưa
+                                            đọc
+                                        </option>
+                                        <option value="5" @(Model.ContactUs.Status == 5 ? "selected" : string.Empty)>
+                                            Đã đọc
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -73,21 +85,9 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-1">Nội dung:</label>
-                                <div class="col-sm-5">
+                                <div class="col-sm-11">
                                     <textarea rows="5" class="form-control-readonly notvalid"
                                               readonly>@Model.ContactUs.Content</textarea>
-                                </div>
-                                <label class="col-sm-1">Trạng thái</label>
-                                <div class="col-sm-5">
-                                    <select name="Status" id="Status" class="form-control">
-                                        <option value="1" @(Model.ContactUs.Status == 1 ? "selected" : string.Empty)>
-                                            Chưa
-                                            đọc
-                                        </option>
-                                        <option value="5" @(Model.ContactUs.Status == 5 ? "selected" : string.Empty)>
-                                            Đã đọc
-                                        </option>
-                                    </select>
                                 </div>
                             </div>
                         </div>

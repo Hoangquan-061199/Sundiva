@@ -45,11 +45,11 @@
         <div class="container">
             <div class="left">
                 <div class="title">
-                    @if (Model.ModuleItem.CreatedDate.HasValue)
+                    @if (Model.ContentItem.CreatedDate.HasValue)
                     {
                         <div class="date">
-                            <p><strong>@Model.ModuleItem.CreatedDate.Value.ToString("dd")</strong></p>
-                            <p>@Model.ModuleItem.CreatedDate.Value.ToString("MM/yyyy")</p>
+                            <p><strong>@Model.ContentItem.CreatedDate.Value.ToString("dd")</strong></p>
+                            <p>@Model.ContentItem.CreatedDate.Value.ToString("MM/yyyy")</p>
                         </div>
                     }
                     <h1 class="big-title title-main-page">@Model.ContentItem.Name</h1>
@@ -133,6 +133,7 @@
 
                         <div class="item item-news-index">
                             <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                <span class="hover"></span>
                                 @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                             </a>
                             <div class="text">

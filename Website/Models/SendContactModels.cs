@@ -16,7 +16,7 @@ namespace Website.Models
         [Required]
         public string Phone { get; set; }
         public string UrlFile { get; set; }
-        
+        public string Price { get; set; }
         public string Content { get; set; }
         public string Accessory { get; set; }
         public string PlateType { get; set; }

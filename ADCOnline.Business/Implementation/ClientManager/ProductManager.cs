@@ -533,10 +533,11 @@ namespace ADCOnline.Business.Implementation.ClientManager
                 if (!string.IsNullOrEmpty(search.gia))
                 {
                     List<string> giaids = ListHelper.GetValuesArrayTag(search.gia);
-                    decimal from = ConvertUtil.ToDecimal(giaids[0]);
-                    decimal to = ConvertUtil.ToDecimal(giaids[1]);
-                    if (from > 0) giafrom = Math.Abs(from * 1000000);
-                    if (to > 0) giato = Math.Abs(to * 1000000);
+                    giafrom = ConvertUtil.ToDecimal(giaids[0]);
+                    giato = ConvertUtil.ToDecimal(giaids[1]);
+
+                    //if (from > 0) giafrom = Math.Abs(from * 1000000);
+                    //if (to > 0) giato = Math.Abs(to * 1000000);
                 }
                 using (SqlConnection connect = _dapperDa.GetOpenConnection())
                 {
@@ -547,8 +548,8 @@ namespace ADCOnline.Business.Implementation.ClientManager
                         @ModuleIds = ModuleIds.AsTableValuedParameter("[dbo].[keysSearch]"),
                         @AttrIds = AttrIds.AsTableValuedParameter("[dbo].[KeysSearchSort]"),
                         @HsxIds = HsxIds.AsTableValuedParameter("[dbo].[keysSearch]"),
-                        @giafrom = (int?)giafrom,
-                        @giato = (int?)giato,
+                        @giafrom = giafrom,
+                        @giato = giato,
                         search.sort,
                         search.lang,
                         contentIds,

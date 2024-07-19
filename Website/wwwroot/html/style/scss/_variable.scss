@@ -1,6 +1,6 @@
 @font-face {
     font-family: UTM-E-C;
-    src: url("../fonts/00089-UTM-Essendine-Caps.ttf");
+    src: url("/html/style/fonts/00089-UTM-Essendine-Caps.ttf");
     font-display: swap;
 }
 
@@ -8,7 +8,7 @@
     font-family: "default";
     font-style: normal;
     font-weight: 700;
-    src: url("../fonts/inteligent-bold.otf");
+    src: url("/html/style/fonts/inteligent-bold.otf");
     font-display: swap;
 }
 
@@ -16,7 +16,7 @@
     font-family: "default";
     font-style: normal;
     font-weight: 600;
-    src: url("../fonts/inteligent-semibold.otf");
+    src: url("/html/style/fonts/inteligent-semibold.otf");
     font-display: swap;
 }
 
@@ -24,7 +24,7 @@
     font-family: "default";
     font-style: normal;
     font-weight: 400;
-    src: url("../fonts/inteligent-regular.otf");
+    src: url("/html/style/fonts/inteligent-regular.otf");
     font-display: swap;
 }
 
@@ -32,6 +32,7 @@
     //color
     --color-main: #54a34c;
     --color-main1: #5a3d2a;
+    --color-big-title: #5a3d2a;
     --color-red: #ec282f;
     --color-white: #fff;
     --color-text: #393939;
@@ -44,7 +45,7 @@
     --color-old-price: #727272;
     --color-border-dot: #a3a3a3;
     --color-border-product-new: #c7c7c7;
-    --color-border-table: #ececec;
+    --color-border-table: #cecece;
     --color-border-map: #cacaca;
     --color-border-input: #b9bbb7;
     --color-border-page: #c5c5c5;
@@ -57,15 +58,16 @@
     --color-before-input: #d8d8d8;
     //bg-color
     --bg-translate: #eeefef;
-    --bg-mess: ##1777f1;
+    --bg-mess: #1777f1;
     --bg-zalo: #008ff3;
     //height
     --h-header: 87.6px;
     --h-header-mini: 80px;
     //width
-    --width-container-2: 1470px;
-    --width-container: 1300px;
+    --width-container-2: 1400px;
+    --width-container: 1230px;
     --width-logo: 235px;
+    --width-logo-ft: 160px;
     //font-size
     --fs-text-min: 13px;
     --fs-text: 16px;
@@ -77,6 +79,7 @@
     --fs-h4: 16px;
     --fs-h5: 15px;
     --fs-h6: 14px;
+    --fs-title-recuiment: 24px;
     //------------------------------------------------
     --fs-year: 50px;
     --fs-news-date-strong: 28px;
@@ -89,21 +92,20 @@
     --fs-name: 17px;
     --fs-code: 15px;
     --fs-old-price: 14px;
-    --fs-old-price: 14px;
+    --fs-new-price: 17px;
     --fs-price: 28px;
     --fs-paragraph: 16px;
     --fs-more-item: 17px;
     --fs-more-border: 16px;
     --fs-more: 14px;
     --fs-page: 14px;
-    --fs-news-date: 12px; 
+    --fs-news-date: 12px;
     //fs title
     --fs-title-min: 26px;
     --fs-title-ft: 18px;
     --fs-title-product: 24px;
     --fs-title-product-min: 20px;
     --fs-14: 14px;
-
     --fs-title: 40px;
     --fs-title-extra: 34px;
     --fs-title-product-detail: 38px;
@@ -111,7 +113,7 @@
     --fs-title-banner: 26px;
     --fs-title-main-page: 26px;
     --fs-title-item-flex: 24px;
-    --fs-title-recruitment: 24px;
+    --fs-title-recruitment: 22px;
     --fs-title-form: 22px;
     --fs-title-item: 20px;
     --fs-title-product: 18px;
@@ -121,6 +123,7 @@
         --width-container: 1300px;
         --width-container-2: 1470px;
         --width-logo: 235px;
+        --width-logo-ft: 160px;
     }
 }
 // 1199px
@@ -129,6 +132,11 @@
         --width-container: 1130px;
         --width-container-2: 1280px;
         --width-logo: 205px;
+        --width-logo-ft: 140px;
+        --fs-title-banner: 20px;
+        --fs-text: 15px;
+        --fs-title-recuiment: 17px;
+        --fs-title-recruitment : 20px;
     }
 }
 //991px
@@ -138,14 +146,27 @@
         --width-container-2: 1100px;
         --fs-title: 22px;
         --width-logo: 180px;
+        --width-logo-ft: 120px;
+        --fs-title-banner: 20px;
     }
 }
-//767px
+
 @media (max-width: 991px) {
+    :root {
+        --fs-title-recuiment: 16px;
+        --fs-text: 14px;
+        --width-container: unset;
+        --width-container-2: unset;
+        --width-logo: 123px;
+        --width-logo-ft: unset;
+    }
+}
+@media (max-width: 767px) {
     :root {
         --fs-text: 14px;
         --width-container: unset;
         --width-container-2: unset;
+        --width-logo: 96px;
         //------------------------------------------------
         --fs-year: 22px;
         --fs-news-date-strong: 22px;

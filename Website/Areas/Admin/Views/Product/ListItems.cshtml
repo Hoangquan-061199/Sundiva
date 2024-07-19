@@ -13,7 +13,7 @@
     bool isSale = false;
     bool isFrame = false;
     bool isInsert = false;
-    bool isProductCode = false;
+    bool isProductCode = true;
     bool isBrand = true;
     bool isView = false;
     bool isSold = false;
@@ -24,6 +24,7 @@
 }
 @if (Model.SystemActionAdmin.View)
 {
+    <input type="hidden" id="TypeView" value="Product" />
     <div id="tblContent">
         <table class="table table-bordered table-hover">
             <thead>
@@ -132,6 +133,7 @@
                                     <li><a href="javascript:" class="removeframes btn btn-danger" title="Bỏ khung các sản phẩm đã chọn"><i class="lnr lnr-pencil"></i><span>Bỏ khung</span></a></li>
                                 }
                                 <li><a href="javascript:" class="resize btn btn-warning"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                                <li><a href="javascript:" class="resize-album"><i class="lnr lnr-pencil"></i><span>Resize album</span></a></li>
                             </ul>
                         </div>
                     </th>
@@ -150,7 +152,7 @@
                     {
                         <tr id="item_@item.ID" class="@(item.ID==Model.Product.ID ? "active" : string.Empty)">
                             <td class="text-center">
-                                @if (Model.SystemActionAdmin.Edit)
+                                @if (Model.SystemActionAdmin.Edit && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                 {
                                     <a href="#@item.ID" class="edit" data-tab="">
                                         @if (!string.IsNullOrEmpty(item.UrlPicture))
@@ -176,7 +178,7 @@
                                 }
                             </td>
                             <td class="@(("," + item.ViewHome+ ",").Contains(",0,") ? "new" : string.Empty)">
-                                @if ((!string.IsNullOrEmpty(item.NameAscii) || !string.IsNullOrEmpty(item.LinkUrl)) && Model.SystemActionAdmin.Edit == true)
+                                @if ((!string.IsNullOrEmpty(item.NameAscii) || !string.IsNullOrEmpty(item.LinkUrl)) && Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                 {
                                     <a href="#@item.ID" class="edit" data-tab="">@Html.Raw(Utility.DisplayShowName(item._Name, item.IsShow))</a>
                                 }
@@ -197,7 +199,7 @@
                                 }
                                 @if (isProductCode == true && !string.IsNullOrEmpty(item.ProductCode))
                                 {
-                                    <div>Mã: <b>@item.ProductCode</b> Nhóm: <b>@item.ProductGroupCode</b></div>
+                                    <div>Mã: <b>@item.ProductCode</b></div>
                                 }
                                 @*@if (isBrand == true && !string.IsNullOrEmpty(item.NameBrand))
                     {
@@ -219,13 +221,19 @@
                                         <!option value="2" @(item.Status == 2 ? "selected" : string.Empty)>Ngừng kinh doanh</!option>
                                     </select>
                                 }
-                                @if (Model.SystemActionAdmin.Active)
+                                @if (Model.SystemActionAdmin.Active && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                 {
                                     <a href="#@item.ID" class="hiddens" title="Nhấn click để @(ConvertUtil.ToBool(item.IsShow)?" Ẩn "+item._Name:" Hiển thị "+item._Name) sản phẩm">@Html.Raw(StaticEnum.Show(item.IsShow))</a>
+                                } else
+                                {
+                                    @Html.Raw(StaticEnum.Show(item.IsShow))
                                 }
-                                @if (Model.SystemActionAdmin.Sitemap)
+                                @if (Model.SystemActionAdmin.Sitemap && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                 {
                                     <a href="#@item.ID" class="sitemaps" title="Nhấn click để @(ConvertUtil.ToBool(item.IsSitemap)?" gỡ "+item._Name:" thêm "+item._Name) sản phẩm vào sitemap">@Html.Raw(StaticEnum.Sitemap(item.IsSitemap))</a>
+                                }else
+                                {
+                                    @Html.Raw(StaticEnum.Sitemap(item.IsSitemap))
                                 }
                                 @*@{
                     var ids = "," + item.ViewHome + ",";
@@ -263,14 +271,20 @@
                             {
                                 <td class="@(item.TypeSaleValue>0 ? "sale" : string.Empty)">
                                     @*<input type="text" style="margin-bottom:10px;" class="InputPriceOld @(item.IsShowPrice!=true ? "hidden-price" : string.Empty) form-control" name="PriceOld" onchange="changePriceOld('@item.ID', this.value)" value="@Utility.GetFormatPriceType(item.PriceOld, 1, string.Empty)" disabled />*@
-                                    <input type="text" style="color:red;" class="InputPrice @(item.IsShowPrice!=true ? "hidden-price" : string.Empty) form-control" name="Price" onchange="changePrice('@item.ID', this.value)" value="@Utility.GetFormatPriceType(item.Price, 1, string.Empty)" disabled />
+                                    @if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
+                                    {
+                                        <input type="text" style="color:red;" class="InputPrice @(item.IsShowPrice!=true ? "hidden-price" : string.Empty) form-control" name="Price" onchange="changePrice('@item.ID', this.value)" value="@Utility.GetFormatPriceType(item.Price, 1, string.Empty)" disabled />
+                                    }else
+                                    {
+                                        <span class="">@Utility.GetFormatPriceType(item.Price, 1, string.Empty)</span>
+                                    }
                                     @if (item.TypeSaleValue.HasValue && item.TypeSaleValue.Value > 0 && item.TypeSale == 1 && isSale == true)
                                     {
                                         <span class="badge badge-warning"><span class="lnr lnr-arrow-down"></span>@(item.TypeSaleValue.HasValue ? Math.Round(item.TypeSaleValue.Value, 0) : 0)%</span>
                                     }
                                     @if (isVat == true)
                                     {
-                                        if (Model.SystemActionAdmin.Edit == true)
+                                        if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                         {
                                             <a href="#@item.ID" class="isvat">@Html.Raw(StaticEnum.VAT(item.IsVAT))</a>
                                         }
@@ -292,7 +306,7 @@
                             {
                                 <td>Tạo: @item.CreatedDate.Value.ToString("dd/MM/yyyy HH:mm:ss") <span class="color-info" style="font-size:12px;">bởi @item.CreatorName</span></td>
                             }
-                            @if (Model.SystemActionAdmin.Edit == true)
+                            @if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                             {
                                 <td>
                                     <a href="#@item.ID" class="edit badge badge-primary" data-tab="TabModule"><span class="lnr lnr-pencil"></span></a>
@@ -347,13 +361,13 @@
                                         <span class="lnr lnr-eye"></span>
                                     </a>
                                 }
-                                @if (Model.SystemActionAdmin.Edit)
+                               @if (Model.SystemActionAdmin.Edit && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                 {
                                     <a href="#@item.ID" class="edit" data-toggle="tooltip" data-tab="" data-placement="bottom" title="Nhấn click để chỉnh sửa sản phẩm">
                                         <span class="lnr lnr-pencil"></span>
                                     </a>
                                 }
-                                @if (Model.SystemActionAdmin.Delete)
+                                @if (Model.SystemActionAdmin.Delete && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                 {
                                     <a href="#@item.ID" class="delete" title="Nhấn click để xóa sản phẩm">
                                         <span class="lnr lnr-trash"></span>
@@ -361,10 +375,19 @@
                                 }
                             </td>
                             <td class="text-center">
-                                <div class="label-check">
-                                    <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" class="minimal check" value="@item.ID">
-                                    <label for="Check@(item.ID)"></label>
-                                </div>
+                               @if (Model.SystemActionAdmin.Edit && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
+                                {
+                                    <div class="label-check">
+                                        <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                        <label for="Check@(item.ID)"></label>
+                                    </div>
+                                }else
+                                {
+                                    <div class="label-check">
+                                        <input type="checkbox" class="minimal check">
+                                        <label for="Check"></label>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }

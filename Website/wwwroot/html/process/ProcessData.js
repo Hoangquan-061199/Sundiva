@@ -14,13 +14,11 @@ function ProcessData() {
                 FullName: { required: true },
                 Phone: { required: true, minlength: 10, maxlength: 12 },
                 Email: { required: true, email: true },
-                Title: { required: true }
             },
             messages: {
                 FullName: { required: GetSource("NhapHoTen") },
                 Phone: { required: GetSource("NhapSoDienThoai"), minlength: GetSource("Tu10Den12KyTu"), maxlength: GetSource("Tu10Den12KyTu") },
                 Email: { required: GetSource("NhapEmail"), email: GetSource("EmailKhongChinhXac") },
-                Title: { required: GetSource("NhapTieuDe") }
             },
             submitHandler: function () {
                 let d = $formContact.serialize();
@@ -150,29 +148,31 @@ function ProcessData() {
             }
         });
     };
-    this.SendBookTour = function () {
-        let $formContact = $("#BookTour");
+    this.SendOrder = function () {
+        let $formContact = $("#SendCOrder");
         $formContact.validate({
             rules: {
                 FullName: { required: true },
                 Phone: { required: true, minlength: 10, maxlength: 12 },
-                Email: { required: true, email: true },
+                Number: { required: true },
+                Address: { required: true },
             },
             messages: {
                 FullName: { required: GetSource("NhapHoTen") },
                 Phone: { required: GetSource("NhapSoDienThoai"), minlength: GetSource("Tu10Den12KyTu"), maxlength: GetSource("Tu10Den12KyTu") },
-                Email: { required: GetSource("NhapEmail"), email: GetSource("EmailKhongChinhXac") },
+                Number: { required: '' },
+                Address: { required: '' },
             },
             submitHandler: function () {
                 updateDateDDMMYYYY();
                 let d = $formContact.serialize();
-                $(".book-tour-submit").prop("disabled", true).hide();
+                $("#SendCOrder .submit-contact").prop("disabled", true).hide();
                 $(".load").addClass('show');
                 $("body").addClass('disable');
                 let action = $formContact.attr('action');
                 $.post(action, d, function (data) {
                     if (data.errors) {
-                        $(".book-tour-submit").prop("disabled", false).show();
+                        $("#SendCOrder .submit-contact").prop("disabled", false).show();
                         $(".load").removeClass('show');
                         $("body").removeClass('disable');
                         OpenAlert(data.message, false);
@@ -182,10 +182,10 @@ function ProcessData() {
                         setInterval(function () { window.location.reload(); }, 3000);
                         $(".load").removeClass('show');
                         $("body").removeClass('disable');
-                        $(".book-tour-submit").show();
+                        $("#SendCOrder .submit-contact").show();
                     }
                 }).fail(function () {
-                    $(".book-tour-submit").prop("disabled", false).show();
+                    $("#SendCOrder .submit-contact").prop("disabled", false).show();
                     $(".load").removeClass('show');
                     $("body").removeClass('disable');
                     OpenAlert(GetSource("GuiThatBai"), false);
@@ -659,7 +659,6 @@ $(function () {
 });
 //#region hidden
 var Resource = new Object();
-LoadResource();
 function LoadResource() { var o = "/DataJson/Resource/Resources_" + lang + ".json"; $.ajax({ url: o, dataType: "json", async: !1, success: function (o) { Resource = o }, error: function (o) { console.log("Dữ liệu không tồn tại") } }) }
 function GetSource(e) { var r = Resource[e]; return null != r ? r : "[" + e + "]" }
 var getUrlParameter = function (r) { for (var t, e = window.location.search.substring(1).split("&"), n = 0; n < e.length; n++)if ((t = e[n].split("="))[0] === r) return t[1], decodeURIComponent(t[1]); return !1 };
@@ -678,24 +677,8 @@ function resizeImage(e, s) {
 
 function getValueFormMutilSelect(t) { var e, i = ""; return $(t).find("input[type='checkbox']:checked, input[type='radio']:checked, input[type='text'],input[type='number'], input[type='hidden'], select").each(function () { e = $(this).attr("name"), "" != $(this).val() && (i += "&" + e + "=" + $(this).val()) }), "" != i && (i = i.substring(1)), i }
 function getparram(t) { var n = new Object; return $(t).find("input[type='checkbox']:checked, input[type='radio']:checked, input[type='text'],input[type='number'], input[type='hidden'], select").each(function () { var t = $(this).attr("name"), e = $(this).val(); "" != $(this).val() && "" != t && null != t && (n[t] = e) }), n }
-//function TemplateLoading() { return '<div class="load show text-center"><img src="/html/style/image2022/loading.svg" alt="' + GetSource('DangTai') + '" /><p>' + GetSource('DangTai') + '</p></div>' }
 function formatPrice(n, e) { return null == n ? "Liên hệ" : n.toFixed(0).replace(/./g, function (n, e, r) { return 0 < e && "." !== n && (r.length - e) % 3 == 0 ? "," + n : n }) + e }
-function OpenVideo(url) {
-    var html = ``;
-    if (url != '') {
-        html = `<div class="popup-vd">`;
-        if (url.includes('images/')) {
-            html += `<div class="ifr-tv"><video width="400" autoplay controls><source src="` + url + `" type="video/mp4"></video></div><div class="bgblack"></div><div class="close-pu"></div>`;
-        } else {
-            var src = "https://www.youtube.com/embed/" + url + "?autoplay=1";
-            html += `<div class="ifr-tv"><iframe src="` + src + `" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div class="bgblack"></div><div class="close-pu"></div>`;
-        }
-        html += `<script>$(".bgblack, .close-pu").click(function () { $('body').find(".popup-vd").remove();$('body').removeClass('nonescroll'); });</script></div>`;
-        $('body').append(html);
-        $('body').addClass('nonescroll');
-        $('.popup-vd').addClass('active');
-    }
-}
+
 function AlertError(r) { window.alert(r) }
 function OpenAlert(msg, success) {
     $('.alrt-popup .main').html(msg);
@@ -859,3 +842,26 @@ function updateDateDDMMYYYY() {
 }
 
 function DateViNow(id) { $(id).datetimepicker({ format: 'd/m/Y', timepicker: false, minDate: 0 }); }
+
+/**
+ * Takes a screenshot from video.
+ * @param videoEl {Element} Video element
+ * @param scale {Number} Screenshot scale (default = 1)
+ * @returns {Element} Screenshot image element
+ */
+function getScreenshot(videoEl, scale) {
+    scale = scale || 1;
+    const video = videoEl;
+
+    const canvas = document.createElement("canvas");
+    // scale the canvas accordingly
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    // draw the video at that frame
+    canvas.getContext('2d')
+        .drawImage(video, 0, 0, canvas.width, canvas.height);
+    // convert it to a usable data URL
+    const dataURL = canvas.toDataURL();
+    var img = document.querySelector(".video-img");
+    img.setAttribute("src", dataURL)
+}

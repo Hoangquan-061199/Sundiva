@@ -55,6 +55,7 @@ namespace ADCOnline.Simple.Item
         public string SeoKeyword { get; set; }
         public string SEOTitle { get; set; }
         public decimal? Price { get; set; }
+        public decimal? Price2 { get; set; }
         public decimal? PriceOld { get; set; }
         public int? TypeSale { get; set; }
         public int? TypeSaleValue { get; set; }

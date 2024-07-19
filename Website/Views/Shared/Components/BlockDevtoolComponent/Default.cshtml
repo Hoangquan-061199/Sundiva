@@ -1,0 +1,59 @@
+﻿@if (ViewBag.IsDev == false)
+{
+    <style>
+        body {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                          supported by Chrome, Edge, Opera and Firefox */
+        }
+    </style>
+    <script>
+        $(document).keydown(function (event) {
+            if (event.keyCode == 123) { // Prevent F12
+                return false;
+            }
+            if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Prevent Ctrl+Shift+I
+                return false;
+            }
+            if (event.ctrlKey && event.shiftKey && event.keyCode == 67) { // Prevent Ctrl+Shift+c
+                return false;
+            }
+            if (event.ctrlKey && event.shiftKey && event.keyCode == 74) { // Prevent Ctrl+Shift+j
+                return false;
+            }
+            if (event.keyCode == 83 && (navigator.platform.match("Mac") ? event.metaKey : event.ctrlKey)) {
+                return false;
+            }
+            if (event.ctrlKey && event.keyCode == 85) {
+                //history.pushState({}, null, '/html/style/source.html')
+                return false;
+            }
+        });
+
+        document.oncontextmenu = document.body.oncontextmenu = function () { return false; }
+        function onDevToolsOpen() {
+            $('html').remove();
+            setTimeout(console.clear.bind(console))
+            setTimeout(() => {
+                console.log(
+                    "%cDevTools is open!",
+                    "color:red;font-family:system-ui;font-size:4rem"
+                )
+            })
+        }
+
+        class DevToolsChecker extends Error {
+            toString() {
+
+            }
+            get message() {
+                onDevToolsOpen();
+            }
+        }
+        console.log(new DevToolsChecker())
+    </script>
+}

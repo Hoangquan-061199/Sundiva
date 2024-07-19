@@ -31,30 +31,63 @@
     {
         switch (position.Code)
         {
+            case StaticEnum.Popup:
+                @if (position.AdvertisingItems.Any())
+                {
+                    <div class="overlay-popup-index"></div>
+                    <div class="popup-index">
+                        <div class="exit-popup">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" /></svg>
+                        </div>
+                        @foreach (var item in position.AdvertisingItems.Take(1))
+                        {
+                            if (!String.IsNullOrEmpty(item.LinkUrl))
+                            {
+                                <a href="@item.LinkUrl" title="@item.Name" target="@(item.LinkUrl.Contains("http") ? "_blank" : "_self")" class="img">
+                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="img">
+                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+                break;
             case StaticEnum.SlideHome:
                 if (position.AdvertisingItems.Any())
                 {
+                    int i = 1;
                     <div class="banner index">
-                        <div class="slide-index owl-carousel owl-theme">
-                            @foreach (AdvertisingItem item in position.AdvertisingItems)
-                            {
-                                if (!string.IsNullOrEmpty(item.LinkUrl))
+                        <div class="slide-index">
+                            <div class=" owl-carousel owl-theme">
+                                @foreach (AdvertisingItem item in position.AdvertisingItems)
                                 {
-                                    <a href="@item.LinkUrl" title="@item.Name" class="item">
-                                        <div class="img">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                    SizeImages size = Utility.GetSizeImages(WebConfig.PathServer, item.UrlPicture);
+                                    if (!string.IsNullOrEmpty(item.LinkUrl))
+                                    {
+                                        <a href="@item.LinkUrl" title="@item.Name" class="item">
+                                            <div class="img">
+                                                <img src="@Common.ImageUrl(item.UrlPicture, Context, 0, 400)" alt="@item.Name" width="@size.Width" height="@size.Height" @(i != 1 ? "loading = \"lazy\"" : string.Empty) />
+                                                @*@Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))*@
+                                            </div>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <div class="item">
+                                            <div class="img">
+                                                <img src="@Common.ImageUrl(item.UrlPicture, Context, 0, 400)" alt="@item.Name" width="@size.Width" height="@size.Height" @(i != 1 ? "loading = \"lazy\"" : string.Empty) />
+                                                @*@Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))*@
+                                            </div>
                                         </div>
-                                    </a>
+                                    }
+                                    i++;
                                 }
-                                else
-                                {
-                                    <div class="item">
-                                        <div class="img">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                        </div>
-                                    </div>
-                                }
-                            }
+                            </div>
                         </div>
                         @if (position.WebsiteModulesItems.Any())
                         {
@@ -63,13 +96,13 @@
                                 {
                                     <div class="item item-list-banner">
                                         <div class="text">
-                                            <h2 class="big-title title-banner">@(!string.IsNullOrEmpty(item.Title) ? item.Title : item.Name)</h2>
+                                            <h2 class="big-title title-banner"><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@(!string.IsNullOrEmpty(item.Title) ? item.Title : item.Name)</a></h2>
                                             <div class="paragaph detail-content">
                                                 @Html.Raw(item.Description)
                                             </div>
                                         </div>
                                         <div class="img-item">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                         </div>
                                     </div>
                                 }
@@ -89,8 +122,9 @@
                                 @foreach (WebsiteModulesJson item in position.WebsiteModulesItems.Where(x => x.ParentID == parent.ID))
                                 {
                                     <div class="item item-product-index">
+                                        <span class="hover"></span>
                                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 600, 400), item.Name))
                                         </a>
                                         <h3 class="big-title title-product color-white"><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></h3>
                                     </div>
@@ -108,38 +142,41 @@
                         <div class="news-index">
                             <div class="container">
                                 <h2 class="big-title center before">@(!string.IsNullOrEmpty(parent.Title) ? parent.Title : parent.Name)</h2>
-                                <div class="slide-news-index owl-carousel owl-theme">
-                                    @foreach (WebsiteContentItem item in position.WebsiteContentItems)
-                                    {
-                                        <div class="item item-news-index">
-                                            <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
-                                            </a>
-                                            <div class="text">
-                                                @if (item.CreatedDate.HasValue)
-                                                {
-                                                    <div class="date">
-                                                        <p><strong>@item.CreatedDate.Value.ToString("dd")</strong></p>
-                                                        <p>@item.CreatedDate.Value.ToString("MM/yyyy")</p>
-                                                    </div>
-                                                }
-                                                <h3>
-                                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
-                                                        @item.Name
-                                                    </a>
-                                                </h3>
-                                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="more">
-                                                    @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                             width="16" height="16" viewBox="0 0 24 24">
-                                                            <path fill="currentColor"
-                                                                  d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
-                                                        </svg>
-                                                    </div>
+                                <div class="slide-news-index">
+                                    <div class="owl-carousel owl-theme">
+                                        @foreach (WebsiteContentItem item in position.WebsiteContentItems)
+                                        {
+                                            <div class="item item-news-index">
+                                                <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                                    <span class="hover"></span>
+                                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                                 </a>
+                                                <div class="text">
+                                                    @if (item.CreatedDate.HasValue)
+                                                    {
+                                                        <div class="date">
+                                                            <p><strong>@item.CreatedDate.Value.ToString("dd")</strong></p>
+                                                            <p>@item.CreatedDate.Value.ToString("MM/yyyy")</p>
+                                                        </div>
+                                                    }
+                                                    <h3>
+                                                        <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">
+                                                            @item.Name
+                                                        </a>
+                                                    </h3>
+                                                    <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="more">
+                                                        @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 width="16" height="16" viewBox="0 0 24 24">
+                                                                <path fill="currentColor"
+                                                                      d="M17.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 17 6H7a1 1 0 0 0 0 2h7.59l-8.3 8.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L16 9.41V17a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38Z" />
+                                                            </svg>
+                                                        </div>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                    }
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -175,16 +212,19 @@
                                     @Html.Raw(module.Description)
                                 </div>
                             </div>
-                            <div class="slide-construction-index owl-carousel owl-theme">
-                                @foreach (WebsiteContentItem item in position.WebsiteContentItems)
-                                {
-                                    <div class="item item-construction-index">
-                                        <div class="img">
-                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                            <div class="slide-construction-index">
+                                <div class="owl-carousel owl-theme">
+                                    @foreach (WebsiteContentItem item in position.WebsiteContentItems)
+                                    {
+                                        <div class="item item-construction-index">
+                                            <div class="img">
+                                                <span class="hover"></span>
+                                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 600, 400), item.Name))
+                                            </div>
+                                            <h3 class="big-title title-product color-white">@item.Name</h3>
                                         </div>
-                                        <h3 class="big-title title-product color-white">@item.Name</h3>
-                                    </div>
-                                }
+                                    }
+                                </div>
                             </div>
                         </div>
                     }

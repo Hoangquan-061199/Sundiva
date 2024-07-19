@@ -1,7 +1,11 @@
-﻿using ADCOnline.Utils;
+﻿using ADCOnline.Business.Implementation.AdminManager;
+using ADCOnline.Simple.Admin;
+using ADCOnline.Simple.Item;
+using ADCOnline.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +21,9 @@ namespace Website.Areas.Admin.Controllers
 {
     public class ImageController : BaseController
     {
+        private readonly WebsiteContentDa _websiteContentDa;
+        private readonly ProductDa _productDa;
+        private readonly WebsiteModuleDa _websiteModuleDa;
         private readonly string _systemRootPath;
         private readonly string _tempPath;
         private readonly string _filesRootPath;
@@ -25,6 +32,9 @@ namespace Website.Areas.Admin.Controllers
         private Dictionary<string, string> _lang = null;
         public ImageController(IWebHostEnvironment env)
         {
+            _websiteContentDa = new WebsiteContentDa(WebConfig.ConnectionString);
+            _productDa = new ProductDa(WebConfig.ConnectionString);
+            _websiteModuleDa = new WebsiteModuleDa(WebConfig.ConnectionString);
             // Setup CMS paths to suit your environment (we usually inject settings for these)
             _systemRootPath = env.ContentRootPath;
             _tempPath = _systemRootPath + "\\wwwroot\\Upload\\Temp";
@@ -36,7 +46,6 @@ namespace Website.Areas.Admin.Controllers
         {
             string dpath = "/wwwroot/resize/";
             string c = string.Empty;
-            Image fileImage;
             try
             {
                 string d = MakePhysicalPath(dpath);
@@ -46,42 +55,56 @@ namespace Website.Areas.Admin.Controllers
                 string res = GetSuccessRes();
                 FileInfo f = new(name);
                 RemoveExist(dpath + name);
-                string dest = Path.Combine(c, name);
+                string dest = Path.Combine(c, name); // image goc
                 string size = WebConfig.Sizes;
-                string[] listsize = size.Split(',');
-                fileImage = Image.FromFile(dest);
-                ImageFormat format = fileImage.RawFormat;
-                ImageCodecInfo codec = ImageCodecInfo.GetImageDecoders().First(x => x.FormatID == format.Guid);
-                string mimeType = codec.MimeType;
-                fileImage.Dispose();
-                for (int i = 0; i < listsize.Length; i++)
+                var isResize = ResizeImages.ResizeImage(c, dest, size, name);
+                if (!isResize) return NotFound();
+                return Ok(true);
+            }
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
+        }
+        public ActionResult ResizeAlbum(string id, string type)
+        {
+            string dpath = "/wwwroot/resize/";
+            string c = string.Empty;
+            try
+            {
+                List<AlbumGalleryAdmin> listAlbum = null;
+                if (type == "Content")
                 {
-                    #region resize
-                    string newurl = AddTail(c + "/", Path.GetFileNameWithoutExtension(name), "x" + listsize[i] + "x4", Path.GetExtension(name), listsize[i]);
-                    using Image filefrom = Image.FromFile(dest);
-                    int height;
-                    int width = ConvertUtil.ToInt32(Convert.ToInt32(listsize[i]));
-                    if (filefrom.Width > width)
-                    {
-                        height = (int)Math.Round(Convert.ToDecimal(width * filefrom.Height / filefrom.Width));
-                    }
-                    else
-                    {
-                        width = filefrom.Width;
-                        height = filefrom.Height;
-                    }
-                    Bitmap result = ResizeImage(filefrom, width, height);
-                    ImageCodecInfo myImageCodecInfo;
-                    Encoder myEncoder;
-                    EncoderParameter myEncoderParameter;
-                    EncoderParameters myEncoderParameters;
-                    myImageCodecInfo = GetEncoderInfo(mimeType);
-                    myEncoder = Encoder.ColorDepth;
-                    myEncoderParameters = new EncoderParameters(1);
-                    myEncoderParameter = new EncoderParameter(myEncoder, 24L);
-                    myEncoderParameters.Param[0] = myEncoderParameter;
-                    result.Save(newurl, myImageCodecInfo, myEncoderParameters);
-                    #endregion
+                    var content = _websiteContentDa.GetId(Convert.ToInt32(id));
+                    if (string.IsNullOrEmpty(content.AlbumPictureJson)) return NotFound();
+                    listAlbum = JsonConvert.DeserializeObject<List<AlbumGalleryAdmin>>(content.AlbumPictureJson);
+                }
+
+                if (type == "Product")
+                {
+                    var product = _productDa.GetId(Convert.ToInt32(id));
+                    if (string.IsNullOrEmpty(product.AlbumPictureJson)) return NotFound();
+                    listAlbum = JsonConvert.DeserializeObject<List<AlbumGalleryAdmin>>(product.AlbumPictureJson);
+                }
+                if (type == "Module")
+                {
+                    var module = _websiteModuleDa.GetId(Convert.ToInt32(id));
+                    if (string.IsNullOrEmpty(module.AlbumPictureJson)) return NotFound();
+                    listAlbum = JsonConvert.DeserializeObject<List<AlbumGalleryAdmin>>(module.AlbumPictureJson);
+                }
+                if (listAlbum == null) return NotFound();
+
+                string d = MakePhysicalPath(dpath);
+                d = FixPath(d);
+                foreach (var item in listAlbum)
+                {
+                    string filename = Path.GetFileName(item.AlbumUrl);
+                    c = MakePhysicalPath(item.AlbumUrl.Replace(filename, ""));
+                    c = FixPath(c);
+                    string dest = Path.Combine(c, filename);
+                    string size = WebConfig.Sizes;
+                    var isResize = ResizeImages.ResizeImage(c, dest, size, filename);
+                    if (!isResize) return NotFound();
                 }
                 return Ok(true);
             }

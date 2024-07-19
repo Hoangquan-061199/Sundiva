@@ -146,6 +146,15 @@ namespace Website.Controllers
                                 SystemConfigJson config = cacheUtils.SystemConfigItem(Lang());
                                 //config.ConfigPopup = JsonConvert.DeserializeObject<Dictionary<string, string>>(config.ConfigPopupJson);
                                 module.AlbumGalleryItems = !string.IsNullOrEmpty(module.AlbumPictureJson) ? JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(module.AlbumPictureJson) : new List<AlbumGalleryItem>();
+                                var moduleproduct = _webModuleManager.GetByModuleTypeCode(StaticEnum.Product, Lang());
+
+                                if (module.ParentID == 0)
+                                {
+                                    ModuleViewModels modelparent = new();
+                                    modelparent.ModuleItem = module;
+                                    modelparent.WebsiteModulesItems = moduleproduct != null ? moduleproduct : new();
+                                    return View(@"~/Views/Product/ListGroupProduct.cshtml", modelparent);
+                                }
 
                                 ModuleViewModels model = new()
                                 {
@@ -154,13 +163,14 @@ namespace Website.Controllers
                                     ModuleItem = module,
                                     SystemConfigItem = config,
                                     WebsiteModulesItem = _webModuleManager.GetByTypeCode(StaticEnum.Contact, Lang()),
-                                    AdvertisingItems = cacheUtils.GetListAdvertisingItemByCode(StaticEnum.TourIndex, Lang())
+                                    AdvertisingItems = cacheUtils.GetListAdvertisingItemByCode(StaticEnum.TourIndex, Lang()),
+                                    WebsiteModulesItems = moduleproduct != null ? moduleproduct : new()
                                 };
 
                                 var moduleNews = _webModuleManager.GetByTypeCode(StaticEnum.News, Lang());
                                 var moduleNewschild = cacheUtils.GetListModuleChidrentNotAsync(moduleNews.ID);
                                 model.ListContentItemHot = _webContentManager.GetListContentHot(3, moduleNews.ID, string.Join(",", moduleNewschild.Select(x => x.ID)));
-                                int pageSize = 6;
+                                int pageSize = 9;
 
                                 #region Lọc (Ẩn)
 
@@ -189,14 +199,13 @@ namespace Website.Controllers
                                         lstattr.Add(Request.Query[key]);
                                     }
                                 }
-
                                 search.attr = string.Join(",", lstattr);
                                 model.ListModuleItems = await cacheUtils.GetListModuleChildID(module.ID, Lang());
                                 var childModule = cacheUtils.GetListModuleChidrentNotAsync(module.ID);
                                 List<ProductItem> listProduct = _productManager.GetListProduct(new SearchModel { page = search.page, lang = Lang(), sort = 5 }, pageSize, module.ID, string.Join(",", childModule.Select(x => x.ID)), "0");
+                                model.MaxPrice = _productManager.MaxPrice(search, module.ID, string.Join(",", childModule.Select(x => x.ID)));
+                                model.MinPrice = _productManager.MinPrice(search, module.ID, string.Join(",", childModule.Select(x => x.ID)));
                                 model.ListModulesItemTour = childModule;
-                                var moduleproduct = _webModuleManager.GetByModuleTypeCode(StaticEnum.Product, Lang());
-                                model.WebsiteModulesItems = moduleproduct != null ? moduleproduct : new();
 
                                 #region check khuyen mai (Ẩn)
 
@@ -255,16 +264,14 @@ namespace Website.Controllers
                                 model.PageSize = pageSize;
                                 model.Page = p ?? 1;
                                 model.SearchModel = search;
-                                ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
+                                //ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
 
-                                //ViewBag.GridHtml = Common.GetAjaxPage(search.page, model.Total.Value, pageSize);
+                                ViewBag.GridHtml = Common.GetAjaxPage(search.page, model.Total.Value, pageSize);
                                 //if(model.ListProductItem.Count() == 1)
                                 //{
                                 //    return RedirectPermanent(model.ListProductItem.FirstOrDefault().NameAscii);
                                 //}
                                 await _webModuleManager.UpdateTotalViews(module.ID);
-                                if(module.ParentID == 0)
-                                    return View(@"~/Views/Product/ListGroupProduct.cshtml", model);
                                 return View(@"~/Views/Product/ListGridProduct.cshtml", model);
                             }
 
@@ -389,12 +396,10 @@ namespace Website.Controllers
                                 IEnumerable<WebsiteModulesItem> childmodule = await cacheUtils.GetListModuleChidrentAsync(module.ID);
                                 model.WebsiteModulesItems = module.ParentID == 0 ? await cacheUtils.GetListModuleChildID(module.ID, Lang()) : childmodule.Any(x => x.ParentID == module.ID) ? childmodule.Where(x => x.ParentID == module.ID)?.ToList() : await cacheUtils.GetListModuleChildID(module.ParentID.Value, Lang());
                                 model.ModuleParentItem = childmodule.Any(x => x.ParentID == module.ID) ? module : cacheUtils.GetModuleById(module.ParentID.HasValue && module.ParentID.Value > 0 ? module.ParentID.Value : module.ID);
-                                int pageSize = 10;
+                                int pageSize = 4;
                                 search.sort = 1;
                                 search.start = (search.page - 1) * pageSize;
-                                IEnumerable<WebsiteContentItem> listContentNoUrl = await _webContentManager.GetListContent(search, 0, model.WebsiteModulesItems.FirstOrDefault(x => x.ModuleTypeCode == StaticEnum.SimpleModule).ID, "0", "0");
-                                IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, string.Join(",", model.WebsiteModulesItems.Where(x => x.TypeView == StaticEnum.Recuiment2).Select(x => x.ID)), "0");
-                                model.ListContentItem = listContentNoUrl;
+                                IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, "0", "0");
                                 model.ListContentItemAsync = listContent;
                                 model.Total = listContent.Any() ? listContent.FirstOrDefault().TotalRecord : 0;
                                 model.PageSize = pageSize;
@@ -402,6 +407,14 @@ namespace Website.Controllers
                                 model.SearchModel = search;
                                 ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
                                 await _webModuleManager.UpdateTotalViews(module.ID);
+
+                                if (module.TypeView == StaticEnum.Recuiment1)
+                                    return View(@"~/Views/News/ListRecuitment1.cshtml", model);
+                                if (model.WebsiteModulesItems.Any(x => x.ModuleTypeCode == StaticEnum.SimpleModule))
+                                {
+                                    IEnumerable<WebsiteContentItem> listContentNoUrl = await _webContentManager.GetListContent(search, 0, model.WebsiteModulesItems.FirstOrDefault(x => x.ModuleTypeCode == StaticEnum.SimpleModule).ID, "0", "0");
+                                    model.ListContentItem = listContentNoUrl != null ? listContentNoUrl : null;
+                                }
                                 return View(@"~/Views/News/ListRecuitment.cshtml", model);
                             }
                         #endregion Tuyển dụng
@@ -421,9 +434,9 @@ namespace Website.Controllers
                                 IEnumerable<WebsiteModulesItem> childmodule = await cacheUtils.GetListModuleChidrentAsync(module.ID);
                                 model.WebsiteModulesItems = module.ParentID == 0 ? await cacheUtils.GetListModuleChildID(module.ID, Lang()) : childmodule.Any(x => x.ParentID == module.ID) ? childmodule.Where(x => x.ParentID == module.ID)?.ToList() : await cacheUtils.GetListModuleChildID(module.ParentID.Value, Lang());
                                 int pageSize = 6;
+                                search.sort = 1;
                                 IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, string.Join(",", childmodule.Select(x => x.ID)), "0");
                                 model.ListContentItemAsync = listContent;
-
                                 List<WebsiteContentItem> listContentHot = _webContentManager.GetListContentHot(pageSize, module.ID, string.Join(",", childmodule.Select(x => x.ID)));
                                 model.ListContentItemHot = listContentHot;
                                 model.Total = listContent.Any() ? listContent.FirstOrDefault().TotalRecord : 0;
@@ -459,8 +472,7 @@ namespace Website.Controllers
                                 model.SearchModel = search;
                                 ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
                                 await _webModuleManager.UpdateTotalViews(module.ID);
-                                if (listContent.Count() == 1)
-                                    return RedirectPermanent(Utility.Link(listContent.FirstOrDefault().NameAscii, string.Empty, listContent.FirstOrDefault().LinkUrl));
+
                                 if (module.ParentID == 0)
                                 {
                                     if (model.WebsiteModulesItems.Count() == 1)
@@ -548,6 +560,7 @@ namespace Website.Controllers
                                     SystemConfigItem = cacheUtils.SystemConfigItem(Lang()),
                                 };
                                 int pageSize = 6;
+                                search.sort = 5;
                                 IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, string.Join(",", Allmodule.Select(x => x.ID)), "0");
                                 model.ListContentItemAsync = listContent;
                                 model.Total = listContent.Any() ? listContent.FirstOrDefault().TotalRecord : 0;
@@ -922,34 +935,38 @@ namespace Website.Controllers
 
                                         #region Attribute
 
-                                        //attr
-                                        //IEnumerable<AttributeItem> attr = new List<AttributeItem>();
-                                        //List<AttributeItem> attrCal = new();
-                                        //List<Attribute_WebsiteContentItem> attrCalPrice = new();
-                                        //if (!string.IsNullOrEmpty(product.AttributeProductIds))
-                                        //{
-                                        //    attr = await _productManager.GetAttributeByListIds(product.AttributeProductIds);
-                                        //    foreach (AttributeItem item in attr)
-                                        //    {
-                                        //        string temp = string.Empty;
-                                        //        if (module != null)
-                                        //        {
-                                        //            temp = "," + module.AttributeModuleIdsCal + ",";
-                                        //        }
-                                        //        if (temp.Contains("," + item.ID + ","))
-                                        //        {
-                                        //            attrCal.Add(item);
-                                        //        }
-                                        //        if (item.ParentID != null && temp.Contains("," + item.ParentID.Value + ","))
-                                        //        {
-                                        //            attrCal.Add(item);
-                                        //        }
-                                        //    }
-                                        //    if (attrCal.Any())
-                                        //    {
-                                        //        attrCalPrice = _productManager.GetAttributeWebsiteContentItemByListAttrIdsAndProductId(string.Join(",", attrCal.Select(c => c.ID.ToString())), product.ID);
-                                        //    }
-                                        //}
+                                        IEnumerable<AttributeItem> attr = new List<AttributeItem>();
+                                        List<AttributeItem> attrCal = new();
+                                        var priceMin = 0;
+                                        List<Attribute_WebsiteContentItem> attrCalPrice = new();
+                                        if (!string.IsNullOrEmpty(product.AttributeProductIds))
+                                        {
+                                            attr = await _productManager.GetAttributeByListIds(product.AttributeProductIds);
+                                            foreach (AttributeItem item in attr)
+                                            {
+                                                string temp = string.Empty;
+                                                if (module != null)
+                                                {
+                                                    temp = "," + module.AttributeModuleIdsCal + ",";
+                                                }
+                                                if (temp.Contains("," + item.ID + ","))
+                                                {
+                                                    attrCal.Add(item);
+                                                }
+                                                if (item.ParentID != null && temp.Contains("," + item.ParentID.Value + ","))
+                                                {
+                                                    attrCal.Add(item);
+                                                }
+                                            }
+                                            if (attrCal.Any())
+                                            {
+                                                attrCalPrice = _productManager.GetAttributeWebsiteContentItemByListAttrIdsAndProductId(string.Join(",", attrCal.Where(x => x.ParentID != 0).Select(c => c.ID.ToString())), product.ID);
+                                            }
+
+
+
+
+                                        }
 
                                         #endregion Attribute
 
@@ -1041,6 +1058,9 @@ namespace Website.Controllers
                                             BreadcrumbList = await cacheUtils.GetListBreadcrumb(module.ID, Lang()),
                                             CustomerItem = _customerManager.GetId(GetWebUserID()),
                                             ProductItem = product,
+                                            AttributeItems = attr,
+                                            AttributeItemCals = attrCal,
+                                            AttributeWebsiteContentItems = attrCalPrice,
                                             ModuleItem = module ?? new WebsiteModulesItem(),
                                             ListProductModels = related,
                                             SystemConfigJson = cacheUtils.SystemConfigItem(Lang()),
@@ -1054,47 +1074,27 @@ namespace Website.Controllers
                                             //CommentItems = comments.Where(x => x.IsApproved == true),
                                             //TotalComment = comments.Count() > 0 ? comments.FirstOrDefault().TotalRecord : 0,
                                             //RateItems = rate.Where(x => x.IsApproved == true),
-                                            ListProductSub = _subItemManager.GetProductByParentID(Lang(), product.ID)
+                                            ListSubItems = _subItemManager.GetAll(Lang(), product.ID),
+                                            ListModulesItem = ModuleProduct.Where(x => x.ID != module.ID && x.ParentID != 0)
                                         };
 
-                                        if (model.ListProductSub != null)
-                                        {
-                                            model.ListProductSub.ForEach(x =>
-                                            {
-                                                if (!string.IsNullOrEmpty(x.AttributeProductIds))
-                                                {
-                                                    search.lang = Lang();
-                                                    string rs = Regex.Replace(x.AttributeProductIds, "^,", "");
-                                                    rs = Regex.Replace(rs, ",$", "");
-                                                    string[] arr = rs.Split(",");
-                                                    List<string> lstattr = new List<string>(arr);
-                                                    search.ListAttr = lstattr;
-                                                    x.ListColorItems = _productManager.GetListColorProductSub(search);
-                                                }
-                                                x.ListSubItems = _subItemManager.GetAll(Lang(), x.ID);
-                                            });
-                                        }
-
-                                        List<CommonJsonItem> listItem = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("TimeTour.json", "DataJson"));
-                                        List<CommonJsonItem> listItem2 = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("AddressStart.json", "DataJson"));
-                                        if (model.ProductItem != null)
-                                        {
-                                            model.ProductItem.ListSubItems = _subItemManager.GetAll(Lang(), model.ProductItem.ID);
-                                            if (!string.IsNullOrEmpty(model.ProductItem.Times))
-                                            {
-                                                model.ProductItem.TimesValue = listItem != null ? listItem.FirstOrDefault(y => y.ID == Convert.ToInt32(model.ProductItem.Times)).Name : null;
-                                            }
-                                        }
-                                        if (model.ListProductItem.Any())
-                                        {
-                                            foreach (var item in model.ListProductItem)
-                                            {
-                                                if (!string.IsNullOrEmpty(item.Times))
-                                                    item.TimesValue = listItem != null ? listItem.FirstOrDefault(y => y.ID == Convert.ToInt32(item.Times)).Name : null;
-                                                if (!string.IsNullOrEmpty(item.AddressId))
-                                                    item.Address = listItem2.FirstOrDefault(y => y.ID == Convert.ToInt32(item.AddressId)).Name;
-                                            }
-                                        }
+                                        //if (model.ListProductSub != null)
+                                        //{
+                                        //    model.ListProductSub.ForEach(x =>
+                                        //    {
+                                        //        if (!string.IsNullOrEmpty(x.AttributeProductIds))
+                                        //        {
+                                        //            search.lang = Lang();
+                                        //            string rs = Regex.Replace(x.AttributeProductIds, "^,", "");
+                                        //            rs = Regex.Replace(rs, ",$", "");
+                                        //            string[] arr = rs.Split(",");
+                                        //            List<string> lstattr = new List<string>(arr);
+                                        //            search.ListAttr = lstattr;
+                                        //            x.ListColorItems = _productManager.GetListColorProductSub(search);
+                                        //        }
+                                        //        x.ListSubItems = _subItemManager.GetAll(Lang(), x.ID);
+                                        //    });
+                                        //}
 
                                         var listAds = cacheUtils.GetListAdvertisingItemByCode("ADSProductDetail", Lang());
                                         model.ListAds = listAds;
@@ -1154,8 +1154,6 @@ namespace Website.Controllers
                                             model.ListQA = new List<WebsiteContentItem>();
                                         }
                                         await _productManager.UpdateTotalViews(product.ID);
-                                        if (model.ModuleItem.TypeView == StaticEnum.TypeProductII)
-                                            return View(@"~/Views/Product/DetailProductHotel.cshtml", model);
                                         return View(@"~/Views/Product/DetailProduct.cshtml", model);
                                     }
 
@@ -1787,8 +1785,8 @@ namespace Website.Controllers
                     lang = Lang()
                 };
                 await TryUpdateModelAsync(search);
-                search.view = string.IsNullOrEmpty(search.view) ? "grid" : search.view;
-                int pageSize = 6;
+                //search.view = string.IsNullOrEmpty(search.view) ? "grid" : search.view;
+                int pageSize = 9;
                 WebsiteModulesItem module = await cacheUtils.GetModuleByNameAscii(search.seoUrl);
                 if (module.ModuleTypeCode == StaticEnum.Trademark)
                 {
@@ -1808,14 +1806,14 @@ namespace Website.Controllers
                     }
                     search.attr = string.Join(",", lstattr);
                     search.ListAttr = lstattr;
-                    search.sort = search.sort;
+                    search.sort = 5;
                     if (search.page == 1)
                     {
                         search.start = 0;
                     }
                     else
                     {
-                        search.start = (6 + (search.page - 2) * pageSize);
+                        search.start = (pageSize + (search.page - 2) * pageSize);
                     }
                     SearchModel searchproduct = new()
                     {
@@ -1833,16 +1831,6 @@ namespace Website.Controllers
                     listProduct = await _productManager.GetListProductJson(searchproduct, pageSize, module.ID, string.Join(",", childmodule.Select(x => x.ID)), "0");
                     List<CommonJsonItem> listItem = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("TimeTour.json", "DataJson"));
                     List<CommonJsonItem> listItem2 = JsonConvert.DeserializeObject<List<CommonJsonItem>>(ReadFile("AddressStart.json", "DataJson"));
-                    if (listProduct.Any())
-                    {
-                        foreach (var item in listProduct)
-                        {
-                            if (!string.IsNullOrEmpty(item.Times))
-                                item.TimesValue = listItem.FirstOrDefault(y => y.ID == Convert.ToInt32(item.Times)).Name;
-                            if (!string.IsNullOrEmpty(item.AddressId))
-                                item.Address = listItem2.FirstOrDefault(y => y.ID == Convert.ToInt32(item.AddressId)).Name;
-                        }
-                    }
                 }
                 model.ListProductItemJson = listProduct;
                 model.Total = listProduct.Any() ? listProduct.FirstOrDefault().TotalRecord.Value : 0;
@@ -2002,6 +1990,60 @@ namespace Website.Controllers
                 model.PageSize = pageSize;
                 model.Page = search.page > 1 ? search.page : 1;
                 return View(@"~/Views/PartialContent/PartialDocument.cshtml", model);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PartialRecuitment()
+        {
+            try
+            {
+                ModuleViewModels model = new();
+                Response.Headers.Add("AMP-Access-Control-Allow-Source-Origin", Request.Scheme + "://" + Request.Host);
+                Response.Headers.Add("Access-Control-Expose-Headers", "AMP-Redirect-To, AMP-Access-Control-Allow-Source-Origin");
+                SearchModel search = new()
+                {
+                    lang = Lang()
+                };
+                await TryUpdateModelAsync(search);
+                //foreach (var prop in search.GetType().GetProperties())
+                //{
+                //    if (prop.PropertyType == typeof(string))
+                //    {
+                //        var val = search.GetType().GetProperty(prop.Name).GetValue(search, null);
+                //        if (val != null)
+                //        {
+                //            prop.SetValue(search, Utility.RemoveSpecialCharacterSQLInjection2(val.ToString()));
+                //        }
+                //    }
+                //}
+                var module = cacheUtils.GetModuleById(search.moduleId);
+                if (module != null)
+                {
+                    int pageSize = 4;
+                    if (search.page == 1)
+                    {
+                        search.start = 0;
+                    }
+                    else
+                    {
+                        search.start = module.ModuleTypeCode == StaticEnum.Video ? (4 + (search.page - 2) * pageSize) : (4 + (search.page - 2) * pageSize);
+                    }
+
+                    IEnumerable<WebsiteContentItem> listContent = await _webContentManager.GetListContent(search, pageSize, module.ID, "0", "0");
+                    model.ListContentItem = listContent;
+                    model.Total = listContent.Any() ? listContent.FirstOrDefault().TotalRecord : 0;
+                    model.PageSize = pageSize;
+                    model.Page = search.page > 1 ? search.page : 1;
+                    model.ModuleItem = module;
+                    model.Number = search.number;
+                    return View(@"~/Views/PartialContent/PartialRecuitment.cshtml", model);
+                }
+                return NotFound();
             }
             catch
             {

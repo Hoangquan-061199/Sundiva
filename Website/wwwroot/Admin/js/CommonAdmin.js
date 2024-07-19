@@ -47,7 +47,7 @@
         e.preventDefault();
         var old = $(this).val();
         var newval = removeTagHTML(old);
-        newval = newval.replace(/!|\$|\\|\{|\@|\}|\^|\*|\(|\)|\+|\<|\>|,|\;|\'|\"|\[|\]|~|$|”|“|`|®/g, "");
+        newval = newval.replace(/!|\$|\\|\{|\}|\^|\*|\(|\)|\+|\<|\>|,|\;|\'|\"|\[|\]|~|$|”|“|`|®/g, "");
         //newval = newval.replace(/-+-/g, "");
         $(this).val(newval);
     });
@@ -235,81 +235,12 @@ function PostAjaxQuickAttr(urlPostAction, fromId, elemetResult) {
     $.post(urlPostAction, $(fromId).serialize(), function (data) {
         if (data.errors) { swal({ title: "Thông báo", text: data.message, type: "error", showConfirmButton: true, animation: false }); } else {
             var htmlAppend = `
-                <div class="item-attr changeUrlTinyMceParent col-sm-6"
-                    style="height:175px;margin-bottom:15px;padding-bottom: 10px;padding-top:15px;border-top:1px solid #cdcdcd;border-bottom: 1px solid #cdcdcd; border-right: 1px solid #cdcdcd">
-                    <div class="form-group">
-                        <div class="col-sm-1">
-                            <label><input checked type="checkbox" class="child-attr" name="AttributeProductIds" style="margin-right:5px;"
-                                    value="${data.id}"/></label>
-                            Tên
-                        </div>
-                        <div class="col-sm-5">
-                            <input type="text" name="AttributeName_${data.id}" class="form-control"
-                                value="${data.name}" placeholder="Tên" />
-                        </div>
-                        <div class="col-sm-1">
-                            <label>
-                                Màu
-                            </label>
-                        </div>
-                        <div class="col-sm-5">
-                            <input type="text" name="AttributeColor_${data.id}" class="form-control" value=""
-                                placeholder="Mã màu" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-1">
-                            <label>
-                                Ảnh
-                            </label>
-                        </div>
-                        <div class="col-sm-5">
-                            <div class="input-group " style="margin-top:5px;">
-                                <input type="text" class="changeUrlTinyMce link form-control"
-                                    onchange="ChangeUrlTinyMce($(this),'AttributeUrlPicture_${data.id}', 'AttributeUrlPicture_${data.id}',0)"
-                                    value="" placeholder="Ảnh" />
-                                <span class="input-group-addon"><button type="button"
-                                        onclick="SelectFileTyniMce('AttributeUrlPicture_${data.id}','AttributeUrlPicture_${data.id}',0);"
-                                        class="btn btn-info btn-sm"><i class="lnr lnr-upload"></i> ảnh</button></span>
-                            </div>
-                            <div id="AttributeUrlPicture_${data.id}">
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                            <label>
-                                Thứ tự
-                            </label>
-                        </div>
-                        <div class="col-sm-5">
-                            <input type="text" name="AttributeOrderDisplay_${data.id}" class="form-control" value=""
-                                placeholder="Thứ tự" />
-                        </div>
-                    </div>
+                <div class="item-attr changeUrlTinyMceParent">
+                    <label><input type="checkbox" class="child-attr" name="AttributeProductIds" style="margin-right:5px;" value="${data.id}" checked />${data.name}</label>
+                    <input type="text" name="AttributePrice_${data.id}" class="form-control negative-price maskPrice" value="" placeholder="Giá cộng thêm" />
                 </div>
                 `;
             $(elemetResult).append(htmlAppend)
-            $(".child-attr").change(function () {
-                var parrentE = $(this).parents(".parent-ittr-select");
-                var id = $(this).val();
-                if ($(this).is(':checked')) {
-                    parrentE.find(".parr-attr").prop('checked', true);
-                    $('input[name=AttributePrice_' + id + ']').removeAttr('disabled');
-                } else {
-                    var checked = 0;
-                    parrentE.find(".child-attr").each(function () {
-                        if ($(this).is(':checked')) {
-                            checked = 1;
-                            return;
-                        }
-                    })
-                    if (checked == 0) {
-                        parrentE.find(".parr-attr").prop('checked', false);
-                    } else {
-                        parrentE.find(".parr-attr").prop('checked', true);
-                    }
-                    $('input[name=AttributePrice_' + id + ']').attr('disabled', 'disabled');
-                }
-            })
             ModalADC.Close();
 
         }

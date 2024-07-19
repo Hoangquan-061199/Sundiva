@@ -78,13 +78,14 @@
                 </div>
             }
             <div class="list">
-                @if (Model.WebsiteModulesItems.Any())
+                @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
                 {
-                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems)
+                    @foreach (WebsiteModulesItem item in Model.WebsiteModulesItems.Where(x => x.ParentID > 0).OrderBy(x => x.OrderDisplay))
                     {
                         <div class="item item-collection">
                             <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                <span class="hover"></span>
+                                @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                             </a>
                             <h3 class="big-title title-product color-white center"><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></h3>
                         </div>

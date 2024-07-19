@@ -23,21 +23,21 @@ namespace Website.Areas.Admin.Controllers
         public IActionResult Login()
         {
             string pathHost = HttpContext.Request.Host.Host;
-            if (pathHost == "localhost")
-            {
-                AspnetMembership memberShip = aspnetMembershipDa.GetLogin("adconline", "112233");
-                if (memberShip == null && WebConfig.PassAdmin == "112233")
-                {
-                    memberShip = aspnetMembershipDa.GetUserName("adconline");
-                }
-                if (memberShip != null)
-                {
-                    SessionBase session = new (HttpContext);
-                    session.SetAdminUserId(Convert.ToString(memberShip.UserId));
-                    session.SetAdminUserName("adconline");
-                    session.SetAdminRole(memberShip.RoleCode);
-                }
-            }
+            // if (pathHost == "localhost")
+            // {
+            //     AspnetMembership memberShip = aspnetMembershipDa.GetLogin("adconline", "112233");
+            //     if (memberShip == null && WebConfig.PassAdmin == "112233")
+            //     {
+            //         memberShip = aspnetMembershipDa.GetUserName("adconline");
+            //     }
+            //     if (memberShip != null)
+            //     {
+            //         SessionBase session = new (HttpContext);
+            //         session.SetAdminUserId(Convert.ToString(memberShip.UserId));
+            //         session.SetAdminUserName("adconline");
+            //         session.SetAdminRole(memberShip.RoleCode);
+            //     }
+            // }
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString("WebAdminUserID")))
             {
                 return Redirect("/" + WebConfig.AdminAlias + "/HomeAdmin/Index");

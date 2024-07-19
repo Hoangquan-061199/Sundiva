@@ -89,7 +89,7 @@ namespace Website.Areas.Admin.Controllers
                 {
                     ViewBag.Action = action.Do ?? ActionType.Add;
                     ViewBag.ActionText = ActionType.ActionText(action.Do);
-                    return View("AjaxFormApply",model);
+                    return View("AjaxFormApply", model);
                 }
             }
             ViewBag.Action = action.Do ?? ActionType.Add;
@@ -103,23 +103,23 @@ namespace Website.Areas.Admin.Controllers
             JsonMessage msg = new() { Errors = true, Message = "Không có hành động nào được thực hiện." };
             ContactUs obj = new();
             switch (action.Do)
-            {                
+            {
                 case ActionType.Edit:
                     try
                     {
                         if (SystemActionAdmin.Edit != true)
                         {
-                            msg = new JsonMessage{Errors = true,Message = "Bạn chưa được phân quyền cho chức năng này."};
+                            msg = new JsonMessage { Errors = true, Message = "Bạn chưa được phân quyền cho chức năng này." };
                             return Ok(msg);
                         }
                         obj = _contactUsDa.GetId(ConvertUtil.ToInt32(action.ItemId));
                         AddLogEdit(Request.Path, "Edit", obj.ID.ToString(), obj);
-                        TryUpdateModelAsync(obj);                        
+                        TryUpdateModelAsync(obj);
                         int result = _contactUsDa.Update(obj);
                         AddLogAdmin(Request.Path, "Cập nhật liên hệ", "Actions-Edit");
                         if (result > 0)
                         {
-                            msg = new JsonMessage{Errors = false,Message = "Cập nhật thành công.", Obj = obj};
+                            msg = new JsonMessage { Errors = false, Message = "Cập nhật thành công.", Obj = obj };
                             return Ok(msg);
                         }
                     }
@@ -143,7 +143,7 @@ namespace Website.Areas.Admin.Controllers
                         _contactUsDa.Delete(obj, " ID =" + action.ItemId);
                         AddLogEdit(Request.Path, "Delete", action.ItemId.ToString(), obj);
                         AddLogAdmin(Request.Path, "Xóa liên hệ", "Actions-Delete");
-                        msg = new JsonMessage{Errors = false,Message = "Xóa thành công."};
+                        msg = new JsonMessage { Errors = false, Message = "Xóa thành công." };
                         return Ok(msg);
                     }
                     catch (Exception ex)
@@ -210,12 +210,12 @@ namespace Website.Areas.Admin.Controllers
                 xlPackage.Workbook.CalcMode = ExcelCalcMode.Manual;
                 //Create Headers and format them
                 string[] properties = new string[100];
-                properties[0] = "ID";
-                properties[1] = "Tiêu đề";
-                properties[2] = "Tên khách hàng";
+                properties[0] = "STT";
+                properties[1] = "Tên khách hàng";
+                properties[2] = "Điện thoại";
                 properties[3] = "Email";
-                properties[4] = "Số điện thoại";
-                properties[5] = "Nội dung";
+                properties[4] = "Nội dung";
+                properties[5] = "Trang thái";
                 properties[6] = "Ngày gửi";
                 for (int i = 0; i < properties.Length; i++)
                 {
@@ -225,32 +225,44 @@ namespace Website.Areas.Admin.Controllers
                     worksheet.Cells[1, i + 1].Style.Font.Bold = true;
                 }
                 int row = 2;
+                int stt = 1;
                 foreach (ContactUsAdmin item in report)
                 {
                     dem++;
                     int col = 1;
                     if (item.ID > 0)//ID
-                        worksheet.Cells[row, col].Value = item.ID;
+                        worksheet.Cells[row, col].Value = stt;
                     col++;
-                    if (item.Title != null)//Tiêu đề
-                        worksheet.Cells[row, col].Value = item.Title;
-                    col++;
-                    if (item.FullName != null)//Tên khách hàng
+                    if (item.FullName != null)//Tên Khách hàng
                         worksheet.Cells[row, col].Value = item.FullName;
-                    col++;
-                    if (item.Email != null)//Email
-                        worksheet.Cells[row, col].Value = item.Email;
                     col++;
                     if (item.Phone != null)//Số điện thoại
                         worksheet.Cells[row, col].Value = item.Phone;
                     col++;
+                    if (item.Email != null)//Email
+                        worksheet.Cells[row, col].Value = item.Email;
+                    col++;
                     if (item.Content != null)//Nội dung
                         worksheet.Cells[row, col].Value = item.Content;
                     col++;
+                    if (item.Phone != null)//Trang thái
+                        if (item.Status == 1)
+                        {
+                            worksheet.Cells[row, col].Value = "Chưa đọc";
+                        }
+                        else
+                        {
+                            worksheet.Cells[row, col].Value = "Đã đọc";
+                        }
+                    col++;
+                    //if (item.Content != null)//Nội dung
+                    //    worksheet.Cells[row, col].Value = item.Content;
+                    //col++;
                     if (item.CreatedDate.HasValue)//Ngày gửi
                         worksheet.Cells[row, col].Value = item.CreatedDate.Value.ToString("dd/MM/yyyy");
                     col++;
                     row++;
+                    stt++;
                 }
                 string nameexcel = "Danh sách liên hệ " + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fff");
                 xlPackage.Workbook.Properties.Title = string.Format("{0} reports", nameexcel);

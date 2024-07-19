@@ -67,7 +67,7 @@
             <div>@Model.ModuleItem.Name</div>
         </div>
     </div>
-    @if (Model.ListContentItem.Any())
+    @if (Model.ListContentItem != null && Model.ListContentItem.Any())
     {
         <div class="list-recruitment">
             <div class="container">
@@ -86,9 +86,10 @@
             </div>
         </div>
     }
-    @if (Model.ListContentItemAsync.Any())
+    @if (Model.ListContentItemAsync != null && Model.ListContentItemAsync.Any())
     {
         int i = 1;
+         int rest = Model.Total.Value - Model.ListContentItemAsync.Count();
         <div class="chance">
             <div class="container">
                 <div class="big-title center before">@ResourceData.Resource("CoHoiViecLam", ViewBag.Lang)</div>
@@ -103,22 +104,25 @@
                                 <th>@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="grid-load">
                             @foreach (WebsiteContentItem item in Model.ListContentItemAsync)
                             {
                                 <tr>
                                     <td>@i.ToString("D2")</td>
-                                    <td><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
+                                    <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
                                     <td>@item.Address</td>
-                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
-                                    <td><a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
+                                    <td>@(item.EndDate.HasValue ? item.EndDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                    <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
                                 </tr>
                                 i++;
                             }
+                            <input type="hidden" name="number" class="Number" value="@i" />
                         </tbody>
                     </table>
                 </div>
-                <div class="more border square1 uppercase">
+                @if (rest > 0) {
+                    <div class="btn-block">
+                <div class="more border square1 uppercase btn-recuitment" data-page="@(Model.Page + 1)">
                     @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
                              class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -128,6 +132,12 @@
                     </div>
                 </div>
             </div>
+                }
+            </div>
         </div>
     }
+    <input type="hidden" name="moduleId" class="ModuleId" value="@Model.ModuleItem.ID" />
+    <input value="@Model.ModuleItem.NameAscii" id="seoUrl" type="hidden" />
+    <input type="hidden" id="page" value="@Model.Page" />
+    <script defer src="/html/process/content.js"></script>
 }

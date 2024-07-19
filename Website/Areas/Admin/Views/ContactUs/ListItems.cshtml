@@ -41,7 +41,7 @@
                 {
                     <tr id="item_@item.ID" class="@(item.ID == Model.ContactUs.ID ? "active" : string.Empty)">
                         <td>@item.ID</td>
-                        <td>Tiêu đề: <b>@item.Title</b> - Họ tên: <b>@item.FullName</b> - Số điện thoại: <b>@item.Phone</b> - Email: <b>@item.Email</b> - Nội dung: <b>@item.Content</b></td>
+                        <td>Họ tên: <b>@item.FullName</b> - Số điện thoại: <b>@item.Phone</b> - Email: <b>@item.Email</b> - Nội dung: <b>@item.Content</b></td>
                         <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
                         @*<td>@Temp.TypeContact(item.Code)</td>*@
                         <td class="text-center">

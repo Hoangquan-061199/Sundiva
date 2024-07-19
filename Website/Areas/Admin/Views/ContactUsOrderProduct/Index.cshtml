@@ -1,0 +1,76 @@
+﻿@model Website.Areas.Admin.ViewModels.HomeAdminViewModel
+@using Website.Utils
+@using ADCOnline.Utils
+@{
+    ViewBag.Title = "Khách hàng đặt hàng";
+    ViewBag.RolesView = Model.SystemActionAdmin.View;
+    ViewBag.RolesSearch = false;
+    ViewBag.RolesAdd = Model.SystemActionAdmin.Add;
+    ViewBag.RolesEdit = Model.SystemActionAdmin.Edit;
+    ViewBag.RolesExcel = false;
+    ViewBag.RolesPrint = false;
+    ViewBag.RolesCreateFile = false;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (Model.SystemActionAdmin.View)
+{
+    <div class="col-sm-12">
+        @if (Model.ListModule.Any())
+        {
+            @foreach (var item in Model.ListModule.Where(x => x.ParentID == Model.Module.ParentID).OrderBy(x => x.Ord))
+            {
+                <a href="@Utility.LinkAdmin(WebConfig.AdminAlias+"/"+item.Tag,"Index",item.Redirect)" class="badge @(Model.Module.ID == item.ID ? "badge-warning" : "badge-info")">@item.NameModule</a>
+            }
+        }
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active fade in" id="tab_search">
+            <form id="searchFrm">
+                <div class="w_searchgr">
+                    <div class="form-group form-inline">
+                        <input type="text" class="form-control title" name="Keyword" placeholder="Nhập từ khóa cần tìm">
+                        <select class="form-control" name="Status" id="Status">
+                            <option value="">-- Trạng thái --</option>
+                            <option value="1">Đang chờ</option>
+                            <option value="5">Đã đọc</option>
+                        </select>
+                        <input type="text" class="form-control" style="width: 100px !important;" name="page" value="" id="page" placeholder="Trang" />
+                        <button type="submit" class="btn btn-info btn-sm" id="btnSearch"><i class="lnr lnr-magnifier fa-fw" aria-hidden="true"></i> Tìm kiếm</button>
+                        @if (Model.SystemActionAdmin.Add)
+                        {
+                            <button type="button" id="btnExportEx" class="btn btn-success"><span class="lnr lnr-download"></span> Xuất excel</button>
+                        }
+                    </div>
+                </div>
+            </form>
+            <div class="w_tablegr" id="loadGridView">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab_add">
+        </div>
+    </div>
+    <script>
+        $(function() {
+            ValidInput();            
+            urlPostAction = "@Url.Action("Actions")";
+            urlForm = '@Url.Action("AjaxForm")';
+            initAjaxLoad("@Url.Action("ListItems")", "#loadGridView");
+            $("#btnSearch").click(function() {
+                var form = $("#searchFrm");
+                window.location.href = '#' + getValueFormMutilSelect(form);
+                return false;
+            });
+            var urlXuatExcel = '@Url.Action("ProcessExportFile", "ContactUsOrderProduct")';
+            $('#btnExportEx').click(function(e) {
+                e.preventDefault();
+                var frm = $("#searchFrm");
+                var hastag = getValueFormMutilSelect(frm);
+                window.location.href = urlXuatExcel + '?' + hastag;
+                return false;
+            });
+        });
+
+    </script>
+}
+
+

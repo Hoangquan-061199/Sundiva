@@ -27,6 +27,9 @@
 }
 @if (Model.ModuleItem != null)
 {
+    <link href="/lib/jrange/ion.rangeSlider.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/lib/jrange/jquery.range.css">
+    <link rel="stylesheet" href="/lib/jrange/jquery.range-control.css">
     if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
     {
         if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
@@ -68,7 +71,7 @@
         </div>
     </div>
 
-    <div class="price product">
+    <div class="price-quote product">
         <div class="container">
             <div class="left">
                 @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
@@ -100,6 +103,36 @@
                         </div>
                     }
                 }
+                <div class="overlay-fillter"></div>
+                <div class="icon-fillter">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z" /></svg>
+                </div>
+                <div class="filter-price module-filter">
+                    <div class="close-fillter">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512"><path d="M3.9 22.9C10.5 8.9 24.5 0 40 0H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L396.4 195.6C316.2 212.1 256 283 256 368c0 27.4 6.3 53.4 17.5 76.5c-1.6-.8-3.2-1.8-4.7-2.9l-64-48c-8.1-6-12.8-15.5-12.8-25.6V288.9L9 65.3C-.7 53.4-2.8 36.8 3.9 22.9zM432 224a144 144 0 1 1 0 288 144 144 0 1 1 0-288zm59.3 107.3c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0L432 345.4l-36.7-36.7c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6L409.4 368l-36.7 36.7c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0L432 390.6l36.7 36.7c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6L454.6 368l36.7-36.7z" /></svg>
+                    </div>
+                    <div class="item">
+                        <div class="big-title title-main-page before left">
+                            <p>@ResourceData.Resource("Gia", ViewBag.Lang)</p>
+                        </div>
+                        <div class="attr-price">
+                            <input type="hidden" class="rangeslider-price" data-id="11" value="0,@Model.MaxPrice" style="display: none;">
+                            <span id="Min" style="display:none">0</span>
+                            <span id="Max" style="display:none">@Model.MaxPrice</span>
+                            <input name="gia" id="price-rank" type="hidden" value="0,@Model.MaxPrice">
+                        </div>
+                        <div class="from-jranger">
+                            <div class="form-group">
+                                <input type="number" class="not-get maskPrice" id="PriceFrom" value="0">
+                                <label>đ</label>
+                            </div>
+                            <span>to</span>
+                            <div class="form-group">
+                                <input type="number" class="not-get maskPrice" id="PriceTo" value="@Model.MaxPrice"> <label>đ</label>
+                            </div>
+                        </div><div class="filter_price">@ResourceData.Resource("ApDung", ViewBag.Lang)</div>
+                    </div>
+                </div>
                 @if (Model.ListProductModels.Any())
                 {
                     <div class="product-new">
@@ -111,11 +144,12 @@
                             {
                                 <div class="item item-product-new">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
+                                        <span class="hover"></span>
                                         @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
                                     </a>
                                     <div class="text">
                                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
-                                            @item.Name
+                                            @item.Name_
                                         </a>
                                         @if (!string.IsNullOrEmpty(item.ProductCode))
                                         {
@@ -124,11 +158,11 @@
                                             </div>
                                         }
                                         <div class="p-price">
-                                            @if (item.PriceOld.HasValue)
+                                            @if (item.PriceOld.HasValue && item.PriceOld > 0)
                                             {
-                                                <p>@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
+                                                <p class="price-old">@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
                                             }
-                                            <p><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                                            <p class="price"><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
                                         </div>
                                     </div>
                                 </div>
@@ -144,37 +178,46 @@
                 </div>
                 @if (Model.ListProductItem.Any())
                 {
-                    <div class="list-product">
+                    <div class="list-product grid-load-product">
                         @foreach (ProductItem item in Model.ListProductItem)
                         {
                             <div class="item item-product-new main">
                                 <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                    <span class="hover"></span>
+                                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                 </a>
                                 <div class="text">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
-                                        @item.Name
+                                        @item.Name_
                                     </a>
-                                    <div class="code">
-                                        <p>@ResourceData.Resource("Ma", ViewBag.Lang): @item.ProductCode</p>
-                                    </div>
+                                    @if (!string.IsNullOrEmpty(item.ProductCode))
+                                    {
+                                        <div class="code">
+                                            <p>@ResourceData.Resource("Ma", ViewBag.Lang): @item.ProductCode</p>
+                                        </div>
+                                    }
                                     <div class="p-price">
-                                        @if (item.PriceOld.HasValue)
+                                        @if (item.PriceOld.HasValue && item.PriceOld > 0)
                                         {
-                                            <p>@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
+                                            <p class="price-old">@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
                                         }
-                                        <p><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                                        <p class="price"><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
                                     </div>
                                 </div>
                             </div>
                         }
-                    </div>
                         @if (Model.Total > Model.PageSize)
                         {
                             @Html.Raw(ViewBag.GridHtml)
                         }
+                    </div>
                 }
             </div>
         </div>
     </div>
+    <input type="hidden" id="seoUrl" data-size="@Model.PageSize" value="@Model.ModuleItem.NameAscii" />
+    <input type="hidden" id="page" value="@Model.Page" />
+    <script src="/lib/jrange/jquery.range.js"></script>
+    <script src="/lib/jrange/ion.rangeSlider.min.js"></script>
+    <script src="/html/process/product.js"></script>
 }

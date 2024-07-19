@@ -10,11 +10,12 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
     <title>@Html.Raw(ViewBag.Title)</title>
     <meta name="description" content="@Html.Raw(ViewBag.Description)" />
     <meta name="keywords" content="@ViewBag.Keywords" />
     <meta name="robots" content="@(!string.IsNullOrEmpty(ViewBag.IndexGoogle) ? ViewBag.IndexGoogle : "noodp,index,follow")" />
+    @*<meta name="robots" content="noodp,index,follow" />*@
     <meta name="revisit-after" content="1 days" />
     <meta property="og:image" content="@(!string.IsNullOrEmpty(ViewBag.UrlOgImage)? Utility.ReplaceHttpToHttps(urlWebsite +ViewBag.UrlOgImage,WebConfig.EnableHttps) : (Utility.ReplaceHttpToHttps(urlWebsite,WebConfig.EnableHttps)+"/ogimage.jpg"))" />
     <meta property="og:image:alt" content="@ViewBag.OgImageAlt" />
@@ -69,5 +70,6 @@
     });
     </script>*@
     <vc:languages-component></vc:languages-component>
+     @*<vc:block-devtool-component></vc:block-devtool-component>*@
 </body>
 </html>

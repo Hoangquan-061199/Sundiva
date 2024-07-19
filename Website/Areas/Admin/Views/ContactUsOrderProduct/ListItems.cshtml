@@ -1,0 +1,102 @@
+﻿@model Website.Areas.Admin.ViewModels.ContactUsViewModel
+@using ADCOnline.Utils
+@using Website.Utils
+@if (Model.SystemActionAdmin.View)
+{
+    <table id="tblContent" class="table table-bordered table-hover">
+        <thead>
+            <tr role="row">
+                <th class="wd50">ID</th>
+                <th>Thông tin</th>
+                <th>Ngày gửi</th>
+                <th class="text-center" style="width:100px;">Trạng thái</th>
+                <th class="act_roles wd150 text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thao tác <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Model.SystemActionAdmin.Active == true)
+                            {
+                                <li><a href="#showAll" class="showAll" title="Hiển thị chọn"><i class="lnr lnr-checkmark-circle"></i><span>Hiển thị</span></a></li>
+                                <li><a href="#hideAll" class="hideAll" title="Ẩn chọn"><i class="lnr lnr-warning"></i><span>Ẩn</span></a></li>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <li><a href="#deleteAll" title="Xóa chọn" class="deleteAll"><span class="lnr lnr-trash"></span><span>Xóa</span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </th>
+                <th class="text-center wd50">
+                    <div class="label-check">
+                        <input type="checkbox" id="checkAll" class="minimal checkAll" value="">
+                        <label for="checkAll"></label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListItem != null && Model.ListItem.Count > 0)
+            {
+                foreach (var item in Model.ListItem)
+                {
+                    <tr id="item_@item.ID" class="@(item.ID == Model.ContactUs.ID ? "active" : string.Empty)">
+                        <td>@item.ID</td>
+                        <td> Họ tên: <b>@item.FullName</b> - Số điện thoại: <b>@item.Phone</b> - Sản phẩm: <b><a href="@item.ProductLink" title="@item.ProductName" target="_blank">@item.ProductName</a></b> - Loại: <b>@item.Title</b> @* - Email: <b>@item.Email</b> *@- Nội dung: <b>@item.Content</b></td>
+                        <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                        @*<td>@Temp.TypeContact(item.Code)</td>*@
+                        <td class="text-center">
+                            @if (item.Status == 5)
+                            {
+                                <span class="badge badge-success">Đã đọc</span>
+                            }
+                            else if (item.Status == 1)
+                            {
+                                <span class="badge badge-warning">Đang chờ</span>
+                            }
+                        </td>
+                        <td class="act_delete" style="width:150px;">
+                            @if (Model.SystemActionAdmin.Edit == true)
+                            {
+                                <a href="#@item.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @item.FullName">
+                                    <i class="lnr lnr-pencil"></i>
+                                </a>
+                            }
+                            @if (Model.SystemActionAdmin.Delete == true)
+                            {
+                                <a href="#@item.ID" class="delete btn" title="Xóa: @item.FullName">
+                                    <i class="lnr lnr-trash"></i>
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="label-check">
+                                <input type="checkbox" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                <label for="Check@(item.ID)"></label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+    @Html.Raw(ViewBag.GridHtml)
+    <script>
+        $(function() {
+            registerGridView("#tblContent");
+            $('#page').val(@Model.SearchModel.page);
+        });
+    </script>    
+    @if (Model.ContactUs.ID > 0)
+    {
+        <script>
+            $(function() {
+                var item = $('#item_@(Model.ContactUs.ID)');
+                if (item.length > 0) {
+                    window.scrollTo(0, item.offset().top);
+                }
+            });
+        </script>
+    }
+}
+

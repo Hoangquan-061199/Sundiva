@@ -16,6 +16,7 @@
 }
 @if (Model.SystemActionAdmin.View)
 {
+    <input type="hidden" id="TypeView" value="Content" />
     <table id="tblContent" class="table table-bordered table-hover">
         <thead>
             <tr role="row">
@@ -69,6 +70,7 @@
                                 <li><a href="javascript:" class="notsitemapall"><i class="lnr lnr-warning"></i><span>Bỏ sitemap</span></a></li>
                             }
                             <li><a href="javascript:" class="resize"><i class="lnr lnr-pencil"></i><span>Resize</span></a></li>
+                            <li><a href="javascript:" class="resize-album"><i class="lnr lnr-pencil"></i><span>Resize album</span></a></li>
                         </ul>
                     </div>
                 </th>
@@ -87,7 +89,7 @@
                 {
                     <tr id="item_@item.ID" class="@(item.IsShow!=true ? " hid" : string.Empty) @(item.ID==Model.WebsiteContent.ID ? "active" : string.Empty)">
                         <td class="text-center">
-                            @if (Model.SystemActionAdmin.Edit == true)
+                            @if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                             {
                                 <a href="#@item.ID" class="edit" data-tab="">
                                     @if (!string.IsNullOrEmpty(item.UrlPicture))
@@ -109,7 +111,7 @@
                             }
                         </td>
                         <td>
-                            @if (Model.SystemActionAdmin.Edit == true)
+                            @if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                             {
                                 <a class="edit" href="#@item.ID" data-tab="">
                                     @Html.Raw(Utility.DisplayShowName(item.Name, item.IsShow.Value))
@@ -185,16 +187,16 @@
                                 }
                             }
                         </td>
-                        @if (Model.SystemActionAdmin.Edit == true)
+                        @if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                         {
                             <td>
                                 <a href="#@item.ID" class="edit badge badge-primary" data-tab="TabModule"><span class="lnr lnr-pencil"></span></a>
-                                <a href="#@item.ID" class="edit" data-tab="TabModule" data-toggle="tooltip" data-placement="bottom" title="@item.ModuleNames">@Utility.TrimLength(item.ModuleNames,50)</a>
+                                <a href="#@item.ID" class="edit" data-tab="TabModule" data-toggle="tooltip" data-placement="bottom" title="@item.ModuleNames">@Utility.TrimLength(item.ModuleNames, 50)</a>
                             </td>
                         }
                         else
                         {
-                            <td>@Utility.TrimLength(item.ModuleNames,50)</td>
+                            <td>@Utility.TrimLength(item.ModuleNames, 50)</td>
                         }
                         @if (item.ModifiedDate != null)
                         {
@@ -214,7 +216,7 @@
                         @if (!notorder.Contains(Model.SearchModel.type))
                         {
                             <td class="text-center">
-                                @if (Model.SystemActionAdmin.Order)
+                                @if (Model.SystemActionAdmin.Order && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                                 {
                                     <input type="number" class="InputOrderDisplay form-control" name="OrderDisplay" onchange="changeOrder('@item.ID', this.value)" value="@item.OrderDisplay" disabled />
                                 }
@@ -243,13 +245,13 @@
                                     <span class="lnr lnr-eye"></span>
                                 </a>
                             }
-                            @if (Model.SystemActionAdmin.Edit == true)
+                            @if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                             {
                                 <a href="#@item.ID" class="edit btn" data-tab="" title="Chỉnh sửa: @item.Name">
                                     <span class="lnr lnr-pencil"></span>
                                 </a>
                             }
-                            @if (Model.SystemActionAdmin.Delete == true)
+                            @if (Model.SystemActionAdmin.Delete == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
                             {
                                 <a href="#@item.ID" class="delete btn" title="Xóa: @item.Name">
                                     <span class="lnr lnr-trash"></span>
@@ -257,10 +259,20 @@
                             }
                         </td>
                         <td class="text-center">
-                            <div class="label-check">
-                                <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" class="minimal check" value="@item.ID">
-                                <label for="Check@(item.ID)"></label>
-                            </div>
+                            @if (Model.SystemActionAdmin.Edit == true && (Model.Role == "Admin" || Model.UserId == item.CreatorID.ToString()))
+                            {
+                                <div class="label-check">
+                                    <input type="checkbox" data-url="@item.UrlPicture" id="Check@(item.ID)" class="minimal check" value="@item.ID">
+                                    <label for="Check@(item.ID)"></label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="label-check">
+                                    <input type="checkbox" class="minimal check" />
+                                    <label for="Check"></label>
+                                </div>
+                            }
                         </td>
                     </tr>
                 }

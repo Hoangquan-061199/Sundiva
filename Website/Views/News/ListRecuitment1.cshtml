@@ -1,0 +1,115 @@
+﻿@model ModuleViewModels
+@using ADCOnline.Simple.Item
+@using ADCOnline.Utils
+@using Microsoft.Extensions.Options
+@using Website.Utils
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptChaConfig
+@{
+    if (ViewBag.NoIndex == true)
+    {
+        Layout = "~/Views/shared/_LayoutNoIndex.cshtml";
+    }
+    if (Model.ModuleItem != null)
+    {
+        ViewBag.Title = Model.ModuleItem.SEOTitle;
+        ViewBag.Name = Model.ModuleItem.Name;
+        ViewBag.Description = Model.ModuleItem.SeoDescription;
+        ViewBag.Keywords = Model.ModuleItem.SeoKeyword;
+    }
+    ViewBag.UrlOgImage = !string.IsNullOrEmpty(Model.ModuleItem.UrlPicture) ? Model.ModuleItem.UrlPicture : string.Empty;
+    ViewBag.OgImageAlt = !string.IsNullOrEmpty(Model.ModuleItem.SEOTitle) ? Model.ModuleItem.SEOTitle : string.Empty;
+    string url = Utility.ReplaceHttpToHttps(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path, WebConfig.EnableHttps);
+    ViewBag.IndexGoogle = ViewBag.NoIndex == true ? "noodp,noindex,nofollow" : Model.ModuleItem.IndexGoogle;
+    ViewBag.Canonical = !string.IsNullOrEmpty(Model.ModuleItem.Canonical) ? Model.ModuleItem.Canonical : string.Empty;
+    ViewBag.IsSchema = true;
+    ViewBag.ShowDichVu = true;
+}
+
+@if (Model.ModuleItem != null)
+{
+    if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
+    {
+        if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
+        {
+            <div class="banner">
+                <div class="img-banner">
+                    @Html.Raw(Utility.GetImage(WebConfig.PathServer, Model.ModuleItem.AlbumGalleryItems.FirstOrDefault(x => x.AlbumType == 3).AlbumUrl, Model.ModuleItem.Name))
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="banner">
+                <div class="slide-index owl-carousel owl-theme">
+                    @foreach (AlbumGalleryItem item in Model.ModuleItem.AlbumGalleryItems.Where(x => x.AlbumType == 3))
+                    {
+                        <div class="img-banner">
+                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.AlbumUrl, Model.ModuleItem.Name))
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    <div class="path">
+        <div class="container">
+            <a href="/" title="@ResourceData.Resource("TrangChu", ViewBag.Lang)">
+                @ResourceData.Resource("TrangChu", ViewBag.Lang)
+            </a>
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor"
+                     class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                </svg>
+            </div>
+            <vc:bread-crumb-component module-id="@Model.ModuleItem.ParentID"></vc:bread-crumb-component>
+            <div>@Model.ModuleItem.Name</div>
+        </div>
+    </div>
+
+    @if (Model.ListContentItemAsync.Any())
+    {
+        int i = 1;
+        <div class="chance">
+            <div class="container">
+                <div class="big-title center before">@ResourceData.Resource("CoHoiViecLam", ViewBag.Lang)</div>
+                <div class="paragraph fs17 detail-content">
+                    <table class="table-chance">
+                        <thead>
+                            <tr>
+                                <th>@ResourceData.Resource("STT", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("ViTriTuyenDung", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("NoiLamViec", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("HanNopHoSo", ViewBag.Lang)</th>
+                                <th>@ResourceData.Resource("XemChiTiet", ViewBag.Lang)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (WebsiteContentItem item in Model.ListContentItemAsync)
+                            {
+                                <tr>
+                                    <td>@i.ToString("D2")</td>
+                                    <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@item.Name</a></td>
+                                    <td>@item.Address</td>
+                                    <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : string.Empty)</td>
+                                    <td><a href="@Utility.Link(string.Empty, item.NameAscii, item.LinkUrl)" title="@item.Name">@ResourceData.Resource("XemNgay", ViewBag.Lang)</a></td>
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="more border square1 uppercase">
+                    @ResourceData.Resource("XemThem", ViewBag.Lang) <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                             class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

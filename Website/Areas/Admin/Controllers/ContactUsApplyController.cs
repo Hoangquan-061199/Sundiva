@@ -66,7 +66,7 @@ namespace Website.Areas.Admin.Controllers
             };
             if (!ViewBag.IsExport)
             {
-                int total = list!=null && list.Count>0 ? list[0].TotalRecord : 0;
+                int total = list != null && list.Count > 0 ? list[0].TotalRecord : 0;
                 ViewBag.GridHtml = GetPage(seach.page, total, 20);
             }
             return View(model);
@@ -81,7 +81,7 @@ namespace Website.Areas.Admin.Controllers
             };
             if (action.Do == ActionType.Edit)
             {
-                model.ContactUs = _contactUsDa.GetId(ConvertUtil.ToInt32(action.ItemId));                
+                model.ContactUs = _contactUsDa.GetId(ConvertUtil.ToInt32(action.ItemId));
             }
             ViewBag.Action = action.Do ?? ActionType.Add;
             ViewBag.ActionText = ActionType.ActionText(action.Do);
@@ -114,13 +114,15 @@ namespace Website.Areas.Admin.Controllers
                 xlPackage.Workbook.CalcMode = ExcelCalcMode.Manual;
                 //Create Headers and format them
                 string[] properties = new string[100];
-                properties[0] = "ID";
-                properties[1] = "Tên công việc";
-                properties[2] = "Họ tên";
-                properties[3] = "Email";
-                properties[4] = "Điện thoại";
-                properties[5] = "Hồ sơ";
-                properties[6] = "Ngày ứng tuyển";
+                properties[0] = "STT";
+                properties[1] = "Họ tên";
+                properties[2] = "Tên công việc";
+                properties[3] = "Điện thoại";
+                properties[4] = "Email";
+                properties[5] = "Nội dung";
+                properties[6] = "Hồ sơ";
+                properties[7] = "Trang thái";
+                properties[8] = "Ngày ứng tuyển";
                 for (int i = 0; i < properties.Length; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = properties[i];
@@ -129,32 +131,47 @@ namespace Website.Areas.Admin.Controllers
                     worksheet.Cells[1, i + 1].Style.Font.Bold = true;
                 }
                 int row = 2;
+                int stt = 1;
                 foreach (ContactUsAdmin item in report)
                 {
                     dem++;
                     int col = 1;
                     if (item.ID > 0)//ID
-                        worksheet.Cells[row, col].Value = item.ID;
-                    col++;
-                    if (item.ProductName != null)//Tên công việc
-                        worksheet.Cells[row, col].Value = item.ProductName;
+                        worksheet.Cells[row, col].Value = stt;
                     col++;
                     if (item.FullName != null)//Họ và Tên
                         worksheet.Cells[row, col].Value = item.FullName;
                     col++;
-                    if (item.Email != null)//Email
-                        worksheet.Cells[row, col].Value = item.Email;
+                    if (item.ProductName != null)//Tên công việc
+                        worksheet.Cells[row, col].Value = item.ProductName;
                     col++;
                     if (item.Phone != null)//Số điện thoại
                         worksheet.Cells[row, col].Value = item.Phone;
                     col++;
+                    if (item.Email != null)//Email
+                        worksheet.Cells[row, col].Value = item.Email;
+                    col++;
+                    if (item.Content != null)//Số điện thoại
+                        worksheet.Cells[row, col].Value = item.Content;
+                    col++;
                     if (item.Division != null)//Hồ sơ
                         worksheet.Cells[row, col].Value = WebConfig.Website + item.Division;
+                    col++;
+                    if (item.Phone != null)//Trang thái
+                        if (item.Status == 1)
+                        {
+                            worksheet.Cells[row, col].Value = "Chưa đọc";
+                        }
+                        else
+                        {
+                            worksheet.Cells[row, col].Value = "Đã đọc";
+                        }
                     col++;
                     if (item.CreatedDate.HasValue)//Ngày ứng tuyển
                         worksheet.Cells[row, col].Value = item.CreatedDate.Value.ToString("dd/MM/yyyy");
                     col++;
                     row++;
+                    stt++;
                 }
                 string nameexcel = "Danh sách đơn ứng tuyển " + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fff");
                 xlPackage.Workbook.Properties.Title = string.Format("{0} reports", nameexcel);

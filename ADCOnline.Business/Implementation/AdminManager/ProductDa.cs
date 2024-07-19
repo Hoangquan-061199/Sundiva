@@ -206,7 +206,7 @@ namespace ADCOnline.Business.Implementation.AdminManager
         {
             using (SqlConnection connect = _dapperDa.GetOpenConnection())
             {
-                var result = connect.Query<Simple.Base.SubItem>("SELECT * FROM SubItem WHERE ProductID=@productId", new { productId });
+                var result = connect.Query<Simple.Base.SubItem>("SELECT * FROM SubItem WHERE IsDeleted = 0 and ProductID=@productId", new { productId });
                 connect.Close();
                 return result.ToList();
             }
@@ -259,6 +259,14 @@ namespace ADCOnline.Business.Implementation.AdminManager
                 connect.Close();
                 return result;
             }
+        }
+
+        public int CheckProductCode(string code)
+        {
+            using SqlConnection connect = _dapperDa.GetOpenConnection();
+            var result = connect.Query<int>("SELECT ID FROM Product Where IsDeleted = 0 and ProductCode = @code", new { code });
+            connect.Close();
+            return result != null && result.Any() ? result.First() : 0;
         }
         //=> _dapperDa.ExecuteSql(string.Format($"update Product set TypeSaleValue = {value} where ',{ids},' like N'%,'+CONVERT(varchar,ID)+',%'"));
         public int Insert(Product obj) => _dapperDa.Insert(obj);

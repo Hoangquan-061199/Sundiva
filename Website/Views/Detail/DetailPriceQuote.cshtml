@@ -22,9 +22,11 @@
     ViewBag.LangModule = Model.ModuleItem.Lang;
     SizeImages image = new SizeImages();
     ViewBag.Banner = false;
+    //List<AlbumGalleryItem> albums = !string.IsNullOrEmpty(Model.ContentItem.AlbumPictureJson) ? JsonConvert.DeserializeObject<List<AlbumGalleryItem>>(Model.ContentItem.AlbumPictureJson) : new List<AlbumGalleryItem>();
 }
 @if (Model.ContentItem != null)
 {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.css">
     if (Model.ModuleItem.AlbumGalleryItems.Any(x => x.AlbumType == 3))
     {
         if (Model.ModuleItem.AlbumGalleryItems.Count(x => x.AlbumType == 3) == 1)
@@ -65,7 +67,7 @@
             <div>@Model.ModuleItem.Name</div>
         </div>
     </div>
-    <div class="price">
+    <div class="price-quote">
         <div class="container">
             <div class="left">
                 @if (Model.WebsiteModulesItems.Any(x => x.ParentID > 0))
@@ -108,11 +110,11 @@
                             {
                                 <div class="item item-product-new">
                                     <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="img">
-                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, item.UrlPicture, item.Name))
+                                        @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.UrlPicture, Context, 400, 400), item.Name))
                                     </a>
                                     <div class="text">
                                         <a href="@Utility.Link(item.NameAscii, string.Empty, item.LinkUrl)" title="@item.Name" class="name">
-                                            @item.Name
+                                            @item.Name_
                                         </a>
                                         @if (!string.IsNullOrEmpty(item.ProductCode))
                                         {
@@ -121,11 +123,11 @@
                                             </div>
                                         }
                                         <div class="p-price">
-                                            @if (item.PriceOld.HasValue)
+                                            @if (item.PriceOld.HasValue && item.PriceOld > 0)
                                             {
-                                                <p>@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
+                                                <p class="price-old">@Utility.GetFormatPriceType(item.PriceOld,1,"",true)</p>
                                             }
-                                            <p><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
+                                            <p class="price"><strong>@Utility.GetFormatPriceType(item.Price,1,ResourceData.Resource("LienHe", ViewBag.Lang),true)</strong></p>
                                         </div>
                                     </div>
                                 </div>
@@ -137,16 +139,90 @@
             <div class="right">
                 <h1 class="big-title title-main-page before left">@Model.ContentItem.Name</h1>
                 <div class="paragraph fs17 detail-content">
+                    @*@if (albums.Any())
+                    {
+                    <div class="img-detai">
+                        @if (albums.Count(x => x.AlbumType == 0) <= 4)
+                        {
+                            int count = albums.Count(x => x.AlbumType == 0);
+                            @foreach (AlbumGalleryItem item in albums.Where(x => x.AlbumType == 0).Take(4))
+                            {
+                                image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                                <div class="item count_@count" data-src="@item.AlbumUrl" data-fancybox="gallery"
+                                     data-caption="@item.AlbumTitle">
+                                    <img src="@item.AlbumUrl" alt="@item.AlbumTitle" width="@image.Width" height="@image.Height" loading="lazy" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            int count = albums.Count(x => x.AlbumType == 0) - 4;
+                            int i = 1;
+                            @foreach (AlbumGalleryItem item in albums.Where(x => x.AlbumType == 0).Take(4))
+                            {
+                                image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                                <div class="item count_4" data-src="@item.AlbumUrl" data-fancybox="gallery"
+                                     data-caption="@item.AlbumTitle">
+                                    <img src="@item.AlbumUrl" alt="@item.AlbumTitle" width="@image.Width" height="@image.Height" loading="lazy" />
+                                    @if (i == 4)
+                                    {
+                                        <div class="count-more-image">@(count)+</div>
+                                    }
+                                </div>
+                                i++;
+                            }
+
+                            @foreach (AlbumGalleryItem item in albums.Where(x => x.AlbumType == 0).Skip(4))
+                            {
+                                image = Utility.GetSizeImages(WebConfig.PathServer, item.AlbumUrl);
+                                <div class="item" style="display: none" data-src="@item.AlbumUrl" data-fancybox="gallery"
+                                     data-caption="@item.AlbumTitle">
+                                    <img src="@item.AlbumUrl" alt="@item.AlbumTitle" width="@image.Width" height="@image.Height" loading="lazy" />
+                                </div>
+                            }
+                        }
+                    </div>
+                    }*@
+
+                    @if (Model.ContentItem.AlbumGalleryItems.Any(x => x.AlbumType == 0))
+                    {
+                        int i = 1;
+                        <div class="album-product" id="detai_5">
+                            @*<div class="content-title">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M20 4v12H8V4h12m0-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 9.67l1.69 2.26 2.48-3.1L19 15H9zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" /></svg>
+                                </div>
+                                <h2 class="big-title title-content">@ResourceData.Resource("Album", ViewBag.Lang)</h2>
+                            </div>*@
+                            <div class="grid-gallery zoom">
+                                @foreach (var item in Model.ContentItem.AlbumGalleryItems.Where(x => x.AlbumType == 0))
+                                {
+                                    <figure class=" @(i > 8 ? "hide": string.Empty) @(i == 4 ? "wide" : string.Empty)">
+                                        <a data-src="@item.AlbumUrl" data-fancybox="gallery" data-caption="@item.AlbumTitle" title="@item.AlbumTitle">
+                                            @Html.Raw(Utility.GetImage(WebConfig.PathServer, Common.ImageUrl(item.AlbumUrl, Context, 400, 400), Model.ContentItem.Name))
+                                            <figcaption>
+                                                <h3>@item.AlbumTitle</h3>
+                                                <p>@item.AlbumTitle</p>
+                                            </figcaption>
+                                            @if (i == 8)
+                                            {
+                                                <span class="more-gallery">@(Model.ContentItem.AlbumGalleryItems.Count() - 8)+</span>
+                                            }
+                                        </a>
+                                    </figure>
+                                    i++;
+                                }
+
+                            </div>
+                        </div>
+                    }
                     @if (!string.IsNullOrEmpty(Model.ContentItem.Content))
                     {
                         @Html.Raw(Model.ContentItem.Content)
-                    }
-                    else
-                    {
-                        <p class="update">@ResourceData.Resource("DangCapNhat", ViewBag.Lang)</p>
                     }
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 }
