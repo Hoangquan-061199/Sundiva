@@ -67,7 +67,7 @@
             <div>@Model.ModuleItem.Name</div>
         </div>
     </div>
-    @if (Model.ListContentItem.Any())
+    @if (Model.ListContentItem != null && Model.ListContentItem.Any())
     {
         <div class="list-recruitment">
             <div class="container">
@@ -86,7 +86,7 @@
             </div>
         </div>
     }
-    @if (Model.ListContentItemAsync.Any())
+    @if (Model.ListContentItemAsync != null && Model.ListContentItemAsync.Any())
     {
         int i = 1;
          int rest = Model.Total.Value - Model.ListContentItemAsync.Count();

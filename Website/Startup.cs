@@ -44,7 +44,7 @@ namespace Website
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             //runtime view *.cshtml
-            //services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.Configure<GoogleCaptchaConfig>(Configuration.GetSection("GoogleRecaptcha"));
             services.AddTransient(typeof(GoogleCapthaService));
             services.AddDistributedMemoryCache();

@@ -282,13 +282,6 @@
     <None Remove="ScaffoldingReadMe.txt" />
     <None Remove="ViewComponents\4u1qxqpc.g2i~" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="gulpfile.js">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
 <ItemGroup>
 	<ProjectReference Include="..\ADCOnline.Business\ADCOnline.Business.csproj" />
 	<ProjectReference Include="..\ADCOnline.DA.Dapper\ADCOnline.DA.Dapper.csproj" />

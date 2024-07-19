@@ -165,7 +165,7 @@ namespace Website.Controllers
                                     WebsiteModulesItem = _webModuleManager.GetByTypeCode(StaticEnum.Contact, Lang()),
                                     AdvertisingItems = cacheUtils.GetListAdvertisingItemByCode(StaticEnum.TourIndex, Lang()),
                                     WebsiteModulesItems = moduleproduct != null ? moduleproduct : new()
-                            };
+                                };
 
                                 var moduleNews = _webModuleManager.GetByTypeCode(StaticEnum.News, Lang());
                                 var moduleNewschild = cacheUtils.GetListModuleChidrentNotAsync(moduleNews.ID);
@@ -407,12 +407,14 @@ namespace Website.Controllers
                                 model.SearchModel = search;
                                 ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
                                 await _webModuleManager.UpdateTotalViews(module.ID);
-                                if (model.ListContentItemAsync.Count() == 1)
-                                    return RedirectPermanent(Utility.Link(model.ListContentItemAsync.FirstOrDefault().NameAscii, string.Empty, model.ListContentItemAsync.FirstOrDefault().LinkUrl));
+
                                 if (module.TypeView == StaticEnum.Recuiment1)
                                     return View(@"~/Views/News/ListRecuitment1.cshtml", model);
-                                IEnumerable<WebsiteContentItem> listContentNoUrl = await _webContentManager.GetListContent(search, 0, model.WebsiteModulesItems.FirstOrDefault(x => x.ModuleTypeCode == StaticEnum.SimpleModule).ID, "0", "0");
-                                model.ListContentItem = listContentNoUrl != null ? listContentNoUrl : null;
+                                if (model.WebsiteModulesItems.Any(x => x.ModuleTypeCode == StaticEnum.SimpleModule))
+                                {
+                                    IEnumerable<WebsiteContentItem> listContentNoUrl = await _webContentManager.GetListContent(search, 0, model.WebsiteModulesItems.FirstOrDefault(x => x.ModuleTypeCode == StaticEnum.SimpleModule).ID, "0", "0");
+                                    model.ListContentItem = listContentNoUrl != null ? listContentNoUrl : null;
+                                }
                                 return View(@"~/Views/News/ListRecuitment.cshtml", model);
                             }
                         #endregion Tuyển dụng
@@ -470,8 +472,7 @@ namespace Website.Controllers
                                 model.SearchModel = search;
                                 ViewBag.GridHtml = Common.GetHtmlPageLink(search.page, model.Total.Value, pageSize, Utility.GetUrl(module.NameAscii), Lang());
                                 await _webModuleManager.UpdateTotalViews(module.ID);
-                                if (listContent.Count() == 1)
-                                    return RedirectPermanent(Utility.Link(listContent.FirstOrDefault().NameAscii, string.Empty, listContent.FirstOrDefault().LinkUrl));
+
                                 if (module.ParentID == 0)
                                 {
                                     if (model.WebsiteModulesItems.Count() == 1)
